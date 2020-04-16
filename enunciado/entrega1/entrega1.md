@@ -32,7 +32,7 @@ El equipo de front estara utilizando la interfaz  `PatogenoService`  para comuni
 - `agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen : String) : Especie` - Debera lograr que se genere una nueva Especie del Patogeno. Por el momento no nos interesa persistir esa nueva especie, pero si llevar la cuenta de la cantidad de especies del Patogeno.
 
 
-Adicionalmente, el lider del equipo tecnico nos adelanta que el equipo de operaciones estaran realizando testeos de la simulacion con grandes permutaciones y volumenes de datos, y nos facilita la la siguiente interfaz la cual estaran utilizando para cargar dichos datos en los test, y para la cual deberemos proveer una primera implementacion:
+Adicionalmente, el lider del equipo tecnico nos adelanta que el equipo de operaciones estaran realizando testeos de la simulacion con grandes permutaciones y volumenes de datos. Nos facilita la siguiente interfaz la cual estaran utilizando para cargar dichos datos en los test, y para la cual deberemos proveer una primera implementacion:
 
 La interfaz `DataService` entiende dos mensajes:
 
