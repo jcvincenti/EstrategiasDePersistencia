@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
+import java.sql.Connection
 
 
 class JDBCPatogenoDAO : PatogenoDAO {
@@ -20,7 +21,19 @@ class JDBCPatogenoDAO : PatogenoDAO {
     }
 
     override fun recuperarATodos(): List<Patogeno> {
-        TODO("not implemented")
+        return execute {
+            conn: Connection ->
+                val ps = conn.prepareStatement("SELECT id, tipo, cantidadDeEspecies FROM patogenos")
+                val resultSet = ps.executeQuery()
+                val patogenos = mutableListOf<Patogeno>()
+                while (resultSet.next()) {
+                    var patogeno = Patogeno(resultSet.getString("tipo"))
+                    patogeno.cantidadDeEspecies = resultSet.getInt("cantidadDeEspecies")
+                    patogeno.id = resultSet.getInt("id")
+                }
+                ps.close()
+                patogenos
+        }
     }
 
     init {

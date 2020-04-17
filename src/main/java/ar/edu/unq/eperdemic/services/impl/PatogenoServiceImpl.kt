@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 
-class PatogenoServiceImpl(patogenoDAO: PatogenoDAO) : PatogenoService {
+class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun crearPatogeno(patogeno: Patogeno): Int {
         TODO("not implemented")
     }
@@ -14,9 +14,7 @@ class PatogenoServiceImpl(patogenoDAO: PatogenoDAO) : PatogenoService {
         TODO("not implemented")
     }
 
-    override fun recuperarATodosLosPatogenos(): List<Patogeno> {
-        TODO("not implemented")
-    }
+    override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
         TODO("not implemented")
