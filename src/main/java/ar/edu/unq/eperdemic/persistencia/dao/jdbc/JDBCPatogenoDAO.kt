@@ -3,12 +3,24 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
+import java.sql.Connection
+import java.sql.Statement
 
 
 class JDBCPatogenoDAO : PatogenoDAO {
 
     override fun crear(patogeno: Patogeno): Int {
-        TODO("not implemented")
+        return execute { conn: Connection ->
+            val ps = conn.prepareStatement("INSERT INTO patogeno (tipo, cantidad_de_especies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
+            ps.setString(1, patogeno.tipo)
+            ps.setInt(2, patogeno.cantidadDeEspecies)
+            val id = ps.executeUpdate()
+            if (ps.updateCount != 1) {
+                throw RuntimeException("No se inserto el patogeno $patogeno")
+            }
+            ps.close()
+            id
+            }
     }
 
     override fun actualizar(patogeno: Patogeno) {
