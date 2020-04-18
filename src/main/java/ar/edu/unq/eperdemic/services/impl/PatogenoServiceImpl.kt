@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
-import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
+import ar.edu.unq.eperdemic.services.exceptions.*
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
@@ -16,7 +16,14 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         }
     }
 
-    override fun recuperarPatogeno(id: Int): Patogeno = patogenoDAO.recuperar(id)
+    override fun recuperarPatogeno(id: Int): Patogeno {
+        try {
+            return patogenoDAO.recuperar(id)
+        }
+        catch(e: RuntimeException) {
+            throw NoSePudoRecuperarPatogenoException("Patogeno con id $id inexistente")
+        }
+    }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 

@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
 import org.junit.Assert
@@ -42,5 +43,17 @@ class PatogenoServiceTest {
         var patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
         Assert.assertTrue(patogenos.isEmpty())
+    }
+
+    @Test
+    fun testRecuperarPatogenoExistente(){
+        var patogeno = patogenoService.recuperarPatogeno(1)
+        Assert.assertEquals("bacteria", patogeno.tipo)
+        Assert.assertEquals(0, patogeno.cantidadDeEspecies)
+    }
+
+    @Test
+    fun testRecuperarPatogenoInexistente(){
+        Assertions.assertThrows(NoSePudoRecuperarPatogenoException::class.java, {patogenoService.recuperarPatogeno(75)})
     }
 }
