@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
+import ar.edu.unq.eperdemic.services.exceptions.PatogenoNoEncotradoException
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
@@ -21,6 +22,11 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
-        TODO("not implemented")
+        val patogeno = recuperarPatogeno(id)
+        try {
+            return patogeno.crearEspecie(nombreEspecie,paisDeOrigen)
+        } catch(e: RuntimeException){
+            throw PatogenoNoEncotradoException("No se encontro el patogeno $patogeno")
+        }
     }
 }
