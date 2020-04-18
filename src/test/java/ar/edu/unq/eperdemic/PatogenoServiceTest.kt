@@ -26,11 +26,19 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testRecuperarPatogenos() {
+    fun testRecuperarATodosLosPatogenosConPatogenos() {
         var patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
         Assert.assertEquals(5, patogenos.size)
         Assert.assertEquals("asarasa", patogenos.first().tipo)
         Assert.assertEquals("virus", patogenos.last().tipo)
+    }
+
+    @Test
+    fun testRecuperarATodosLosPatogenosSinPatogenos() {
+        this.cleanUp()
+        var patogenos = mutableListOf<Patogeno>()
+        patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
+        Assert.assertTrue(patogenos.isEmpty())
     }
 }
