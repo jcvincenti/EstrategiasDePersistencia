@@ -10,17 +10,23 @@ import java.sql.Statement
 class JDBCPatogenoDAO : PatogenoDAO {
 
     override fun crear(patogeno: Patogeno): Int {
+
         return execute { conn: Connection ->
             val ps = conn.prepareStatement("INSERT INTO patogeno (tipo, cantidad_de_especies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
             ps.setString(1, patogeno.tipo)
             ps.setInt(2, patogeno.cantidadDeEspecies)
-            val id = ps.executeUpdate()
+            ps.executeUpdate()
             if (ps.updateCount != 1) {
                 throw RuntimeException("No se inserto el patogeno $patogeno")
             }
+            val rs = ps.generatedKeys
+            var id = 0
+            if (rs.next()) {
+                id = rs.getInt(1)
+            }
             ps.close()
             id
-            }
+        }
     }
 
     override fun actualizar(patogeno: Patogeno) {
