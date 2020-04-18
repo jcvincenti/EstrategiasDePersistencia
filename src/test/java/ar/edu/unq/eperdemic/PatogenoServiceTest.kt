@@ -16,4 +16,11 @@ class PatogenoServiceTest {
         patogenoService.crearPatogeno(patogeno)
         TODO("cuando este pusheado el get de patogeno, se hace el assert del crear")
     }
+
+    @Test
+    fun testRecuperarPatogenos() {
+        var patogenos = mutableListOf<Patogeno>()
+        patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
+        Assert.assertEquals(6, patogenos.size)
+    }
 }
