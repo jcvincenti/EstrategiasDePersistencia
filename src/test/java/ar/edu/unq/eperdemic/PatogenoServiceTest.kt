@@ -22,7 +22,9 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testCrearPatogeno(){
+    fun testCrearPatogeno() {
+        val id = patogenoService.crearPatogeno(Patogeno("test-tipo"))
+        Assert.assertEquals(6, id)
     }
 
     @Test
