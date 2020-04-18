@@ -11,20 +11,16 @@ class DataServiceJDBC : DataService {
 
     override fun crearSetDeDatosIniciales() {
         var tiposDePatogenos = mutableListOf("bacteria", "hongo", "protozo", "virus")
-        tiposDePatogenos.forEach{
-            patogeno -> dao.crear(Patogeno(patogeno))
+        tiposDePatogenos.forEach {
+            tipo -> dao.crear(Patogeno(tipo))
         }
     }
 
     override fun eliminarTodo() {
-        TODO("hacer un eliminar solo de los datos que insertamos en el test, acá estoy limpiando toda la tabla")
         return JDBCConnector.execute { conn: Connection ->
-            val ps = conn.prepareStatement("DELETE FROM patogeno")
-            ps.executeUpdate()
-            if (ps.updateCount != 1) {
-                throw RuntimeException("No se pudo eliminar los datos de la tabla patogeno")
-            }
-            ps.close()
+            val st = conn.createStatement()
+            st.executeUpdate("DELETE FROM patogeno")
+            st.close()
             null
         }
     }
