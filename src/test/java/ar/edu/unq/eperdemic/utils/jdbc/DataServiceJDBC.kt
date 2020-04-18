@@ -10,7 +10,7 @@ class DataServiceJDBC : DataService {
     val dao = JDBCPatogenoDAO()
 
     override fun crearSetDeDatosIniciales() {
-        var tiposDePatogenos = mutableListOf("bacteria", "hongo", "protozo", "virus")
+        var tiposDePatogenos = mutableListOf("bacteria", "hongo", "protozo", "virus", "asma")
         tiposDePatogenos.forEach {
             tipo -> dao.crear(Patogeno(tipo))
         }

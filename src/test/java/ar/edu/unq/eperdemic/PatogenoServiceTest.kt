@@ -38,6 +38,8 @@ class PatogenoServiceTest {
     fun testRecuperarPatogenos() {
         var patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
-        Assert.assertEquals(6, patogenos.size)
+        Assert.assertEquals(5, patogenos.size)
+        Assert.assertEquals("asma", patogenos.get(0).tipo)
+        Assert.assertEquals("virus", patogenos.get(4).tipo)
     }
 }
