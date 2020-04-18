@@ -28,8 +28,18 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testCrearPatogeno() {
-        
+    fun testCrearPatogeno(){
+        var patogeno = Patogeno("coronavirus")
+        patogenoService.crearPatogeno(patogeno)
+        TODO("cuando este pusheado el get de patogeno, se hace el assert del crear")
     }
 
+    @Test
+    fun testRecuperarPatogenos() {
+        var patogenos = mutableListOf<Patogeno>()
+        patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
+        Assert.assertEquals(5, patogenos.size)
+        Assert.assertEquals("asma", patogenos.get(0).tipo)
+        Assert.assertEquals("virus", patogenos.get(4).tipo)
+    }
 }

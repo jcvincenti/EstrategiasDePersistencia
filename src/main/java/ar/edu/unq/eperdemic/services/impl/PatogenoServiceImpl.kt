@@ -13,9 +13,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         TODO("not implemented")
     }
 
-    override fun recuperarATodosLosPatogenos(): List<Patogeno> {
-        TODO("not implemented")
-    }
+    override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
         TODO("not implemented")
