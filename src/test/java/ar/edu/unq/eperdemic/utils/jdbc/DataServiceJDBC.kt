@@ -19,7 +19,7 @@ class DataServiceJDBC : DataService {
     override fun eliminarTodo() {
         return JDBCConnector.execute { conn: Connection ->
             val st = conn.createStatement()
-            st.executeUpdate("DROP TABLE patogeno")
+            st.executeUpdate("TRUNCATE TABLE patogeno")
             st.close()
             null
         }
