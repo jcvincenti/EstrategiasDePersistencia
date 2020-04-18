@@ -9,9 +9,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun crearPatogeno(patogeno: Patogeno): Int = patogenoDAO.crear(patogeno)
 
-    override fun recuperarPatogeno(id: Int): Patogeno {
-        TODO("not implemented")
-    }
+    override fun recuperarPatogeno(id: Int): Patogeno = patogenoDAO.recuperar(id)
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 

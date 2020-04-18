@@ -5,33 +5,24 @@ import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
 import org.junit.Assert
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
 
     private val patogenoService = PatogenoServiceImpl(JDBCPatogenoDAO())
+    private val dataService = DataServiceJDBC()
 
-    companion object {
-        private val dataService = DataServiceJDBC()
-        @BeforeAll
-        @JvmStatic
-        fun init() {
-            dataService.crearSetDeDatosIniciales()
-        }
-        @AfterAll
-        @JvmStatic
-        fun cleanUp() {
-            dataService.eliminarTodo()
-        }
+    @BeforeEach
+    fun init() {
+        dataService.crearSetDeDatosIniciales()
+    }
+    @AfterEach
+    fun cleanUp() {
+        dataService.eliminarTodo()
     }
 
     @Test
     fun testCrearPatogeno(){
-        var patogeno = Patogeno("coronavirus")
-        patogenoService.crearPatogeno(patogeno)
-        TODO("cuando este pusheado el get de patogeno, se hace el assert del crear")
     }
 
     @Test
@@ -39,7 +30,7 @@ class PatogenoServiceTest {
         var patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
         Assert.assertEquals(5, patogenos.size)
-        Assert.assertEquals("asma", patogenos.get(0).tipo)
-        Assert.assertEquals("virus", patogenos.get(4).tipo)
+        Assert.assertEquals("asarasa", patogenos.first().tipo)
+        Assert.assertEquals("virus", patogenos.last().tipo)
     }
 }

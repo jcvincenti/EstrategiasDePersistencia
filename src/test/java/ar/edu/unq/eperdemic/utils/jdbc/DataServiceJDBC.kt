@@ -10,7 +10,7 @@ class DataServiceJDBC : DataService {
     val dao = JDBCPatogenoDAO()
 
     override fun crearSetDeDatosIniciales() {
-        var tiposDePatogenos = mutableListOf("bacteria", "hongo", "protozo", "virus", "asma")
+        var tiposDePatogenos = mutableListOf("bacteria", "hongo", "protozoo", "virus", "asarasa")
         tiposDePatogenos.forEach {
             tipo -> dao.crear(Patogeno(tipo))
         }
@@ -19,7 +19,7 @@ class DataServiceJDBC : DataService {
     override fun eliminarTodo() {
         return JDBCConnector.execute { conn: Connection ->
             val st = conn.createStatement()
-            st.executeUpdate("DELETE FROM patogeno")
+            st.executeUpdate("DROP TABLE patogeno")
             st.close()
             null
         }
