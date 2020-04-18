@@ -29,7 +29,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
             ps.setString(1, patogeno.tipo)
             ps.setInt(2, patogeno.cantidadDeEspecies)
             patogeno.id?.let { ps.setInt(3, it) }
-            val id = ps.executeUpdate()
+            ps.executeUpdate()
             if (ps.updateCount != 1) {
                 throw RuntimeException("No se actualizo el patogeno $patogeno")
             }
