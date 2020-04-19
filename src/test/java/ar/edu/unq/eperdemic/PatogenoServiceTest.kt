@@ -60,8 +60,11 @@ class PatogenoServiceTest {
 
     @Test
     fun testAgregarEspecieConPatogenoExistente(){
-        patogenoService.agregarEspecie(4, "sarampion", "indefinido")
+        var especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
         var patogeno = patogenoService.recuperarPatogeno(4)
+        Assert.assertEquals(patogeno.id, especie.patogeno.id)
+        Assert.assertEquals("sarampion",especie.nombre)
+        Assert.assertEquals("indefinido", especie.paisDeOrigen)
         Assert.assertEquals(1,patogeno.cantidadDeEspecies)
     }
 
