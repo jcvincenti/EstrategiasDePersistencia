@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
@@ -55,5 +56,20 @@ class PatogenoServiceTest {
     @Test
     fun testRecuperarPatogenoInexistente(){
         Assertions.assertThrows(NoSePudoRecuperarPatogenoException::class.java, {patogenoService.recuperarPatogeno(75)})
+    }
+
+    @Test
+    fun testAgregarEspecieConPatogenoExistente(){
+        var especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
+        var patogeno = patogenoService.recuperarPatogeno(4)
+        Assert.assertEquals(patogeno.id, especie.patogeno.id)
+        Assert.assertEquals("sarampion",especie.nombre)
+        Assert.assertEquals("indefinido", especie.paisDeOrigen)
+        Assert.assertEquals(1,patogeno.cantidadDeEspecies)
+    }
+
+    @Test
+    fun testAgregarEspecieConPatogenoInexistente(){
+        Assertions.assertThrows(NoSePudoAgregarEspecieException::class.java, {patogenoService.agregarEspecie(99, "test-especie", "test-pais")})
     }
 }
