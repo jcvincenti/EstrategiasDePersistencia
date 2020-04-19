@@ -59,6 +59,16 @@ class PatogenoServiceTest {
     }
 
     @Test
+    fun testMensajeExceptionPatogenoInexistente() {
+        try {
+            patogenoService.recuperarPatogeno(80)
+        } catch (e: NoSePudoRecuperarPatogenoException) {
+            val message = "Patogeno con id 80 inexistente"
+            Assert.assertEquals(message, e.message)
+        }
+    }
+
+    @Test
     fun testAgregarEspecieConPatogenoExistente(){
         var especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
         var patogeno = patogenoService.recuperarPatogeno(4)
