@@ -35,7 +35,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
             patogenoDAO.actualizar(patogeno)
             return especieCreada
         } catch(e: RuntimeException){
-            throw NoSePudoCrearPatogenoException("Patogeno con id $id inexistente")
+            throw NoSePudoRecuperarPatogenoException("Patogeno con id $id inexistente")
         }
     }
 }
