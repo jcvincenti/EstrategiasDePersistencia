@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
+import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
@@ -25,8 +26,13 @@ class PatogenoServiceTest {
 
     @Test
     fun testCrearPatogeno() {
-        val id = patogenoService.crearPatogeno(Patogeno("test-tipo"))
-        Assert.assertEquals(6, id)
+        val patogeno = Patogeno("test-tipo")
+        patogeno.id = patogenoService.crearPatogeno(patogeno)
+        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(patogeno)}
+        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoService.crearPatogeno(patogeno)}
+        Assert.assertEquals("Ya existe un patogeno de tipo ${patogeno.tipo}", exception.message )
+        Assert.assertEquals(6, patogeno.id)
+        Assert.assertEquals(patogeno, patogenoService.recuperarPatogeno(6))
     }
 
     @Test
@@ -60,12 +66,8 @@ class PatogenoServiceTest {
 
     @Test
     fun testMensajeExceptionPatogenoInexistente() {
-        try {
-            patogenoService.recuperarPatogeno(80)
-        } catch (e: NoSePudoRecuperarPatogenoException) {
-            val message = "Patogeno con id 80 inexistente"
-            Assert.assertEquals(message, e.message)
-        }
+        val exception = assertThrows<NoSePudoRecuperarPatogenoException> {patogenoService.recuperarPatogeno(80)}
+        Assert.assertEquals("Patogeno con id 80 inexistente", exception.message )
     }
 
     @Test

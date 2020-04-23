@@ -10,10 +10,10 @@ import ar.edu.unq.eperdemic.services.exceptions.*
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
-        try {
+        if (patogenoDAO.existePatogenoConTipo(patogeno.tipo)) {
+            throw NoSePudoCrearPatogenoException("Ya existe un patogeno de tipo ${patogeno.tipo}")
+        } else {
             return patogenoDAO.crear(patogeno)
-        } catch(e: RuntimeException){
-            throw NoSePudoCrearPatogenoException("No se pudo crear el patogeno $patogeno")
         }
     }
 

@@ -3,24 +3,23 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.sql.Connection
+import java.sql.SQLIntegrityConstraintViolationException
 import java.sql.Statement
 
 
 class JDBCPatogenoDAO : PatogenoDAO {
 
     override fun crear(patogeno: Patogeno): Int {
-
         return execute { conn: Connection ->
+            var id = 0
             val ps = conn.prepareStatement("INSERT INTO patogeno (tipo, cantidad_de_especies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
             ps.setString(1, patogeno.tipo)
             ps.setInt(2, patogeno.cantidadDeEspecies)
             ps.executeUpdate()
-            if (ps.updateCount != 1) {
-                throw RuntimeException("No se inserto el patogeno $patogeno")
-            }
             val rs = ps.generatedKeys
-            var id = 0
             if (rs.next()) {
                 id = rs.getInt(1)
             }
@@ -75,6 +74,21 @@ class JDBCPatogenoDAO : PatogenoDAO {
             }
             ps.close()
             patogenos
+        }
+    }
+
+    override fun existePatogenoConTipo(tipo: String) : Boolean {
+        var existe = true
+        return execute { conn: Connection ->
+            val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE tipo = ?")
+            ps.setString(1, tipo)
+            val resultSet = ps.executeQuery()
+
+            if (!resultSet.next()){
+                existe = false
+            }
+            ps.close()
+            existe
         }
     }
 
