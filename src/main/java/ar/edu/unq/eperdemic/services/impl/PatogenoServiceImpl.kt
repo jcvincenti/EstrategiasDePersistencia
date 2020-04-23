@@ -12,29 +12,27 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun crearPatogeno(patogeno: Patogeno): Int {
         if (patogenoDAO.existePatogenoConTipo(patogeno.tipo)) {
             throw NoSePudoCrearPatogenoException("Ya existe un patogeno de tipo ${patogeno.tipo}")
-        } else {
-            return patogenoDAO.crear(patogeno)
         }
+        return patogenoDAO.crear(patogeno)
     }
 
     override fun recuperarPatogeno(id: Int): Patogeno {
         if (!patogenoDAO.existePatogenoConId(id)){
             throw NoSePudoRecuperarPatogenoException("Patogeno con id $id inexistente")
-        } else {
-            return patogenoDAO.recuperar(id)
         }
+        return patogenoDAO.recuperar(id)
+
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
-        if (patogenoDAO.existePatogenoConId(id)) {
-            val patogeno = patogenoDAO.recuperar(id)
-            val especieCreada = patogeno.crearEspecie(nombreEspecie,paisDeOrigen)
-            patogenoDAO.actualizar(patogeno)
-            return especieCreada
-        } else {
+        if (!patogenoDAO.existePatogenoConId(id)) {
             throw NoSePudoAgregarEspecieException("Patogeno con id $id inexistente")
         }
+        val patogeno = patogenoDAO.recuperar(id)
+        val especieCreada = patogeno.crearEspecie(nombreEspecie,paisDeOrigen)
+        patogenoDAO.actualizar(patogeno)
+        return especieCreada
     }
 }
