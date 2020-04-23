@@ -26,9 +26,11 @@ class PatogenoServiceTest {
 
     @Test
     fun testCrearPatogeno() {
-        var patogeno = Patogeno("test-tipo")
+        val patogeno = Patogeno("test-tipo")
         patogeno.id = patogenoService.crearPatogeno(patogeno)
-        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(Patogeno("test-tipo"))}
+        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(patogeno)}
+        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoService.crearPatogeno(patogeno)}
+        Assert.assertEquals("Ya existe un patogeno de tipo ${patogeno.tipo}", exception.message )
         Assert.assertEquals(6, patogeno.id)
         Assert.assertEquals(patogeno, patogenoService.recuperarPatogeno(6))
     }
