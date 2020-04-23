@@ -47,11 +47,9 @@ class JDBCPatogenoDAO : PatogenoDAO {
             val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE id = ?")
             ps.setInt(1, patogenoId)
             val resultSet = ps.executeQuery()
-
             if (!resultSet.next()){
                 throw RuntimeException("No existe un patogeno con el id $patogenoId")
             }
-
             val patogeno = Patogeno(resultSet.getString("tipo"))
             patogeno.id = resultSet.getInt("id")
             patogeno.cantidadDeEspecies = resultSet.getInt("cantidad_de_especies")
@@ -83,7 +81,6 @@ class JDBCPatogenoDAO : PatogenoDAO {
             val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE tipo = ?")
             ps.setString(1, tipo)
             val resultSet = ps.executeQuery()
-
             if (!resultSet.next()){
                 existe = false
             }
@@ -92,6 +89,19 @@ class JDBCPatogenoDAO : PatogenoDAO {
         }
     }
 
+    override fun existePatogenoConId(id: Int) : Boolean {
+        var existe = true
+        return execute { conn: Connection ->
+            val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE id = ?")
+            ps.setInt(1, id)
+            val resultSet = ps.executeQuery()
+            if (!resultSet.next()){
+                existe = false
+            }
+            ps.close()
+            existe
+        }
+    }
     init {
         val initializeScript = javaClass.classLoader.getResource("createAll.sql").readText()
         execute {
