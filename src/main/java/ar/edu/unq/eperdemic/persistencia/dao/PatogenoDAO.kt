@@ -8,4 +8,5 @@ interface PatogenoDAO {
     fun recuperar(idDelPatogeno: Int): Patogeno
     fun recuperarATodos() : List<Patogeno>
     fun existePatogenoConTipo(tipo: String) : Boolean
+    fun existePatogenoConId(id: Int): Boolean
 }
