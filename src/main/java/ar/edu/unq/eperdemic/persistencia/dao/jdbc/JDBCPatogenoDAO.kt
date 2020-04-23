@@ -3,24 +3,29 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.sql.Connection
+import java.sql.SQLIntegrityConstraintViolationException
 import java.sql.Statement
 
 
 class JDBCPatogenoDAO : PatogenoDAO {
+    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun crear(patogeno: Patogeno): Int {
 
         return execute { conn: Connection ->
+            var id = 0
             val ps = conn.prepareStatement("INSERT INTO patogeno (tipo, cantidad_de_especies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
             ps.setString(1, patogeno.tipo)
             ps.setInt(2, patogeno.cantidadDeEspecies)
-            ps.executeUpdate()
-            if (ps.updateCount != 1) {
-                throw RuntimeException("No se inserto el patogeno $patogeno")
+            try {
+                ps.executeUpdate()
+            } catch(e: SQLIntegrityConstraintViolationException){
+                logger.error(e.message)
             }
             val rs = ps.generatedKeys
-            var id = 0
             if (rs.next()) {
                 id = rs.getInt(1)
             }
