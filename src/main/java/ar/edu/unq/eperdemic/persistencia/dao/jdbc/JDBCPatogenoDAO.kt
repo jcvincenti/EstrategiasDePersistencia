@@ -11,20 +11,14 @@ import java.sql.Statement
 
 
 class JDBCPatogenoDAO : PatogenoDAO {
-    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun crear(patogeno: Patogeno): Int {
-
         return execute { conn: Connection ->
             var id = 0
             val ps = conn.prepareStatement("INSERT INTO patogeno (tipo, cantidad_de_especies) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS)
             ps.setString(1, patogeno.tipo)
             ps.setInt(2, patogeno.cantidadDeEspecies)
-            try {
-                ps.executeUpdate()
-            } catch(e: SQLIntegrityConstraintViolationException){
-                logger.error(e.message)
-            }
+            ps.executeUpdate()
             val rs = ps.generatedKeys
             if (rs.next()) {
                 id = rs.getInt(1)
@@ -80,6 +74,21 @@ class JDBCPatogenoDAO : PatogenoDAO {
             }
             ps.close()
             patogenos
+        }
+    }
+
+    override fun existePatogenoConTipo(tipo: String) : Boolean {
+        var existe = true
+        return execute { conn: Connection ->
+            val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE tipo = ?")
+            ps.setString(1, tipo)
+            val resultSet = ps.executeQuery()
+
+            if (!resultSet.next()){
+                existe = false
+            }
+            ps.close()
+            existe
         }
     }
 
