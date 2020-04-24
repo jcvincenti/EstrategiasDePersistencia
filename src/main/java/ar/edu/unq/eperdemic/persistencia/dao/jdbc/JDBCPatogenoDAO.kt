@@ -102,6 +102,16 @@ class JDBCPatogenoDAO : PatogenoDAO {
             existe
         }
     }
+
+    fun eliminarPatogenos() {
+        return JDBCConnector.execute { conn: Connection ->
+            val st = conn.createStatement()
+            st.executeUpdate("TRUNCATE TABLE patogeno")
+            st.close()
+            null
+        }
+    }
+
     init {
         val initializeScript = javaClass.classLoader.getResource("createAll.sql").readText()
         execute {
