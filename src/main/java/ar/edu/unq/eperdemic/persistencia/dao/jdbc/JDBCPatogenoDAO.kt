@@ -3,12 +3,8 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.sql.Connection
-import java.sql.SQLIntegrityConstraintViolationException
 import java.sql.Statement
-
 
 class JDBCPatogenoDAO : PatogenoDAO {
 
@@ -76,28 +72,22 @@ class JDBCPatogenoDAO : PatogenoDAO {
     }
 
     override fun existePatogenoConTipo(tipo: String) : Boolean {
-        var existe = true
         return execute { conn: Connection ->
-            val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE tipo = ?")
+            val ps = conn.prepareStatement("SELECT id FROM patogeno WHERE tipo = ?")
             ps.setString(1, tipo)
             val resultSet = ps.executeQuery()
-            if (!resultSet.next()){
-                existe = false
-            }
+            val existe = resultSet.next()
             ps.close()
             existe
         }
     }
 
     override fun existePatogenoConId(id: Int) : Boolean {
-        var existe = true
         return execute { conn: Connection ->
-            val ps = conn.prepareStatement("SELECT * FROM patogeno WHERE id = ?")
+            val ps = conn.prepareStatement("SELECT id FROM patogeno WHERE id = ?")
             ps.setInt(1, id)
             val resultSet = ps.executeQuery()
-            if (!resultSet.next()){
-                existe = false
-            }
+            val existe = resultSet.next()
             ps.close()
             existe
         }
