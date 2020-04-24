@@ -60,11 +60,6 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testRecuperarPatogenoInexistente(){
-        Assertions.assertThrows(NoSePudoRecuperarPatogenoException::class.java, {patogenoService.recuperarPatogeno(75)})
-    }
-
-    @Test
     fun testMensajeExceptionPatogenoInexistente() {
         val exception = assertThrows<NoSePudoRecuperarPatogenoException> {patogenoService.recuperarPatogeno(80)}
         Assert.assertEquals("Patogeno con id 80 inexistente", exception.message )
@@ -82,6 +77,7 @@ class PatogenoServiceTest {
 
     @Test
     fun testAgregarEspecieConPatogenoInexistente(){
-        Assertions.assertThrows(NoSePudoAgregarEspecieException::class.java, {patogenoService.agregarEspecie(99, "test-especie", "test-pais")})
+        val exception = assertThrows<NoSePudoAgregarEspecieException> {patogenoService.agregarEspecie(99, "test-especie", "test-pais")}
+        Assert.assertEquals("Patogeno con id 99 inexistente", exception.message)
     }
 }
