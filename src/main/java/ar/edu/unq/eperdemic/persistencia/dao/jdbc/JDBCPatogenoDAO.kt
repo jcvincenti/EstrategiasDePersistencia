@@ -104,7 +104,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
     }
 
     fun eliminarPatogenos() {
-        return JDBCConnector.execute { conn: Connection ->
+        return execute { conn: Connection ->
             val st = conn.createStatement()
             st.executeUpdate("TRUNCATE TABLE patogeno")
             st.close()
