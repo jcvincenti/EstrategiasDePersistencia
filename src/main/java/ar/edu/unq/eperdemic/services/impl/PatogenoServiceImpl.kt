@@ -21,4 +21,16 @@ class PatogenoServiceImpl(patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
         TODO("not implemented")
     }
+
+    override fun cantidadDeInfectados(especieId: Int): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun esPandemia(especieId: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun recuperarEspecie(id: Int): Especie {
+        TODO("Not yet implemented")
+    }
 }
