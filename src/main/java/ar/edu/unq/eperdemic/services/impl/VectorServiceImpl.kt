@@ -23,6 +23,10 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         TransactionRunner.runTrx {
             vectorDAO.guardar(vector)
         }
+        /*
+            en la proxima iteracion ver que hacer con lo que retorna,
+            si el que le pasamos o recuperarlo con el id
+         */
         return vector
     }
 
