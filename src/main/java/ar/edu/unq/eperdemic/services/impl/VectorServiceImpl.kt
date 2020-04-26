@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
@@ -19,7 +20,9 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun crearVector(vector: Vector): Vector {
-        vectorDAO.guardar(vector)
+        TransactionRunner.runTrx {
+            vectorDAO.guardar(vector)
+        }
         return vector
     }
 
