@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.dto
 
+import ar.edu.unq.eperdemic.modelo.ContagioStrategy
 import ar.edu.unq.eperdemic.modelo.Vector
 
 class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
@@ -10,6 +11,10 @@ class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
     }
 
     fun aModelo() : Vector {
-        TODO("Falta implementar")
+        var vector = Vector()
+        vector.nombreDeLocacionActual = nombreDeUbicacionPresente
+        vector.tipo = tipoDeVector.toString()
+        vector.contagioStrategy = Class.forName(tipoDeVector.toString())?.newInstance() as ContagioStrategy
+        return vector
     }
 }

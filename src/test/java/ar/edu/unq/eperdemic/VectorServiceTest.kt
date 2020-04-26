@@ -26,8 +26,10 @@ class VectorServiceTest {
 
     @Test
     fun crearVectorTest() {
-        vectorService.crearVector(Vector("Locacion-Test"))
-        // TODO: chequear con recuperar
+        val vector = Vector("Locacion-Test")
+        vectorService.crearVector(vector)
+        Assert.assertEquals(4, vector.id)
+        Assert.assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
     @Test
