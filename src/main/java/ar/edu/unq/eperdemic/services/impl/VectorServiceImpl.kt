@@ -42,6 +42,10 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun borrarVector(vectorId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TransactionRunner.runTrx {
+            val vector = Vector()
+            vector.id = vectorId
+            vectorDAO.borrar(vector)
+        }
     }
 }
