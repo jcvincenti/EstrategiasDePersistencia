@@ -37,4 +37,10 @@ class VectorServiceTest {
         val vector = vectorService.recuperarVector(1)
         Assert.assertEquals(vector.nombreDeLocacionActual, "Buenos Aires")
     }
+
+    @Test
+    fun borraVectorTest() {
+        vectorService.borrarVector(3)
+        Assert.assertNull(vectorService.recuperarVector(3))
+    }
 }
