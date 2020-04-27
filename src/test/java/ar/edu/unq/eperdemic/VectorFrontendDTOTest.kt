@@ -8,10 +8,17 @@ class VectorFrontendDTOTest {
 
     @Test
     fun aModeloTest(){
-        var vectorDTO = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona, "Quilmes")
-        var vector = vectorDTO.aModelo()
+        val vectorPersona = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona, "Quilmes")
+        val vectorAnimal =  VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Animal, "Berazategui")
+        val vectorInsecto =  VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto, "Lanus")
 
-        Assert.assertEquals(vectorDTO.nombreDeUbicacionPresente, vector.nombreDeLocacionActual)
-        Assert.assertEquals(vectorDTO.tipoDeVector.name, vector.tipo)
+        Assert.assertEquals(vectorPersona.nombreDeUbicacionPresente, vectorPersona.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorPersona.tipoDeVector.name, vectorPersona.aModelo().tipo)
+
+        Assert.assertEquals(vectorAnimal.nombreDeUbicacionPresente, vectorAnimal.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorAnimal.tipoDeVector.name, vectorAnimal.aModelo().tipo)
+
+        Assert.assertEquals(vectorInsecto.nombreDeUbicacionPresente, vectorInsecto.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorInsecto.tipoDeVector.name, vectorInsecto.aModelo().tipo)
     }
 }
