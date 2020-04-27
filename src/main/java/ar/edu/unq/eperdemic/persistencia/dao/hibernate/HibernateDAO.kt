@@ -6,13 +6,18 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateDAO<T>(private val entityType: Class<T>) {
 
-    fun guardar(item: T) {
+    fun guardar(objeto: T) {
         val session = TransactionRunner.currentSession
-        session.save(item)
+        session.save(objeto)
     }
 
     fun recuperar(id: Int): T {
         val session = TransactionRunner.currentSession
         return session.get(entityType, id)
+    }
+
+    fun borrar(objeto : T){
+        val session = TransactionRunner.currentSession
+        session.delete(objeto)
     }
 }
