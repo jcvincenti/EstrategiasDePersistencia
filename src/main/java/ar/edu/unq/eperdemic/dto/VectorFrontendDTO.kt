@@ -7,7 +7,7 @@ class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
                         val nombreDeUbicacionPresente: String) {
 
     enum class TipoDeVector {
-        Persona, Insecto, Animal;
+        Persona, Insecto, Animal
     }
 
     fun aModelo() : Vector {
