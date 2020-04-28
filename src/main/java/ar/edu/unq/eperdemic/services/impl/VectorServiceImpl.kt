@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
@@ -10,7 +9,7 @@ import kotlin.random.Random
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectores.forEach {
-            vector -> if (vector.puedeSerInfectadoPor(vectorInfectado)) {
+            vector -> if (puedeSerInfectadoPor(vector, vectorInfectado)) {
                 vectorInfectado.especies.forEach {
                     especie -> infectar(vector, especie)
                 }
@@ -67,5 +66,14 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         else
             esContagioExitoso = Random.nextInt(1, 100) < factorDeContagio
         return esContagioExitoso
+    }
+
+    fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
+        return when(vector.tipo) {
+            "Persona" -> Persona().puedeSerInfectadoPor(vectorInfectado)
+            "Animal" -> Animal().puedeSerInfectadoPor(vectorInfectado)
+            "Insecto" -> Insecto().puedeSerInfectadoPor(vectorInfectado)
+            else -> throw Exception("despues tiro una exception custom")
+        }
     }
 }

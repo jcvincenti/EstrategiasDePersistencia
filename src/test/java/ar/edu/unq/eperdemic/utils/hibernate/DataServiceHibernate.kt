@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.utils.hibernate
 
+import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
@@ -13,9 +14,13 @@ class DataServiceHibernate : DataService {
     override fun crearSetDeDatosIniciales() {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
-        val vectores = listOf(Vector("Buenos Aires"),
-                               Vector("Cordoba"),
-                               Vector("Bariloche"))
+        val vectores = listOf(
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Buenos Aires")
+                        .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Animal, "Cordoba")
+                        .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto,"Bariloche")
+                        .aModelo())
         val patogenos = listOf(virus, bacteria)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca")
         TransactionRunner.runTrx {

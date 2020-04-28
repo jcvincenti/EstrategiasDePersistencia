@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -61,5 +62,16 @@ class VectorServiceTest {
     fun getEnfermedades(){
         val enfermedades = vectorService.enfermedades(1)
         Assert.assertTrue(enfermedades.size == 3)
+    }
+
+    @Test
+    fun contagiarTest(){
+
+        val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
+        val vectorInfectado = vectorService.recuperarVector(1)
+
+        vectorService.contagiar(vectorInfectado, vectores)
+
+
     }
 }
