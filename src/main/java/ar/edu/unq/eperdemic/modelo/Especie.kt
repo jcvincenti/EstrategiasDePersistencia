@@ -7,6 +7,9 @@ class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
+
+    @ManyToOne
+    @JoinColumn(name = "patogeno_id")
     var patogeno: Patogeno? = null
     var nombre: String? = null
     var paisDeOrigen: String? = null

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.utils.hibernate
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
@@ -10,11 +11,26 @@ class DataServiceHibernate : DataService {
     val hibernateDao = HibernateDataDAO()
 
     override fun crearSetDeDatosIniciales() {
-        val vectores = mutableListOf("Buenos Aires", "Cordoba", "Bariloche")
+        val virus = Patogeno("Virus")
+        val bacteria = Patogeno("Bacteria")
+        val vectores = listOf(Vector("Buenos Aires"),
+                               Vector("Cordoba"),
+                               Vector("Bariloche"))
+        val patogenos = listOf(virus, bacteria)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca")
         TransactionRunner.runTrx {
+            vectores.get(0).especies.addAll(
+                    listOf(virus.crearEspecie("Gripe","China"),
+                    virus.crearEspecie("H1N1", "Uruguay"),
+                    bacteria.crearEspecie("Angina", "Argentina"))
+            )
+
+            patogenos.forEach {
+                patogeno -> hibernateDao.create(patogeno)
+            }
+
             vectores.forEach {
-                locacionVector -> hibernateDao.create(Vector(locacionVector))
+                vector -> hibernateDao.create(vector)
             }
             ubicaciones.forEach{
                 ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
