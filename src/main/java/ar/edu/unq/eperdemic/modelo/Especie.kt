@@ -7,9 +7,10 @@ class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
-    var patogeno: Patogeno? = null
     var nombre: String? = null
     var paisDeOrigen: String? = null
+    @ManyToOne(cascade = [CascadeType.ALL])
+    var patogeno: Patogeno? = null
 
     @ManyToMany(mappedBy = "especies")
     var vectores: MutableSet<Vector> = HashSet()

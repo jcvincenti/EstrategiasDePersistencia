@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -9,6 +10,10 @@ import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito
+import org.mockito.Spy
 
 class VectorServiceTest {
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
@@ -42,5 +47,19 @@ class VectorServiceTest {
     fun borraVectorTest() {
         vectorService.borrarVector(3)
         Assert.assertNull(vectorService.recuperarVector(3))
+    }
+
+    @Test
+    fun infectarHumanoTest() {
+        var virus = Patogeno("Virus")
+        virus.setCapacidadDeContagio("Persona", 10)
+        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var pepe = Vector("Buenos Aires")
+        pepe.tipo = "Persona"
+        var vectorServiceSpy = Mockito.spy(vectorService)
+        Mockito.doReturn(true).`when`(vectorServiceSpy).esContagioExitoso(Mockito.anyInt())
+        Assert.assertTrue(pepe.especies.isEmpty())
+        vectorServiceSpy.infectar(pepe, paperas)
+        Assert.assertFalse(pepe.especies.isEmpty())
     }
 }

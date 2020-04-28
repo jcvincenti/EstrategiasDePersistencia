@@ -5,8 +5,9 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import kotlin.random.Random
 
-class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
+open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         vectores.forEach {
             vector -> if (vector.puedeSerInfectadoPor(vectorInfectado)) {
@@ -21,7 +22,7 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        if (vector.esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
+        if (this.esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
             vector.infectar(especie)
             TransactionRunner.runTrx {
                 vectorDAO.guardar(vector)
@@ -33,9 +34,7 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun crearVector(vector: Vector): Vector {
-        TransactionRunner.runTrx {
-            vectorDAO.guardar(vector)
-        }
+        this.guardarVector(vector)
         return vector
     }
 
@@ -51,5 +50,20 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             vector.id = vectorId
             vectorDAO.borrar(vector)
         }
+    }
+
+    fun guardarVector(vector : Vector) {
+        TransactionRunner.runTrx {
+            vectorDAO!!.guardar(vector)
+        }
+    }
+
+    fun esContagioExitoso(factorDeContagio: Int) : Boolean {
+        var esContagioExitoso: Boolean
+        if (factorDeContagio > 50)
+            esContagioExitoso = Random.nextInt(factorDeContagio-50, 100) < factorDeContagio
+        else
+            esContagioExitoso = Random.nextInt(1, 100) < factorDeContagio
+        return esContagioExitoso
     }
 }
