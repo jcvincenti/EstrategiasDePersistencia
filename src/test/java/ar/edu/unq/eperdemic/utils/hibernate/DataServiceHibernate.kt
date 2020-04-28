@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.utils.hibernate
 
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
@@ -10,9 +11,13 @@ class DataServiceHibernate : DataService {
 
     override fun crearSetDeDatosIniciales() {
         val vectores = mutableListOf("Buenos Aires", "Cordoba", "Bariloche")
+        val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca")
         TransactionRunner.runTrx {
             vectores.forEach {
                 locacionVector -> hibernateDao.create(Vector(locacionVector))
+            }
+            ubicaciones.forEach{
+                ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
             }
         }
     }

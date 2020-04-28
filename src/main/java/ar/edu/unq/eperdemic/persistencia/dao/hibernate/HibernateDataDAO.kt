@@ -15,8 +15,8 @@ open class HibernateDataDAO : DataDAO {
         session.createNativeQuery("SET FOREIGN_KEY_CHECKS=1;").executeUpdate()
     }
 
-    fun create(vector : Vector) {
+    fun create(objeto : Any) {
         val session = TransactionRunner.currentSession
-        session.save(vector)
+        session.save(objeto)
     }
 }
