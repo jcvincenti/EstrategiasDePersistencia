@@ -62,4 +62,10 @@ class VectorServiceTest {
         vectorServiceSpy.infectar(pepe, paperas)
         Assert.assertFalse(pepe.especies.isEmpty())
     }
+
+    @Test
+    fun getEnfermedades(){
+        val enfermedades = vectorService.enfermedades(1)
+        Assert.assertTrue(enfermedades.size == 3)
+    }
 }
