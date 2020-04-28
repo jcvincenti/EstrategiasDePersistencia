@@ -68,12 +68,12 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         return esContagioExitoso
     }
 
-    fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
+    private fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
         return when(vector.tipo) {
             "Persona" -> Persona().puedeSerInfectadoPor(vectorInfectado)
             "Animal" -> Animal().puedeSerInfectadoPor(vectorInfectado)
             "Insecto" -> Insecto().puedeSerInfectadoPor(vectorInfectado)
-            else -> throw Exception("despues tiro una exception custom")
+            else -> false
         }
     }
 }
