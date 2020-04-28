@@ -10,10 +10,6 @@ import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito
-import org.mockito.Spy
 
 class VectorServiceTest {
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
@@ -52,14 +48,12 @@ class VectorServiceTest {
     @Test
     fun infectarHumanoTest() {
         var virus = Patogeno("Virus")
-        virus.setCapacidadDeContagio("Persona", 10)
+        virus.setCapacidadDeContagio("Persona", 90)
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         var pepe = Vector("Buenos Aires")
         pepe.tipo = "Persona"
-        var vectorServiceSpy = Mockito.spy(vectorService)
-        Mockito.doReturn(true).`when`(vectorServiceSpy).esContagioExitoso(Mockito.anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
-        vectorServiceSpy.infectar(pepe, paperas)
+        vectorService.infectar(pepe, paperas)
         Assert.assertFalse(pepe.especies.isEmpty())
     }
 
