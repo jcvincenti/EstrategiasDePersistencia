@@ -1,7 +1,9 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
+import kotlin.collections.HashSet
 import kotlin.jvm.Transient
+import kotlin.random.Random
 
 @Entity
 class Vector() {
@@ -19,34 +21,18 @@ class Vector() {
         this.nombreDeLocacionActual = nombreDeLocacionActual
     }
 
-    fun infectar(especie: Especie) {
-        especies.add(especie)
-        // juan implementa esto bien
+    fun infectar(especie: Especie) = this.especies.add(especie)
+
+    fun esContagioExitoso(factorDeContagio: Int) : Boolean {
+        var esContagioExitoso: Boolean
+        if (factorDeContagio > 50)
+            esContagioExitoso = Random.nextInt(factorDeContagio-50, 100) < factorDeContagio
+        else
+            esContagioExitoso = Random.nextInt(1, 100) < factorDeContagio
+        return esContagioExitoso
     }
 
     fun puedeSerInfectadoPor(vector: Vector) : Boolean = contagioStrategy!!.puedeSerInfectadoPor(vector)
-}
-
-abstract class ContagioStrategy {
-    abstract fun puedeSerInfectadoPor(vector: Vector) : Boolean
-}
-
-class Animal : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Insecto").contains(vector.tipo!!)
-    }
-}
-
-class Persona  : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Humano", "Insecto", "Animal").contains(vector.tipo!!)
-    }
-}
-
-class Insecto  : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Humano", "Animal").contains(vector.tipo!!)
-    }
 }
 
 
