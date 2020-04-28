@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.dto
 
-import ar.edu.unq.eperdemic.modelo.ContagioStrategy
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
+import kotlin.reflect.full.primaryConstructor
 
 class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
                         val nombreDeUbicacionPresente: String) {
@@ -14,7 +14,15 @@ class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
         var vector = Vector()
         vector.nombreDeLocacionActual = nombreDeUbicacionPresente
         vector.tipo = tipoDeVector.toString()
-        vector.contagioStrategy = Class.forName(tipoDeVector.toString())?.newInstance() as ContagioStrategy
+        vector.contagioStrategy = buildContagioStrategy()
         return vector
+    }
+
+    private fun buildContagioStrategy() : ContagioStrategy{
+        return when(tipoDeVector) {
+            TipoDeVector.Persona -> Persona()
+            TipoDeVector.Animal -> Animal()
+            TipoDeVector.Insecto -> Insecto()
+        }
     }
 }
