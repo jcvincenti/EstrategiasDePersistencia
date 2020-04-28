@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -42,6 +43,18 @@ class VectorServiceTest {
     fun borraVectorTest() {
         vectorService.borrarVector(3)
         Assert.assertNull(vectorService.recuperarVector(3))
+    }
+
+    @Test
+    fun infectarHumanoTest() {
+        var virus = Patogeno("Virus")
+        virus.setCapacidadDeContagio("Persona", 90)
+        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var pepe = Vector("Buenos Aires")
+        pepe.tipo = "Persona"
+        Assert.assertTrue(pepe.especies.isEmpty())
+        vectorService.infectar(pepe, paperas)
+        Assert.assertFalse(pepe.especies.isEmpty())
     }
 
     @Test
