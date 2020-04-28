@@ -20,7 +20,8 @@
         <!-- Clases que van a ser persistidas ACA -->
         <mapping class="ar.edu.unq.eperdemic.modelo.Vector"/>
         <mapping class="ar.edu.unq.eperdemic.modelo.Especie"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.Ubicacion"/>
         <mapping class="ar.edu.unq.eperdemic.modelo.Patogeno"/>
-
+      
     </session-factory>
 </hibernate-configuration>
