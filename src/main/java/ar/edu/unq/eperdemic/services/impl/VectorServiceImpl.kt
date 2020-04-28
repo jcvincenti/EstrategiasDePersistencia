@@ -56,7 +56,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     fun guardarVector(vector : Vector) {
         TransactionRunner.runTrx {
-            vectorDAO!!.guardar(vector)
+            vectorDAO.guardar(vector)
         }
     }
 
