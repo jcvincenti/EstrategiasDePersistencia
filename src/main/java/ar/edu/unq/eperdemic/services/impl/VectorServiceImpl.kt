@@ -29,7 +29,9 @@ class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return TransactionRunner.runTrx {
+            vectorDAO.enfermedades(vectorId)
+        }
     }
 
     override fun crearVector(vector: Vector): Vector {

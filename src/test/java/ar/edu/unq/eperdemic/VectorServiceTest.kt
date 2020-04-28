@@ -43,4 +43,10 @@ class VectorServiceTest {
         vectorService.borrarVector(3)
         Assert.assertNull(vectorService.recuperarVector(3))
     }
+
+    @Test
+    fun getEnfermedades(){
+        val enfermedades = vectorService.enfermedades(1)
+        Assert.assertTrue(enfermedades.size == 3)
+    }
 }
