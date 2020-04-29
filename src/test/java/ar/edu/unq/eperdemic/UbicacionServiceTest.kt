@@ -37,7 +37,7 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun moverTestConVectorInfectado(){
+    fun moverConVectorInfectadoTest(){
         var persona = vectorService.recuperarVector(1)
         var cordobes = vectorService.recuperarVector(4)
         val virus = patogenoService.recuperarPatogeno(1)
@@ -60,7 +60,7 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun moverTestConVectorNoInfectado(){
+    fun moverConVectorNoInfectadoTest(){
         var insecto = vectorService.recuperarVector(3)
         var cordobes = vectorService.recuperarVector(4)
 
