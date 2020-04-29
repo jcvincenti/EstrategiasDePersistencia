@@ -38,4 +38,10 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         }
         return ubicacion
     }
+
+    override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion {
+        return TransactionRunner.runTrx {
+            ubicacionDAO.recuperar(nombreUbicacion)
+        }
+    }
 }
