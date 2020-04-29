@@ -28,7 +28,7 @@ class Patogeno() : Serializable{
     }
 
     fun getCapacidadDeContagio(tipoVector: String) : Int? {
-        return this.capacidadDeContagio[tipoVector]!!.plus(Random.nextInt(1, 10))
+        return this.capacidadDeContagio[tipoVector]
     }
 
     fun setCapacidadDeContagio(tipoVector: String, capacidad: Int) {

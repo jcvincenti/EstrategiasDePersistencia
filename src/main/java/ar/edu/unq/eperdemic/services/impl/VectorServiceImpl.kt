@@ -66,12 +66,12 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     open fun esContagioExitoso(factorDeContagio: Int) : Boolean {
-        var esContagioExitoso: Boolean
-        if (factorDeContagio > 50)
-            esContagioExitoso = Random.nextInt(factorDeContagio-50, 100) < factorDeContagio
-        else
-            esContagioExitoso = Random.nextInt(1, 100) < factorDeContagio
-        return esContagioExitoso
+        val factorDeContagioExitoso = factorDeContagio.plus(Random.nextInt(1, 10))
+        return if (factorDeContagioExitoso > 50) {
+            Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
+        } else {
+            Random.nextInt(1, 100) < factorDeContagioExitoso
+        }
     }
 
     private fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
