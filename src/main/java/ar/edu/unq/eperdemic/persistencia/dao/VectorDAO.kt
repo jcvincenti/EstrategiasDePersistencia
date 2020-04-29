@@ -9,4 +9,5 @@ interface VectorDAO {
     fun borrar(vector: Vector)
     fun enfermedades(vectorId: Int) : List<Especie>
     fun actualizar(vector: Vector)
+    fun getVectoresByLocacion(locacion: String?) : List<Vector>
 }
