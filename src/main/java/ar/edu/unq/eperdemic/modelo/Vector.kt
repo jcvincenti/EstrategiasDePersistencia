@@ -1,9 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
-import kotlin.collections.HashSet
 import kotlin.jvm.Transient
-import kotlin.random.Random
 
 @Entity
 class Vector() {

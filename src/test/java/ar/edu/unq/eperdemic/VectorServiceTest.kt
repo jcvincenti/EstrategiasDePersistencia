@@ -1,26 +1,27 @@
 package ar.edu.unq.eperdemic
 
-
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.transaction.Transactional
+import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
+import org.mockito.Spy
 
 class VectorServiceTest {
-    val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    @Spy
+    var vectorService = VectorServiceImpl(HibernateVectorDAO())
     val dataService = DataServiceHibernate()
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
+        MockitoAnnotations.initMocks(this);
         dataService.crearSetDeDatosIniciales()
     }
 
@@ -33,8 +34,8 @@ class VectorServiceTest {
     fun crearVectorTest() {
         val vector = Vector("Locacion-Test")
         vectorService.crearVector(vector)
-        Assert.assertEquals(5, vector.id)
-        Assert.assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
+        assertEquals(5, vector.id)
+        assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
     @Test
@@ -51,15 +52,29 @@ class VectorServiceTest {
     }
 
     @Test
-    fun infectarHumanoTest() {
+    fun infectarHumanoContagioExitosoTest() {
         var virus = Patogeno("Virus")
-        virus.setCapacidadDeContagio("Persona", 90)
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         var pepe = Vector("Buenos Aires")
+        virus.setCapacidadDeContagio("Persona", 50)
         pepe.tipo = "Persona"
+        doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
         vectorService.infectar(pepe, paperas)
         Assert.assertFalse(pepe.especies.isEmpty())
+    }
+
+    @Test
+    fun infectarHumanoContagioNoExitosoTest() {
+        var virus = Patogeno("Virus")
+        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var pepe = Vector("Buenos Aires")
+        virus.setCapacidadDeContagio("Persona", 50)
+        pepe.tipo = "Persona"
+        doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
+        Assert.assertTrue(pepe.especies.isEmpty())
+        vectorService.infectar(pepe, paperas)
+        Assert.assertTrue(pepe.especies.isEmpty())
     }
 
     @Test

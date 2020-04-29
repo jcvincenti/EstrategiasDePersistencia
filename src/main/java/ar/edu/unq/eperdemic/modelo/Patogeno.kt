@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import java.io.Serializable
 import javax.persistence.*
+import kotlin.random.Random
 
 @Entity
 class Patogeno() : Serializable{
@@ -27,7 +28,7 @@ class Patogeno() : Serializable{
     }
 
     fun getCapacidadDeContagio(tipoVector: String) : Int? {
-        return this.capacidadDeContagio[tipoVector]
+        return this.capacidadDeContagio[tipoVector]!!.plus(Random.nextInt(1, 10))
     }
 
     fun setCapacidadDeContagio(tipoVector: String, capacidad: Int) {
