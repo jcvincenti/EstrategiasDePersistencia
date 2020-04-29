@@ -25,7 +25,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         if (this.esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
             vector.infectar(especie)
             TransactionRunner.runTrx {
-                vectorDAO.guardar(vector)
+                vectorDAO.actualizar(vector)
             }
     }
 

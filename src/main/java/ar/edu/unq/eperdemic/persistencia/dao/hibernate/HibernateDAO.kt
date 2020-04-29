@@ -8,7 +8,7 @@ open class HibernateDAO<T>(private val entityType: Class<T>) {
 
     fun guardar(objeto: T) {
         val session = TransactionRunner.currentSession
-        session.saveOrUpdate(objeto)
+        session.save(objeto)
     }
 
     fun recuperar(id: Int): T {
@@ -19,6 +19,11 @@ open class HibernateDAO<T>(private val entityType: Class<T>) {
     fun borrar(objeto : T){
         val session = TransactionRunner.currentSession
         session.delete(objeto)
+    }
+
+    fun actualizar(objeto : T) {
+        val session = TransactionRunner.currentSession
+        session.saveOrUpdate(objeto)
     }
 
 }
