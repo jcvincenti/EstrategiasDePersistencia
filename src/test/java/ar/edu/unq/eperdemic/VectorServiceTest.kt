@@ -10,8 +10,6 @@ import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
@@ -36,7 +34,7 @@ class VectorServiceTest {
     fun crearVectorTest() {
         val vector = Vector("Locacion-Test")
         vectorService.crearVector(vector)
-        assertEquals(4, vector.id)
+        assertEquals(5, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
