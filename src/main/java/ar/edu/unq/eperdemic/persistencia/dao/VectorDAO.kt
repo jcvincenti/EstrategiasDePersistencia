@@ -8,4 +8,5 @@ interface VectorDAO {
     fun recuperar(id: Int) : Vector
     fun borrar(vector: Vector)
     fun enfermedades(vectorId: Int) : List<Especie>
+    fun actualizar(vector: Vector)
 }

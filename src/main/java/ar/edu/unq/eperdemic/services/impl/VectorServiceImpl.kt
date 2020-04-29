@@ -1,23 +1,23 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import javax.transaction.Transactional
 import kotlin.random.Random
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
+
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-        vectores.forEach {
-            vector -> if (vector.puedeSerInfectadoPor(vectorInfectado)) {
-                vectorInfectado.especies.forEach {
-                    especie -> infectar(vector, especie)
+        TransactionRunner.runTrx {
+            vectores.forEach {
+                vector -> if (puedeSerInfectadoPor(vector, vectorInfectado)) {
+                    vectorInfectado.especies.forEach {
+                        especie -> infectar(vector, especie)
+                        }
                 }
             }
-        }
-        TransactionRunner.runTrx {
-            vectores.forEach{ vector -> vectorDAO.guardar(vector) }
         }
     }
 
@@ -25,7 +25,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         if (this.esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
             vector.infectar(especie)
             TransactionRunner.runTrx {
-                vectorDAO.guardar(vector)
+                vectorDAO.actualizar(vector)
             }
     }
 
@@ -67,5 +67,14 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         else
             esContagioExitoso = Random.nextInt(1, 100) < factorDeContagio
         return esContagioExitoso
+    }
+
+    private fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
+        return when(vector.tipo) {
+            "Persona" -> Persona().puedeSerInfectadoPor(vectorInfectado)
+            "Animal" -> Animal().puedeSerInfectadoPor(vectorInfectado)
+            "Insecto" -> Insecto().puedeSerInfectadoPor(vectorInfectado)
+            else -> false
+        }
     }
 }
