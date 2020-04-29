@@ -20,6 +20,8 @@ class DataServiceHibernate : DataService {
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Animal, "Cordoba")
                         .aModelo(),
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto,"Bariloche")
+                        .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Cordoba")
                         .aModelo())
         val patogenos = listOf(virus, bacteria)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca")

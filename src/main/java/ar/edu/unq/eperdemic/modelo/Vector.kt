@@ -21,6 +21,8 @@ class Vector() {
 
     fun infectar(especie: Especie) = this.especies.add(especie)
 
+    fun estaInfectado() = this.especies.isNotEmpty()
+
 }
 
 

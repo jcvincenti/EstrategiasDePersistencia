@@ -12,7 +12,7 @@ class Patogeno() : Serializable{
     var defensa: Int = 0
     var letalidad: Int = 0
     var tipo: String? = null
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "vector")
     @Column(name = "capacidad_de_contagio")
     var capacidadDeContagio: MutableMap<String, Int> = mutableMapOf("Persona" to 0, "Animal" to 0, "Insecto" to 0)

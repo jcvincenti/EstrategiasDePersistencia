@@ -33,7 +33,7 @@ class VectorServiceTest {
     fun crearVectorTest() {
         val vector = Vector("Locacion-Test")
         vectorService.crearVector(vector)
-        Assert.assertEquals(4, vector.id)
+        Assert.assertEquals(5, vector.id)
         Assert.assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 

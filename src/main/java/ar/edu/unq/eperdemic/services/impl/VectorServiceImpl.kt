@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
-import javax.transaction.Transactional
 import kotlin.random.Random
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
@@ -60,6 +59,12 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         }
     }
 
+    fun actualizarVector(vector: Vector){
+        TransactionRunner.runTrx {
+            vectorDAO.actualizar(vector)
+        }
+    }
+
     fun esContagioExitoso(factorDeContagio: Int) : Boolean {
         var esContagioExitoso: Boolean
         if (factorDeContagio > 50)
@@ -75,6 +80,12 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             "Animal" -> Animal().puedeSerInfectadoPor(vectorInfectado)
             "Insecto" -> Insecto().puedeSerInfectadoPor(vectorInfectado)
             else -> false
+        }
+    }
+
+    fun getVectoresByLocacion(locacion: String?): List<Vector> {
+        return TransactionRunner.runTrx {
+            vectorDAO.getVectoresByLocacion(locacion)
         }
     }
 }
