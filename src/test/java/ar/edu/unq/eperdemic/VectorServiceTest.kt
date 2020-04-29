@@ -1,35 +1,29 @@
 package ar.edu.unq.eperdemic
 
-
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.InjectMocks
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 import org.mockito.Spy
-import java.lang.Math.random
-import kotlin.random.Random
-import javax.transaction.Transactional
 
 class VectorServiceTest {
-    val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    @Spy
+    var vectorService = VectorServiceImpl(HibernateVectorDAO())
     val dataService = DataServiceHibernate()
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
+        MockitoAnnotations.initMocks(this);
         dataService.crearSetDeDatosIniciales()
     }
 
@@ -42,8 +36,8 @@ class VectorServiceTest {
     fun crearVectorTest() {
         val vector = Vector("Locacion-Test")
         vectorService.crearVector(vector)
-        Assert.assertEquals(4, vector.id)
-        Assert.assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
+        assertEquals(4, vector.id)
+        assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
     @Test
@@ -61,14 +55,12 @@ class VectorServiceTest {
 
     @Test
     fun infectarHumanoContagioExitosoTest() {
-        // cuando tengamos el recuperar especie, traer los datos de la bd
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         var pepe = Vector("Buenos Aires")
-        virus.setCapacidadDeContagio("Persona", 99)
+        virus.setCapacidadDeContagio("Persona", 50)
         pepe.tipo = "Persona"
-        var vectorServiceSpy = Mockito.spy(vectorService)
-        //Mockito.`when`(vectorServiceSpy.esContagioExitoso(this.getRandom())).thenReturn(true)
+        doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
         vectorService.infectar(pepe, paperas)
         Assert.assertFalse(pepe.especies.isEmpty())
@@ -76,15 +68,12 @@ class VectorServiceTest {
 
     @Test
     fun infectarHumanoContagioNoExitosoTest() {
-        // cuando tengamos el recuperar especie, traer los datos de la bd
         var virus = Patogeno("Virus")
-        virus.setCapacidadDeContagio("Persona", 1)
-        var virusSpy = Mockito.spy(virus)
-        var especieSpy = Mockito.spy(virusSpy.crearEspecie("Paperas", "Yugoslavia"))
-        var paperas = Mockito.spy(especieSpy)
-        var pepe = Mockito.spy(Vector("Buenos Aires"))
-        var vectorServiceSpy = Mockito.spy(VectorServiceImpl(HibernateVectorDAO()))
-        `when`(vectorServiceSpy.esContagioExitoso(1)).thenReturn(true)
+        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var pepe = Vector("Buenos Aires")
+        virus.setCapacidadDeContagio("Persona", 50)
+        pepe.tipo = "Persona"
+        doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
         vectorService.infectar(pepe, paperas)
         Assert.assertTrue(pepe.especies.isEmpty())
