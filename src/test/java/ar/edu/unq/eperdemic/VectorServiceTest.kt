@@ -6,11 +6,14 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import javax.transaction.Transactional
 
 class VectorServiceTest {
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
@@ -37,7 +40,8 @@ class VectorServiceTest {
     @Test
     fun recuperarVectorTest() {
         val vector = vectorService.recuperarVector(1)
-        Assert.assertEquals(vector.nombreDeLocacionActual, "Buenos Aires")
+        assertEquals(vector.nombreDeLocacionActual, "Buenos Aires")
+        assertEquals(1, vector.id)
     }
 
     @Test
@@ -66,12 +70,25 @@ class VectorServiceTest {
 
     @Test
     fun contagiarTest(){
-
+        // el vector con id 2 es un animal, el vector con id 3 es un insecto
         val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
-        val vectorInfectado = vectorService.recuperarVector(1)
 
+        var virus = Patogeno("Virus")
+
+        virus.setCapacidadDeContagio("Insecto", 100)
+        virus.setCapacidadDeContagio("Persona", 100)
+
+        val paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var vectorInfectado = Vector("Las Heras")
+        vectorInfectado.tipo = "Persona"
+
+        vectorService.infectar(vectorInfectado, paperas)
         vectorService.contagiar(vectorInfectado, vectores)
 
-
+        // el vector 2 no tiene que tener especies porque no pudo ser infectado por una Persona
+        assertEquals(0, vectorService.enfermedades(2).size)
+        // el vector 3 tiene que tener una especie y tiene que ser la misma que la del vector infectado
+        assertEquals(1, vectorService.enfermedades(3).size)
+        assertEquals(vectorInfectado.especies.get(0).id, vectorService.enfermedades(3).get(0).id)
     }
 }

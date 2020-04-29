@@ -4,19 +4,20 @@ import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import javax.transaction.Transactional
 import kotlin.random.Random
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
+
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
-        vectores.forEach {
-            vector -> if (puedeSerInfectadoPor(vector, vectorInfectado)) {
-                vectorInfectado.especies.forEach {
-                    especie -> infectar(vector, especie)
+        TransactionRunner.runTrx {
+            vectores.forEach {
+                vector -> if (puedeSerInfectadoPor(vector, vectorInfectado)) {
+                    vectorInfectado.especies.forEach {
+                        especie -> infectar(vector, especie)
+                        }
                 }
             }
-        }
-        TransactionRunner.runTrx {
-            vectores.forEach{ vector -> vectorDAO.guardar(vector) }
         }
     }
 
