@@ -11,8 +11,6 @@ class Vector() {
     var nombreDeLocacionActual: String? = null
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var especies: MutableList<Especie> = mutableListOf()
-    @Transient
-    var contagioStrategy: ContagioStrategy? = null
     var tipo: String? = null
 
     constructor(nombreDeLocacionActual: String) : this() {
