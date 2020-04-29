@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -34,6 +35,12 @@ class UbicacionServiceTest {
         val ubicacion = ubicacionService.crearUbicacion("Quilmes")
 
         Assert.assertEquals("Quilmes", ubicacion.nombreUbicacion)
+    }
+
+    @Test
+    fun recuperarUbicacionTest() {
+        val ubicacion = ubicacionService.recuperarUbicacion("Entre Rios")
+        Assert.assertEquals(ubicacion.nombreUbicacion, "Entre Rios")
     }
 
     @Test
