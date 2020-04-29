@@ -22,7 +22,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
-        if (this.esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
+        if (esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
             vector.infectar(especie)
             TransactionRunner.runTrx {
                 vectorDAO.guardar(vector)
