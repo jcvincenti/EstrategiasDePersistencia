@@ -23,7 +23,6 @@ class Vector() {
 
     fun infectar(especie: Especie) = this.especies.add(especie)
 
-    fun puedeSerInfectadoPor(vector: Vector) : Boolean = contagioStrategy!!.puedeSerInfectadoPor(vector)
 }
 
 

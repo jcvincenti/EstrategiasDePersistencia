@@ -20,4 +20,10 @@ open class HibernateDAO<T>(private val entityType: Class<T>) {
         val session = TransactionRunner.currentSession
         session.delete(objeto)
     }
+
+    fun actualizar(objeto : T) {
+        val session = TransactionRunner.currentSession
+        session.saveOrUpdate(objeto)
+    }
+
 }

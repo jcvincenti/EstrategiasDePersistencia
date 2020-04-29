@@ -12,12 +12,12 @@ class Animal : ContagioStrategy() {
 
 class Persona  : ContagioStrategy() {
     override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Humano", "Insecto", "Animal").contains(vector.tipo!!)
+        return listOf("Persona", "Insecto", "Animal").contains(vector.tipo!!)
     }
 }
 
 class Insecto  : ContagioStrategy() {
     override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Humano", "Animal").contains(vector.tipo!!)
+        return listOf("Persona", "Animal").contains(vector.tipo!!)
     }
 }
