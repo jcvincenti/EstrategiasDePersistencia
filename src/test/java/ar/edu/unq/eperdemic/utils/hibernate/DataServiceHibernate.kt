@@ -13,24 +13,8 @@ class DataServiceHibernate : DataService {
     override fun crearSetDeDatosIniciales() {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
-
         val patogenos = listOf(virus, bacteria)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
-        TransactionRunner.runTrx {
-
-            patogenos.forEach {
-                patogeno -> hibernateDao.create(patogeno)
-            }
-
-            ubicaciones.forEach{
-                ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
-            }
-
-        }
-        crearVectores(virus, bacteria)
-    }
-
-    private fun crearVectores(virus: Patogeno, bacteria: Patogeno){
         val vectores = listOf(
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Buenos Aires")
                         .aModelo(),
@@ -49,9 +33,18 @@ class DataServiceHibernate : DataService {
                             bacteria.crearEspecie("Angina", "Argentina"))
             )
 
+            patogenos.forEach {
+                patogeno -> hibernateDao.create(patogeno)
+            }
+
+            ubicaciones.forEach{
+                ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
+            }
+
             vectores.forEach {
                 vector -> hibernateDao.create(vector)
             }
+
         }
     }
 
