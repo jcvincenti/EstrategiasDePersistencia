@@ -86,23 +86,30 @@ class UbicacionServiceTest {
         Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(cordobes.estaInfectado())
     }
+    @ExperimentalStdlibApi
     @Test
-    fun expandirTest(){
-        var virus = Patogeno("Virus")
-        virus.setCapacidadDeContagio("Persona", 100)
-        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var pepe = Vector("Buenos Aires")
-        var carlos = Vector("Buenos Aires")
-        patogenoService.actualizarPatogeno(virus)
-        pepe.tipo = "Persona"
+    fun expandirVectorInfectadoTest(){
+        var buenosAires = ubicacionService.recuperarUbicacion("Buenos Aires")
+        var carlos = Vector(buenosAires!!)
         carlos.tipo ="Persona"
        //Mockito.doReturn(true).`when`(vectorService).esContagioExitoso(Mockito.anyInt())
-        vectorService.infectar(pepe, paperas)
-        vectorService.crearVector(pepe)
         var carlosId = vectorService.crearVector(carlos).id
         Assert.assertFalse(carlos.estaInfectado())
         ubicacionService.expandir("Buenos Aires")
         Assert.assertTrue(vectorService.recuperarVector(carlosId!!).estaInfectado())
     }
 
+    @ExperimentalStdlibApi
+    @Test
+    fun expandirVectorNoInfectadoTest(){
+        var ricardo = vectorService.recuperarVector(4)
+        var cordoba = ubicacionService.recuperarUbicacion("Cordoba")
+        var jorge = Vector(cordoba!!)
+        jorge.tipo ="Persona"
+        var jorgeId = vectorService.crearVector(jorge).id
+        Assert.assertFalse(ricardo.estaInfectado())
+        Assert.assertFalse(jorge.estaInfectado())
+        ubicacionService.expandir("Cordoba")
+        Assert.assertFalse(vectorService.recuperarVector(jorgeId!!).estaInfectado())
+    }
 }
