@@ -1,8 +1,11 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import org.junit.Assert
@@ -17,6 +20,7 @@ import org.mockito.Spy
 class VectorServiceTest {
     @Spy
     var vectorService = VectorServiceImpl(HibernateVectorDAO())
+    val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     val dataService = DataServiceHibernate()
 
     @BeforeEach
@@ -32,16 +36,17 @@ class VectorServiceTest {
 
     @Test
     fun crearVectorTest() {
-        val vector = Vector("Locacion-Test")
+        val locacion = ubicacionService.crearUbicacion("Locacion-Test")
+        val vector = Vector(locacion)
         vectorService.crearVector(vector)
         assertEquals(5, vector.id)
-        assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
+        assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!.nombreUbicacion)
     }
 
     @Test
     fun recuperarVectorTest() {
         val vector = vectorService.recuperarVector(1)
-        assertEquals(vector.nombreDeLocacionActual, "Buenos Aires")
+        assertEquals("Buenos Aires", vector.nombreDeLocacionActual!!.nombreUbicacion)
         assertEquals(1, vector.id)
     }
 
@@ -55,7 +60,7 @@ class VectorServiceTest {
     fun infectarHumanoContagioExitosoTest() {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var pepe = Vector("Buenos Aires")
+        var pepe = Vector(Ubicacion("Buenos Aires"))
         virus.setCapacidadDeContagio("Persona", 50)
         pepe.tipo = "Persona"
         doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
@@ -68,7 +73,7 @@ class VectorServiceTest {
     fun infectarHumanoContagioNoExitosoTest() {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var pepe = Vector("Buenos Aires")
+        var pepe = Vector(Ubicacion("Buenos Aires"))
         virus.setCapacidadDeContagio("Persona", 50)
         pepe.tipo = "Persona"
         doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
@@ -94,7 +99,8 @@ class VectorServiceTest {
         virus.setCapacidadDeContagio("Persona", 100)
 
         val paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var vectorInfectado = Vector("Las Heras")
+        val locacion = ubicacionService.crearUbicacion("San Martin")
+        var vectorInfectado = Vector(locacion)
         vectorInfectado.tipo = "Persona"
 
         vectorService.infectar(vectorInfectado, paperas)

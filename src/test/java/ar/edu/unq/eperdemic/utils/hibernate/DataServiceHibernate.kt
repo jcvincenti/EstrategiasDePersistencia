@@ -3,7 +3,6 @@ package ar.edu.unq.eperdemic.utils.hibernate
 import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.DataService
@@ -14,6 +13,8 @@ class DataServiceHibernate : DataService {
     override fun crearSetDeDatosIniciales() {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
+        val patogenos = listOf(virus, bacteria)
+        val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
         val vectores = listOf(
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Buenos Aires")
                         .aModelo(),
@@ -22,26 +23,28 @@ class DataServiceHibernate : DataService {
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto,"Bariloche")
                         .aModelo(),
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Cordoba")
-                        .aModelo())
-        val patogenos = listOf(virus, bacteria)
-        val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca")
+                        .aModelo()
+        )
+
         TransactionRunner.runTrx {
             vectores.get(0).especies.addAll(
                     listOf(virus.crearEspecie("Gripe","China"),
-                    virus.crearEspecie("H1N1", "Uruguay"),
-                    bacteria.crearEspecie("Angina", "Argentina"))
+                            virus.crearEspecie("H1N1", "Uruguay"),
+                            bacteria.crearEspecie("Angina", "Argentina"))
             )
 
             patogenos.forEach {
                 patogeno -> hibernateDao.create(patogeno)
             }
 
-            vectores.forEach {
-                vector -> hibernateDao.create(vector)
-            }
             ubicaciones.forEach{
                 ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
             }
+
+            vectores.forEach {
+                vector -> hibernateDao.create(vector)
+            }
+
         }
     }
 

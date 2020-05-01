@@ -9,14 +9,20 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
-    val vectorService = VectorServiceImpl(HibernateVectorDAO())
+        val vectorService = VectorServiceImpl(HibernateVectorDAO())
 
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
-        vector.nombreDeLocacionActual = nombreUbicacion
+        val ubicacion = recuperarUbicacion(nombreUbicacion)
+
+        if (ubicacion == null){
+            //TODO: exception personalizada
+            throw RuntimeException("NO ESITE")
+        }
+        vector.nombreDeLocacionActual = ubicacion
         TransactionRunner.runTrx {
             if (vector.estaInfectado()){
-                this.contagiarZona(vector, vector.nombreDeLocacionActual)
+                this.contagiarZona(vector, nombreUbicacion)
             }
             vectorService.actualizarVector(vector)
         }
@@ -39,7 +45,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         return ubicacion
     }
 
-    override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion {
+    override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion? {
         return TransactionRunner.runTrx {
             ubicacionDAO.recuperar(nombreUbicacion)
         }
