@@ -9,10 +9,10 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), VectorDAO {
     override fun enfermedades(vectorId: Int) : List<Especie> = recuperar(vectorId).especies
 
-    override fun getVectoresByLocacion(nombreDeLocacionActual: Ubicacion) : List<Vector> {
+    override fun getVectoresByLocacion(nombreDeLocacionActual: String?) : List<Vector> {
         val session = TransactionRunner.currentSession
         val hql = ("from Vector v "
-                + "where v.nombreDeLocacionActual = :nombreDeLocacionActual ")
+                + "where v.nombreDeLocacionActual.nombreUbicacion = :nombreDeLocacionActual ")
 
         val query = session.createQuery(hql, Vector::class.java)
         query.setParameter("nombreDeLocacionActual", nombreDeLocacionActual)

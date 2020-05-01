@@ -83,7 +83,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         }
     }
 
-    fun getVectoresByLocacion(locacion: Ubicacion): List<Vector> {
+    fun getVectoresByLocacion(locacion: String?): List<Vector> {
         return TransactionRunner.runTrx {
             vectorDAO.getVectoresByLocacion(locacion)
         }

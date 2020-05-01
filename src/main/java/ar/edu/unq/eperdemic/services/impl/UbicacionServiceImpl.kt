@@ -16,18 +16,19 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val ubicacion = recuperarUbicacion(nombreUbicacion)
 
         if (ubicacion == null){
+            //TODO: exception personalizada
             throw RuntimeException("NO ESITE")
         }
         vector.nombreDeLocacionActual = ubicacion
         TransactionRunner.runTrx {
             if (vector.estaInfectado()){
-                this.contagiarZona(vector, ubicacion)
+                this.contagiarZona(vector, nombreUbicacion)
             }
             vectorService.actualizarVector(vector)
         }
     }
 
-    private fun contagiarZona(vectorInfectado: Vector, locacion: Ubicacion) {
+    private fun contagiarZona(vectorInfectado: Vector, locacion: String?) {
         val vectores = vectorService.getVectoresByLocacion(locacion)
         vectorService.contagiar(vectorInfectado, vectores)
     }
