@@ -1,5 +1,8 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -11,6 +14,7 @@ import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 
 class UbicacionServiceTest {
 
@@ -81,5 +85,31 @@ class UbicacionServiceTest {
         //El Insecto cambio su ubicacion a "Cordoba" pero el cordobes no se infecto
         Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(cordobes.estaInfectado())
+    }
+    @ExperimentalStdlibApi
+    @Test
+    fun expandirVectorInfectadoTest(){
+        var buenosAires = ubicacionService.recuperarUbicacion("Buenos Aires")
+        var carlos = Vector(buenosAires!!)
+        carlos.tipo ="Persona"
+       //Mockito.doReturn(true).`when`(vectorService).esContagioExitoso(Mockito.anyInt())
+        var carlosId = vectorService.crearVector(carlos).id
+        Assert.assertFalse(carlos.estaInfectado())
+        ubicacionService.expandir("Buenos Aires")
+        Assert.assertTrue(vectorService.recuperarVector(carlosId!!).estaInfectado())
+    }
+
+    @ExperimentalStdlibApi
+    @Test
+    fun expandirVectorNoInfectadoTest(){
+        var ricardo = vectorService.recuperarVector(4)
+        var cordoba = ubicacionService.recuperarUbicacion("Cordoba")
+        var jorge = Vector(cordoba!!)
+        jorge.tipo ="Persona"
+        var jorgeId = vectorService.crearVector(jorge).id
+        Assert.assertFalse(ricardo.estaInfectado())
+        Assert.assertFalse(jorge.estaInfectado())
+        ubicacionService.expandir("Cordoba")
+        Assert.assertFalse(vectorService.recuperarVector(jorgeId!!).estaInfectado())
     }
 }

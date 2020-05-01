@@ -14,6 +14,8 @@ class DataServiceHibernate : DataService {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
         val patogenos = listOf(virus, bacteria)
+        patogenos.get(0).setCapacidadDeContagio("Persona",100)
+        patogenos.get(1).setCapacidadDeContagio("Persona",100)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
         val vectores = listOf(
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Buenos Aires")

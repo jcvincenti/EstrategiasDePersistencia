@@ -33,8 +33,17 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         vectorService.contagiar(vectorInfectado, vectores)
     }
 
+    @ExperimentalStdlibApi
     override fun expandir(nombreUbicacion: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val vectoresEnUbicacion = vectorService.getVectoresByLocacion(nombreUbicacion).toMutableList()
+        val vectorInfectado = vectoresEnUbicacion.filter {vector -> vector.estaInfectado()}.randomOrNull()
+        vectoresEnUbicacion.remove(vectorInfectado)
+        TransactionRunner.runTrx {
+            if (vectoresEnUbicacion.isNotEmpty() && vectorInfectado != null) {
+                vectorService.contagiar(vectorInfectado, vectoresEnUbicacion)
+
+            }
+        }
     }
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
