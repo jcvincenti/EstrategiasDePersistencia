@@ -8,12 +8,15 @@ class Vector() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
-    var nombreDeLocacionActual: String? = null
+
+    @ManyToOne
+    var nombreDeLocacionActual: Ubicacion? = null
+
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var especies: MutableList<Especie> = mutableListOf()
     var tipo: String? = null
 
-    constructor(nombreDeLocacionActual: String) : this() {
+    constructor(nombreDeLocacionActual: Ubicacion) : this() {
         this.nombreDeLocacionActual = nombreDeLocacionActual
     }
 

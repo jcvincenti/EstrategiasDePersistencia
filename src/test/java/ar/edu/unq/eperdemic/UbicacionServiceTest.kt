@@ -35,15 +35,15 @@ class UbicacionServiceTest {
 
     @Test
     fun crearUbicacionTest(){
-        val ubicacion = ubicacionService.crearUbicacion("Quilmes")
+        val ubicacion = ubicacionService.crearUbicacion("Adrogue")
 
-        Assert.assertEquals("Quilmes", ubicacion.nombreUbicacion)
+        Assert.assertEquals("Adrogue", ubicacion.nombreUbicacion)
     }
 
     @Test
     fun recuperarUbicacionTest() {
         val ubicacion = ubicacionService.recuperarUbicacion("Entre Rios")
-        Assert.assertEquals(ubicacion.nombreUbicacion, "Entre Rios")
+        Assert.assertEquals(ubicacion!!.nombreUbicacion, "Entre Rios")
     }
 
     @Test
@@ -56,7 +56,7 @@ class UbicacionServiceTest {
         virus.setCapacidadDeContagio("Persona", 100)
         patogenoService.actualizarPatogeno(virus)
 
-        Assert.assertEquals("Buenos Aires", persona.nombreDeLocacionActual)
+        Assert.assertEquals("Buenos Aires", persona.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertTrue(persona.estaInfectado())
         Assert.assertFalse(cordobes.estaInfectado())
 
@@ -65,7 +65,7 @@ class UbicacionServiceTest {
         cordobes = vectorService.recuperarVector(4)
 
         //La Persona cambio su ubicacion a "Cordoba" y el Cordobes ahora esta infectado
-        Assert.assertEquals("Cordoba", persona.nombreDeLocacionActual)
+        Assert.assertEquals("Cordoba", persona.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertTrue(cordobes.estaInfectado())
     }
 
@@ -74,7 +74,7 @@ class UbicacionServiceTest {
         var insecto = vectorService.recuperarVector(3)
         var cordobes = vectorService.recuperarVector(4)
 
-        Assert.assertEquals("Bariloche", insecto.nombreDeLocacionActual)
+        Assert.assertEquals("Bariloche", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(insecto.estaInfectado())
         Assert.assertFalse(cordobes.estaInfectado())
 
@@ -83,7 +83,7 @@ class UbicacionServiceTest {
         cordobes = vectorService.recuperarVector(4)
 
         //El Insecto cambio su ubicacion a "Cordoba" pero el cordobes no se infecto
-        Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual)
+        Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(cordobes.estaInfectado())
     }
     @Test
