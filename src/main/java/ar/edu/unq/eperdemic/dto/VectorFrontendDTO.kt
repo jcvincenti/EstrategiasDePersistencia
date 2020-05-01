@@ -12,9 +12,8 @@ class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
 
     fun aModelo() : Vector {
         var vector = Vector()
-        var ubicacion = Ubicacion(nombreDeUbicacionPresente)
-        vector.nombreDeLocacionActual = ubicacion
-        vector.tipo = tipoDeVector.toString()
+        vector.nombreDeLocacionActual = Ubicacion(nombreDeUbicacionPresente)
+        vector.tipo = TipoDeVectorEnum.parseTipo(tipoDeVector.name)
         return vector
     }
 }

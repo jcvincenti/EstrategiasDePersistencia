@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -61,8 +62,8 @@ class VectorServiceTest {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         var pepe = Vector(Ubicacion("Buenos Aires"))
-        virus.setCapacidadDeContagio("Persona", 50)
-        pepe.tipo = "Persona"
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 50)
+        pepe.tipo = TipoDeVectorEnum.Persona
         doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
         vectorService.infectar(pepe, paperas)
@@ -74,8 +75,8 @@ class VectorServiceTest {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         var pepe = Vector(Ubicacion("Buenos Aires"))
-        virus.setCapacidadDeContagio("Persona", 50)
-        pepe.tipo = "Persona"
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 50)
+        pepe.tipo = TipoDeVectorEnum.Persona
         doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
         Assert.assertTrue(pepe.especies.isEmpty())
         vectorService.infectar(pepe, paperas)
@@ -95,13 +96,13 @@ class VectorServiceTest {
 
         var virus = Patogeno("Virus")
 
-        virus.setCapacidadDeContagio("Insecto", 100)
-        virus.setCapacidadDeContagio("Persona", 100)
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 100)
 
         val paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         val locacion = ubicacionService.crearUbicacion("San Martin")
         var vectorInfectado = Vector(locacion)
-        vectorInfectado.tipo = "Persona"
+        vectorInfectado.tipo = TipoDeVectorEnum.Persona
 
         vectorService.infectar(vectorInfectado, paperas)
         vectorService.contagiar(vectorInfectado, vectores)

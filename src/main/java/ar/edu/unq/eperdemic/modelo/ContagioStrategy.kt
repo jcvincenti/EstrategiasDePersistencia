@@ -6,18 +6,21 @@ abstract class ContagioStrategy {
 
 class Animal : ContagioStrategy() {
     override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Insecto").contains(vector.tipo!!)
+        return listOf(TipoDeVectorEnum.Insecto).contains(vector.tipo!!)
     }
 }
 
 class Persona  : ContagioStrategy() {
     override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Persona", "Insecto", "Animal").contains(vector.tipo!!)
+        return listOf(TipoDeVectorEnum.Persona,
+                TipoDeVectorEnum.Insecto,
+                TipoDeVectorEnum.Animal).contains(vector.tipo!!)
     }
 }
 
 class Insecto  : ContagioStrategy() {
     override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf("Persona", "Animal").contains(vector.tipo!!)
+        return listOf(TipoDeVectorEnum.Persona,
+                TipoDeVectorEnum.Animal).contains(vector.tipo!!)
     }
 }

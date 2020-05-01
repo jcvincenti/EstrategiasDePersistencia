@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.utils.hibernate
 
 import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
@@ -14,8 +15,8 @@ class DataServiceHibernate : DataService {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
         val patogenos = listOf(virus, bacteria)
-        patogenos.get(0).setCapacidadDeContagio("Persona",100)
-        patogenos.get(1).setCapacidadDeContagio("Persona",100)
+        patogenos.get(0).setCapacidadDeContagio(TipoDeVectorEnum.Persona,100)
+        patogenos.get(1).setCapacidadDeContagio(TipoDeVectorEnum.Persona,100)
         val ubicaciones = mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
         val vectores = listOf(
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Buenos Aires")

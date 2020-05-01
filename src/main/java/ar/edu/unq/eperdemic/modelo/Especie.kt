@@ -21,7 +21,7 @@ class Especie() {
         this.paisDeOrigen = paisDeOrigen
     }
 
-    fun getCapacidadDeContagio(tipoVector: String) : Int? {
+    fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
         return this.patogeno!!.getCapacidadDeContagio(tipoVector)
     }
 }
