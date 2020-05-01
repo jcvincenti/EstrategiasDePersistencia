@@ -16,7 +16,9 @@ class Patogeno() : Serializable{
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "vector")
     @Column(name = "capacidad_de_contagio")
-    var capacidadDeContagio: MutableMap<String, Int> = mutableMapOf("Persona" to 0, "Animal" to 0, "Insecto" to 0)
+    var capacidadDeContagio: MutableMap<TipoDeVectorEnum, Int> = mutableMapOf(TipoDeVectorEnum.Persona to 0,
+            TipoDeVectorEnum.Animal to 0,
+            TipoDeVectorEnum.Insecto to 0)
 
     constructor(tipo: String) : this() {
         this.tipo = tipo
@@ -27,11 +29,11 @@ class Patogeno() : Serializable{
         return Especie(this, nombreEspecie, paisDeOrigen)
     }
 
-    fun getCapacidadDeContagio(tipoVector: String) : Int? {
+    fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
         return this.capacidadDeContagio[tipoVector]
     }
 
-    fun setCapacidadDeContagio(tipoVector: String, capacidad: Int) {
+    fun setCapacidadDeContagio(tipoVector: TipoDeVectorEnum, capacidad: Int) {
         this.capacidadDeContagio.replace(tipoVector, capacidad)
     }
 

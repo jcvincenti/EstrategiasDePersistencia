@@ -14,7 +14,7 @@ class Vector() {
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var especies: MutableList<Especie> = mutableListOf()
-    var tipo: String? = null
+    var tipo: TipoDeVectorEnum? = null
 
     constructor(nombreDeLocacionActual: Ubicacion) : this() {
         this.nombreDeLocacionActual = nombreDeLocacionActual

@@ -76,9 +76,9 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     private fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
         return when(vector.tipo) {
-            "Persona" -> Persona().puedeSerInfectadoPor(vectorInfectado)
-            "Animal" -> Animal().puedeSerInfectadoPor(vectorInfectado)
-            "Insecto" -> Insecto().puedeSerInfectadoPor(vectorInfectado)
+            TipoDeVectorEnum.Persona -> Persona().puedeSerInfectadoPor(vectorInfectado)
+            TipoDeVectorEnum.Animal -> Animal().puedeSerInfectadoPor(vectorInfectado)
+            TipoDeVectorEnum.Insecto -> Insecto().puedeSerInfectadoPor(vectorInfectado)
             else -> false
         }
     }
