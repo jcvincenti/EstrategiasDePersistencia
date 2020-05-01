@@ -28,11 +28,12 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun expandir(nombreUbicacion: String) {
+        //val ubicacion = recuperarUbicacion(nombreUbicacion)
         val vectoresEnUbicacion = vectorService.getVectoresByLocacion(nombreUbicacion).toMutableList()
         val vectorInfectado = vectoresEnUbicacion.filter {vector -> vector.estaInfectado()}.random()
         vectoresEnUbicacion.remove(vectorInfectado)
         TransactionRunner.runTrx {
-            if (vectoresEnUbicacion.size > 1 && vectorInfectado != null) {
+            if (vectoresEnUbicacion.isNotEmpty() && vectorInfectado != null) {
                 vectorService.contagiar(vectorInfectado, vectoresEnUbicacion)
 
             }

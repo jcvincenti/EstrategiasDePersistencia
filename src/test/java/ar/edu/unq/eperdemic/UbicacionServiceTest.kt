@@ -1,6 +1,8 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -12,6 +14,7 @@ import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 
 class UbicacionServiceTest {
 
@@ -83,4 +86,23 @@ class UbicacionServiceTest {
         Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual)
         Assert.assertFalse(cordobes.estaInfectado())
     }
+    @Test
+    fun expandirTest(){
+        var virus = Patogeno("Virus")
+        virus.setCapacidadDeContagio("Persona", 100)
+        var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
+        var pepe = Vector("Buenos Aires")
+        var carlos = Vector("Buenos Aires")
+        patogenoService.actualizarPatogeno(virus)
+        pepe.tipo = "Persona"
+        carlos.tipo ="Persona"
+       //Mockito.doReturn(true).`when`(vectorService).esContagioExitoso(Mockito.anyInt())
+        vectorService.infectar(pepe, paperas)
+        vectorService.crearVector(pepe)
+        var carlosId = vectorService.crearVector(carlos).id
+        Assert.assertFalse(carlos.estaInfectado())
+        ubicacionService.expandir("Buenos Aires")
+        Assert.assertTrue(vectorService.recuperarVector(carlosId!!).estaInfectado())
+    }
+
 }
