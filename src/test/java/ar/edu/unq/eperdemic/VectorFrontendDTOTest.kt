@@ -27,12 +27,12 @@ class VectorFrontendDTOTest {
         val vectorInsecto =  VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto, "Lanus")
 
         Assert.assertEquals(vectorPersona.nombreDeUbicacionPresente, vectorPersona.aModelo().nombreDeLocacionActual!!.nombreUbicacion)
-        Assert.assertEquals(vectorPersona.tipoDeVector.name, vectorPersona.aModelo().tipo)
+        Assert.assertEquals(vectorPersona.tipoDeVector.name, vectorPersona.aModelo().tipo!!.name)
 
         Assert.assertEquals(vectorAnimal.nombreDeUbicacionPresente, vectorAnimal.aModelo().nombreDeLocacionActual!!.nombreUbicacion)
-        Assert.assertEquals(vectorAnimal.tipoDeVector.name, vectorAnimal.aModelo().tipo)
+        Assert.assertEquals(vectorAnimal.tipoDeVector.name, vectorAnimal.aModelo().tipo!!.name)
 
         Assert.assertEquals(vectorInsecto.nombreDeUbicacionPresente, vectorInsecto.aModelo().nombreDeLocacionActual!!.nombreUbicacion)
-        Assert.assertEquals(vectorInsecto.tipoDeVector.name, vectorInsecto.aModelo().tipo)
+        Assert.assertEquals(vectorInsecto.tipoDeVector.name, vectorInsecto.aModelo().tipo!!.name)
     }
 }
