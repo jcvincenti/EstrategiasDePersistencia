@@ -2,10 +2,8 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -22,7 +20,6 @@ class UbicacionServiceTest {
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     @Spy
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
-    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     val dataService = DataServiceHibernate()
 
     @BeforeEach
