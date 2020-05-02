@@ -11,7 +11,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach {
-                vector -> if (puedeSerInfectadoPor(vector, vectorInfectado)) {
+                vector -> if (vector.tipo!!.puedeSerInfectadoPor(vector.tipo!!, vectorInfectado.tipo!!)) {
                     vectorInfectado.especies.forEach {
                         especie -> infectar(vector, especie)
                         }
@@ -67,15 +67,6 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
         } else {
             Random.nextInt(1, 100) < factorDeContagioExitoso
-        }
-    }
-
-    private fun puedeSerInfectadoPor(vector: Vector, vectorInfectado: Vector) : Boolean {
-        return when(vector.tipo) {
-            TipoDeVectorEnum.Persona -> Persona().puedeSerInfectadoPor(vectorInfectado)
-            TipoDeVectorEnum.Animal -> Animal().puedeSerInfectadoPor(vectorInfectado)
-            TipoDeVectorEnum.Insecto -> Insecto().puedeSerInfectadoPor(vectorInfectado)
-            else -> false
         }
     }
 

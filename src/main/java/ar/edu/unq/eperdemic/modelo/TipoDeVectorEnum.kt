@@ -13,5 +13,13 @@ enum class TipoDeVectorEnum() {
             }
         }
     }
+
+    fun puedeSerInfectadoPor(tipoVector: TipoDeVectorEnum, tipoVectorInfectado: TipoDeVectorEnum) : Boolean {
+        return when(tipoVector) {
+            Persona -> Persona().puedeSerInfectadoPor(tipoVectorInfectado)
+            Animal -> Animal().puedeSerInfectadoPor(tipoVectorInfectado)
+            Insecto -> Insecto().puedeSerInfectadoPor(tipoVectorInfectado)
+        }
+    }
 }
 

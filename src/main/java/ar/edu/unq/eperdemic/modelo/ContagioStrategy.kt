@@ -1,26 +1,26 @@
 package ar.edu.unq.eperdemic.modelo
 
 abstract class ContagioStrategy {
-    abstract fun puedeSerInfectadoPor(vector: Vector) : Boolean
+    abstract fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) : Boolean
 }
 
 class Animal : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
-        return listOf(TipoDeVectorEnum.Insecto).contains(vector.tipo!!)
+    override fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) : Boolean {
+        return listOf(TipoDeVectorEnum.Insecto).contains(tipo)
     }
 }
 
 class Persona  : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
+    override fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) : Boolean {
         return listOf(TipoDeVectorEnum.Persona,
                 TipoDeVectorEnum.Insecto,
-                TipoDeVectorEnum.Animal).contains(vector.tipo!!)
+                TipoDeVectorEnum.Animal).contains(tipo)
     }
 }
 
 class Insecto  : ContagioStrategy() {
-    override fun puedeSerInfectadoPor(vector: Vector) : Boolean {
+    override fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) : Boolean {
         return listOf(TipoDeVectorEnum.Persona,
-                TipoDeVectorEnum.Animal).contains(vector.tipo!!)
+                TipoDeVectorEnum.Animal).contains(tipo)
     }
 }
