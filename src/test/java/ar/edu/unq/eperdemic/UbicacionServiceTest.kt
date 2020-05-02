@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.services.exceptions.NullEntityException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -11,6 +12,7 @@ import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
@@ -80,6 +82,12 @@ class UbicacionServiceTest {
         //El Insecto cambio su ubicacion a "Cordoba" pero el cordobes no se infecto
         Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(cordobes.estaInfectado())
+    }
+
+    @Test
+    fun moverAUbicacionInexistenteTest() {
+        val exception = assertThrows<NullEntityException> {ubicacionService.mover(1, "Chaco")}
+        Assert.assertEquals("No se encontro una ubicacion con el nombre Chaco", exception.message )
     }
 
     @ExperimentalStdlibApi
