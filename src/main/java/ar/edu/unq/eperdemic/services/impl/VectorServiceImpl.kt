@@ -35,7 +35,9 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun crearVector(vector: Vector): Vector {
-        this.guardarVector(vector)
+        TransactionRunner.runTrx {
+            vectorDAO.guardar(vector)
+        }
         return vector
     }
 
@@ -50,12 +52,6 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             val vector = Vector()
             vector.id = vectorId
             vectorDAO.borrar(vector)
-        }
-    }
-
-    fun guardarVector(vector : Vector) {
-        TransactionRunner.runTrx {
-            vectorDAO.guardar(vector)
         }
     }
 
