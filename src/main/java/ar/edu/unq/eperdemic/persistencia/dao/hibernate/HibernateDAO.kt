@@ -23,7 +23,7 @@ open class HibernateDAO<T>(private val entityType: Class<T>) {
 
     fun actualizar(objeto : T) {
         val session = TransactionRunner.currentSession
-        session.saveOrUpdate(objeto)
+        session.update(objeto)
     }
 
     fun recuperar(id: String): T {

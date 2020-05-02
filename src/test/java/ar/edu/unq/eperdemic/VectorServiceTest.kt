@@ -61,7 +61,7 @@ class VectorServiceTest {
     fun infectarHumanoContagioExitosoTest() {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var pepe = Vector(Ubicacion("Buenos Aires"))
+        var pepe = vectorService.crearVector(Vector(Ubicacion("Buenos Aires")))
         virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 50)
         pepe.tipo = TipoDeVectorEnum.Persona
         doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
@@ -74,7 +74,7 @@ class VectorServiceTest {
     fun infectarHumanoContagioNoExitosoTest() {
         var virus = Patogeno("Virus")
         var paperas = virus.crearEspecie("Paperas", "Yugoslavia")
-        var pepe = Vector(Ubicacion("Buenos Aires"))
+        var pepe = vectorService.crearVector(Vector(Ubicacion("Buenos Aires")))
         virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 50)
         pepe.tipo = TipoDeVectorEnum.Persona
         doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
@@ -101,7 +101,7 @@ class VectorServiceTest {
 
         val paperas = virus.crearEspecie("Paperas", "Yugoslavia")
         val locacion = ubicacionService.crearUbicacion("San Martin")
-        var vectorInfectado = Vector(locacion)
+        var vectorInfectado = vectorService.crearVector(Vector(locacion))
         vectorInfectado.tipo = TipoDeVectorEnum.Persona
 
         vectorService.infectar(vectorInfectado, paperas)
