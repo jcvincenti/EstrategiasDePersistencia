@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.exceptions.NullEntityException
+import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -86,7 +86,7 @@ class UbicacionServiceTest {
 
     @Test
     fun moverAUbicacionInexistenteTest() {
-        val exception = assertThrows<NullEntityException> {ubicacionService.mover(1, "Chaco")}
+        val exception = assertThrows<EntityNotFoundException> {ubicacionService.mover(1, "Chaco")}
         Assert.assertEquals("No se encontro una ubicacion con el nombre Chaco", exception.message )
     }
 
