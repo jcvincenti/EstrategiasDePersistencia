@@ -1,8 +1,6 @@
 package ar.edu.unq.eperdemic
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
@@ -16,16 +14,20 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.mockito.Spy
 
 class UbicacionServiceTest {
 
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
+    @Spy
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     val dataService = DataServiceHibernate()
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
+        MockitoAnnotations.initMocks(this);
         dataService.crearSetDeDatosIniciales()
     }
 
@@ -51,16 +53,11 @@ class UbicacionServiceTest {
     fun moverConVectorInfectadoTest(){
         var persona = vectorService.recuperarVector(1)
         var cordobes = vectorService.recuperarVector(4)
-        val virus = patogenoService.recuperarPatogeno(1)
-        virus.setCapacidadDeContagio(TipoDeVectorEnum.Animal, 100)
-        virus.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
-        virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 100)
-        patogenoService.actualizarPatogeno(virus)
 
         Assert.assertEquals("Buenos Aires", persona.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertTrue(persona.estaInfectado())
         Assert.assertFalse(cordobes.estaInfectado())
-
+        Mockito.doReturn(true).`when`(vectorService).esContagioExitoso(Mockito.anyInt())
         ubicacionService.mover(1, "Cordoba")
         persona = vectorService.recuperarVector(1)
         cordobes = vectorService.recuperarVector(4)
@@ -87,6 +84,7 @@ class UbicacionServiceTest {
         Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual!!.nombreUbicacion)
         Assert.assertFalse(cordobes.estaInfectado())
     }
+
     @ExperimentalStdlibApi
     @Test
     fun expandirVectorInfectadoTest(){
