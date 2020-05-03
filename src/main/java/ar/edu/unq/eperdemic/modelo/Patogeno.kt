@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.modelo
 
 import java.io.Serializable
 import javax.persistence.*
-import kotlin.random.Random
 
 @Entity
 class Patogeno() : Serializable{
@@ -13,12 +12,10 @@ class Patogeno() : Serializable{
     var defensa: Int = 0
     var letalidad: Int = 0
     var tipo: String? = null
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyColumn(name = "vector")
-    @Column(name = "capacidad_de_contagio")
-    var capacidadDeContagio: MutableMap<TipoDeVectorEnum, Int> = mutableMapOf(TipoDeVectorEnum.Persona to 0,
-            TipoDeVectorEnum.Animal to 0,
-            TipoDeVectorEnum.Insecto to 0)
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var capacidadDeContagio: MutableList<FactorDeContagio> = mutableListOf(FactorDeContagio(TipoDeVectorEnum.Persona),
+            FactorDeContagio(TipoDeVectorEnum.Insecto),
+            FactorDeContagio(TipoDeVectorEnum.Animal))
 
     constructor(tipo: String) : this() {
         this.tipo = tipo
@@ -30,11 +27,11 @@ class Patogeno() : Serializable{
     }
 
     fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
-        return this.capacidadDeContagio[tipoVector]
+        return this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio
     }
 
     fun setCapacidadDeContagio(tipoVector: TipoDeVectorEnum, capacidad: Int) {
-        this.capacidadDeContagio.replace(tipoVector, capacidad)
+        this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio = capacidad
     }
 
     override fun equals(other: Any?): Boolean {
