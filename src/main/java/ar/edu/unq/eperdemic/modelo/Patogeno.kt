@@ -27,11 +27,11 @@ class Patogeno() : Serializable{
     }
 
     fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
-        return this.capacidadDeContagio.find{factorDeContagio -> factorDeContagio.tipo == tipoVector}!!.factorDeContagio
+        return this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio
     }
 
     fun setCapacidadDeContagio(tipoVector: TipoDeVectorEnum, capacidad: Int) {
-        this.capacidadDeContagio.find{factorDeContagio -> factorDeContagio.tipo == tipoVector}!!.factorDeContagio = capacidad
+        this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio = capacidad
     }
 
     override fun equals(other: Any?): Boolean {

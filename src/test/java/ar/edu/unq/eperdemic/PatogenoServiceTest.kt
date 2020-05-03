@@ -10,7 +10,6 @@ import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoExcepti
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
@@ -30,7 +29,7 @@ class PatogenoServiceTest {
     @Test
     fun setFactorDeContagioMayorACienTest() {
         val patogenoServiceHibernate = PatogenoServiceImpl(HibernatePatogenoDAO())
-        var patogeno = Patogeno("Sarlanga")
+        var patogeno = Patogeno("Hongo")
         patogeno.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 150)
         val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoServiceHibernate.crearPatogeno(patogeno)}
         Assert.assertEquals("La capacidad de contagio debe ser menor o igual a 100", exception.message )
