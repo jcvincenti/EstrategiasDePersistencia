@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import kotlin.random.Random
 
@@ -30,7 +31,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     override fun enfermedades(vectorId: Int): List<Especie> {
         return TransactionRunner.runTrx {
-            vectorDAO.recuperar(vectorId).especies
+            vectorDAO.recuperar(vectorId)!!.especies
         }
     }
 
@@ -44,7 +45,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun recuperarVector(vectorId: Int): Vector {
         return TransactionRunner.runTrx {
             vectorDAO.recuperar(vectorId)
-        }
+        } ?: throw EntityNotFoundException("No se encontro un vector con el id ${vectorId}")
     }
 
     override fun borrarVector(vectorId: Int) {
