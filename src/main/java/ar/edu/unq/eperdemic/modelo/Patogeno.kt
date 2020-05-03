@@ -8,6 +8,7 @@ class Patogeno() : Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Int? = null
+    @Column(name = "cantidad_de_especies")
     var cantidadDeEspecies: Int = 0
     var defensa: Int = 0
     var letalidad: Int = 0

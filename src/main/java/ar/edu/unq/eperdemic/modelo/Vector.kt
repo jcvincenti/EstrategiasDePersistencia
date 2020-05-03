@@ -10,6 +10,7 @@ class Vector() {
     var id: Int? = null
 
     @ManyToOne
+    @JoinColumn(name="nombre_de_locacion_actual")
     var nombreDeLocacionActual: Ubicacion? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
