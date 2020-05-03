@@ -7,7 +7,7 @@ import javax.persistence.Id
 @Entity
 class Ubicacion() {
     @Id
-    @Column(name = "nombreUbicacion", nullable = false)
+    @Column(name = "nombre_ubicacion", nullable = false)
     var nombreUbicacion: String? = null
 
     constructor(nombreUbicacion: String) : this() {

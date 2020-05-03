@@ -8,11 +8,16 @@ class Patogeno() : Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Int? = null
+    @Column(name = "cantidad_de_especies")
     var cantidadDeEspecies: Int = 0
     var defensa: Int = 0
     var letalidad: Int = 0
     var tipo: String? = null
+
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinTable(name = "patogeno_factor_de_contagio",
+            joinColumns = [JoinColumn(name = "patogeno_id")],
+            inverseJoinColumns = [JoinColumn(name= "factor_de_contagio_id")])
     var capacidadDeContagio: MutableList<FactorDeContagio> = mutableListOf(FactorDeContagio(TipoDeVectorEnum.Persona),
             FactorDeContagio(TipoDeVectorEnum.Insecto),
             FactorDeContagio(TipoDeVectorEnum.Animal))
