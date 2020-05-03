@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -14,6 +15,7 @@ import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
@@ -52,9 +54,10 @@ class VectorServiceTest {
     }
 
     @Test
-    fun borraVectorTest() {
+    fun borrarVectorTest() {
         vectorService.borrarVector(3)
-        Assert.assertNull(vectorService.recuperarVector(3))
+        val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(3) }
+        assertEquals("No se encontro un vector con el id 3", exception.message)
     }
 
     @Test

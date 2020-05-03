@@ -16,10 +16,6 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
 
-        if (ubicacion == null){
-            throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${nombreUbicacion}")
-        }
-
         if (vector.nombreDeLocacionActual!!.nombreUbicacion != nombreUbicacion){
             vector.nombreDeLocacionActual = ubicacion
             TransactionRunner.runTrx {
@@ -56,6 +52,6 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion? {
         return TransactionRunner.runTrx {
             ubicacionDAO.recuperar(nombreUbicacion)
-        }
+        } ?: throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${nombreUbicacion}")
     }
 }
