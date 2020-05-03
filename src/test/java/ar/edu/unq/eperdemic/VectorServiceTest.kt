@@ -48,6 +48,7 @@ class VectorServiceTest {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
         val vector = Vector(locacion)
         vectorService.crearVector(vector)
+
         assertEquals(6, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!.nombreUbicacion)
     }
@@ -55,6 +56,7 @@ class VectorServiceTest {
     @Test
     fun recuperarVectorTest() {
         val vector = vectorService.recuperarVector(1)
+
         assertEquals("Buenos Aires", vector.nombreDeLocacionActual!!.nombreUbicacion)
         assertEquals(1, vector.id)
     }
@@ -69,16 +71,22 @@ class VectorServiceTest {
     @Test
     fun infectarHumanoContagioExitosoTest() {
         doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
+
         Assert.assertTrue(pepe!!.especies.isEmpty())
+
         vectorService.infectar(pepe!!, paperas!!)
+
         Assert.assertFalse(pepe!!.especies.isEmpty())
     }
 
     @Test
     fun infectarHumanoContagioNoExitosoTest() {
         doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
+
         Assert.assertTrue(pepe!!.especies.isEmpty())
+
         vectorService.infectar(pepe!!, paperas!!)
+
         Assert.assertTrue(pepe!!.especies.isEmpty())
     }
 
