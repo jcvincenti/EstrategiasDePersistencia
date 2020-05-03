@@ -10,7 +10,7 @@ import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
-        val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    val vectorService = VectorServiceImpl(HibernateVectorDAO())
 
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
@@ -20,32 +20,30 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${nombreUbicacion}")
         }
 
-        vector.nombreDeLocacionActual = ubicacion
-        TransactionRunner.runTrx {
-            if (vector.estaInfectado()){
-                this.contagiarZona(vector, nombreUbicacion)
+        if (vector.nombreDeLocacionActual!!.nombreUbicacion != nombreUbicacion){
+            vector.nombreDeLocacionActual = ubicacion
+            TransactionRunner.runTrx {
+                contagiarZona(vector, nombreUbicacion)
+                vectorService.actualizarVector(vector)
             }
-            vectorService.actualizarVector(vector)
         }
     }
 
-    private fun contagiarZona(vectorInfectado: Vector, locacion: String?) {
-        val vectores = vectorService.getVectoresByLocacion(locacion)
-        vectorService.contagiar(vectorInfectado, vectores)
+    private fun contagiarZona(vector: Vector?, locacion: String?) {
+        if (vector != null){
+            val vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
+            vectores.removeIf { v -> v.id == vector.id }
+            vectorService.contagiar(vector, vectores)
+        }
     }
 
     @ExperimentalStdlibApi
     override fun expandir(nombreUbicacion: String) {
-        val vectoresEnUbicacion = vectorService.getVectoresByLocacion(nombreUbicacion).toMutableList()
+        val vectoresEnUbicacion = vectorService.getVectoresByLocacion(nombreUbicacion)
         val vectorInfectado = vectoresEnUbicacion.filter {vector -> vector.estaInfectado()}.randomOrNull()
-        vectoresEnUbicacion.remove(vectorInfectado)
-        TransactionRunner.runTrx {
-            if (vectoresEnUbicacion.isNotEmpty() && vectorInfectado != null) {
-                vectorService.contagiar(vectorInfectado, vectoresEnUbicacion)
-
-            }
-        }
+        contagiarZona(vectorInfectado, nombreUbicacion)
     }
+
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val ubicacion = Ubicacion(nombreUbicacion)
