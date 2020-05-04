@@ -7,7 +7,9 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaGetter
 
-
+/**
+ * Utils para chequeos relacionados a la estructura de objetos de manera generica
+ */
 object ObjectStructureUtils {
 
     /**
@@ -17,7 +19,6 @@ object ObjectStructureUtils {
     fun checkNullAttributes(o: Any) {
         val properties = o::class.declaredMemberProperties.filter{ isFieldAccessible(it) }
         properties.forEach {
-
             if (isNullOrEmpty(it, o)) {
                 throw NullPropertyException("La propiedad ${it.name} esta vacia")
             }
