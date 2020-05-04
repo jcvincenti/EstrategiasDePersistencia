@@ -8,7 +8,6 @@ import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
-import org.omg.CORBA.Object
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
