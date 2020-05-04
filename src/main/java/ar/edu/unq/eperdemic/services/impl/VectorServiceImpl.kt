@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import kotlin.random.Random
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
@@ -36,6 +37,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun crearVector(vector: Vector): Vector {
+        ObjectStructureUtils.checkNullAttributes(vector)
         TransactionRunner.runTrx {
             vectorDAO.guardar(vector)
         }

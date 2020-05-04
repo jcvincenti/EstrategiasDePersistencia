@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
+import ar.edu.unq.eperdemic.services.exceptions.NullPropertyException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -48,10 +49,27 @@ class VectorServiceTest {
     fun crearVectorTest() {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
         val vector = Vector(locacion)
+        vector.tipo = TipoDeVectorEnum.Persona
         vectorService.crearVector(vector)
 
         assertEquals(5, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!.nombreUbicacion)
+    }
+
+    @Test
+    fun crearVectorSinLocacionTest() {
+        val vector = Vector()
+        vector.tipo = TipoDeVectorEnum.Persona
+        val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+        assertEquals("La propiedad nombreDeLocacionActual es null", exception.message)
+    }
+
+    @Test
+    fun crearVectorSinTipoDeVectorTest() {
+        val locacion = ubicacionService.crearUbicacion("Locacion-Test")
+        val vector = Vector(locacion)
+        val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+        assertEquals("La propiedad tipo es null", exception.message)
     }
 
     @Test
@@ -60,6 +78,13 @@ class VectorServiceTest {
 
         assertEquals("Buenos Aires", vector.nombreDeLocacionActual!!.nombreUbicacion)
         assertEquals(1, vector.id)
+    }
+
+    @Test
+    fun recuperarVectorNoExistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(100) }
+
+        assertEquals("No se encontro un vector con el id 100", exception.message)
     }
 
     @Test

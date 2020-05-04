@@ -9,14 +9,14 @@ class Vector() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
     @ManyToOne
-    @JoinColumn(name="nombre_de_locacion_actual")
+    @JoinColumn(name="nombre_de_locacion_actual", nullable = false)
     var nombreDeLocacionActual: Ubicacion? = null
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "vector_especie",
             joinColumns = [JoinColumn(name = "especie_id")],
             inverseJoinColumns = [JoinColumn(name= "vector_id")])
     var especies: MutableList<Especie> = mutableListOf()
-    @Column(name="tipo_de_vector")
+    @Column(name="tipo_de_vector", nullable = false)
     var tipo: TipoDeVectorEnum? = null
 
     constructor(nombreDeLocacionActual: Ubicacion) : this() {
