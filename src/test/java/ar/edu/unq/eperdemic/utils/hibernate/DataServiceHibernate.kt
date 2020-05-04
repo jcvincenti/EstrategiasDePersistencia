@@ -28,8 +28,9 @@ class DataServiceHibernate : DataService {
         return listOf(virus, bacteria)
     }
 
-    private fun crearUbicaciones() : List<String> {
-        return mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
+    private fun crearUbicaciones() : List<Ubicacion> {
+        val nombres = mutableListOf("Entre Rios", "La Pampa", "Catamarca", "Buenos Aires", "Cordoba", "Bariloche", "Quilmes", "Berazategui", "Lanus")
+        return nombres.map{u-> Ubicacion(u)}
     }
 
     private fun crearVectores() : List<Vector> {
@@ -51,14 +52,14 @@ class DataServiceHibernate : DataService {
                 patogenos.get(1).crearEspecie("Angina", "Argentina"))
     }
 
-    private fun createDataSet(patogenos: List<Patogeno>, ubicaciones: List<String>, vectores: List<Vector>) {
+    private fun createDataSet(patogenos: List<Patogeno>, ubicaciones: List<Ubicacion>, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             patogenos.forEach {
                 patogeno -> hibernateDao.create(patogeno)
             }
 
             ubicaciones.forEach{
-                ubicacion -> hibernateDao.create(Ubicacion(ubicacion))
+                ubicacion -> hibernateDao.create(ubicacion)
             }
 
             vectores.forEach {
