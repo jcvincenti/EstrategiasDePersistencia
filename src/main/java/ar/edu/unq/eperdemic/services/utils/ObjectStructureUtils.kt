@@ -19,7 +19,7 @@ object ObjectStructureUtils {
      * @param o (Any)
      * @throws EmptyPropertyException
      */
-    fun checkNullAttributes(o: Any) {
+    fun checkEmptyAttributes(o: Any) {
         val properties = o::class.declaredMemberProperties.filter{ isFieldAccessible(it) }
         properties.forEach {
             if (isNullOrEmpty(it, o)) {

@@ -44,7 +44,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val ubicacion = Ubicacion(nombreUbicacion)
-        ObjectStructureUtils.checkNullAttributes(ubicacion)
+        ObjectStructureUtils.checkEmptyAttributes(ubicacion)
         TransactionRunner.runTrx {
             ubicacionDAO.guardar(ubicacion)
         }
