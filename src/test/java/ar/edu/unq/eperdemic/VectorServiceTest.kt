@@ -1,9 +1,11 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
+import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -21,21 +23,20 @@ class VectorServiceTest {
     @Spy
     var vectorService = VectorServiceImpl(HibernateVectorDAO())
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
+    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     val dataService = DataServiceHibernate()
     var virus: Patogeno? = null
     var paperas: Especie? = null
-    var pepe: Vector? = null
+    var cordobes: Vector? = null
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this)
         dataService.crearSetDeDatosIniciales()
-        virus = Patogeno("Virus")
+        virus = patogenoService.recuperarPatogeno(1)
         paperas = virus!!.crearEspecie("Paperas", "Yugoslavia")
-        pepe = vectorService.crearVector(Vector(Ubicacion("Buenos Aires")))
-        virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 100)
+        cordobes = vectorService.recuperarVector(4)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
-        pepe!!.tipo = TipoDeVectorEnum.Persona
     }
 
     @AfterEach
@@ -49,7 +50,7 @@ class VectorServiceTest {
         val vector = Vector(locacion)
         vectorService.crearVector(vector)
 
-        assertEquals(6, vector.id)
+        assertEquals(5, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!.nombreUbicacion)
     }
 
@@ -64,6 +65,7 @@ class VectorServiceTest {
     @Test
     fun borrarVectorTest() {
         vectorService.borrarVector(3)
+        
         val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(3) }
         assertEquals("No se encontro un vector con el id 3", exception.message)
     }
@@ -72,22 +74,22 @@ class VectorServiceTest {
     fun infectarHumanoContagioExitosoTest() {
         doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
 
-        Assert.assertTrue(pepe!!.especies.isEmpty())
+        Assert.assertTrue(cordobes!!.especies.isEmpty())
 
-        vectorService.infectar(pepe!!, paperas!!)
+        vectorService.infectar(cordobes!!, paperas!!)
 
-        Assert.assertFalse(pepe!!.especies.isEmpty())
+        Assert.assertFalse(cordobes!!.especies.isEmpty())
     }
 
     @Test
     fun infectarHumanoContagioNoExitosoTest() {
         doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
 
-        Assert.assertTrue(pepe!!.especies.isEmpty())
+        Assert.assertTrue(cordobes!!.especies.isEmpty())
 
-        vectorService.infectar(pepe!!, paperas!!)
+        vectorService.infectar(cordobes!!, paperas!!)
 
-        Assert.assertTrue(pepe!!.especies.isEmpty())
+        Assert.assertTrue(cordobes!!.especies.isEmpty())
     }
 
     @Test
@@ -101,13 +103,13 @@ class VectorServiceTest {
         // el vector con id 2 es un animal, el vector con id 3 es un insecto
         val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
 
-        vectorService.infectar(pepe!!, paperas!!)
-        vectorService.contagiar(pepe!!, vectores)
+        vectorService.infectar(cordobes!!, paperas!!)
+        vectorService.contagiar(cordobes!!, vectores)
 
         // el vector 2 no tiene que tener especies porque no pudo ser infectado por una Persona
         assertEquals(0, vectorService.enfermedades(2).size)
         // el vector 3 tiene que tener una especie y tiene que ser la misma que la del vector infectado
         assertEquals(1, vectorService.enfermedades(3).size)
-        assertEquals(pepe!!.especies.get(0).id, vectorService.enfermedades(3).get(0).id)
+        assertEquals(cordobes!!.especies.get(0).id, vectorService.enfermedades(3).get(0).id)
     }
 }
