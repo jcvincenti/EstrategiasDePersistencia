@@ -62,7 +62,7 @@ class VectorServiceTest {
         vector.tipo = TipoDeVectorEnum.Persona
         val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
 
-        assertEquals("La propiedad nombreDeLocacionActual es null", exception.message)
+        assertEquals("La propiedad nombreDeLocacionActual esta vacia", exception.message)
     }
 
     @Test
@@ -71,7 +71,7 @@ class VectorServiceTest {
         val vector = Vector(locacion)
         val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
 
-        assertEquals("La propiedad tipo es null", exception.message)
+        assertEquals("La propiedad tipo esta vacia", exception.message)
     }
 
     @Test
