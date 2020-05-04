@@ -61,6 +61,7 @@ class VectorServiceTest {
         val vector = Vector()
         vector.tipo = TipoDeVectorEnum.Persona
         val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+
         assertEquals("La propiedad nombreDeLocacionActual es null", exception.message)
     }
 
@@ -69,6 +70,7 @@ class VectorServiceTest {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
         val vector = Vector(locacion)
         val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+
         assertEquals("La propiedad tipo es null", exception.message)
     }
 
@@ -118,8 +120,9 @@ class VectorServiceTest {
     }
 
     @Test
-    fun getEnfermedades(){
+    fun getEnfermedadesTest(){
         val enfermedades = vectorService.enfermedades(1)
+
         Assert.assertTrue(enfermedades.size == 3)
     }
 
