@@ -37,7 +37,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun crearVector(vector: Vector): Vector {
-        ObjectStructureUtils.checkNullAttributes(vector)
+        ObjectStructureUtils.checkEmptyAttributes(vector)
         TransactionRunner.runTrx {
             vectorDAO.guardar(vector)
         }

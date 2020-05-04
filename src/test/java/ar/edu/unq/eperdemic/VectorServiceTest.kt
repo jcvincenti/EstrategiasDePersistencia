@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
-import ar.edu.unq.eperdemic.services.exceptions.NullPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -60,18 +60,18 @@ class VectorServiceTest {
     fun crearVectorSinLocacionTest() {
         val vector = Vector()
         vector.tipo = TipoDeVectorEnum.Persona
-        val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+        val exception = assertThrows<EmptyPropertyException> { vectorService.crearVector(vector) }
 
-        assertEquals("La propiedad nombreDeLocacionActual es null", exception.message)
+        assertEquals("La propiedad nombreDeLocacionActual esta vacia", exception.message)
     }
 
     @Test
     fun crearVectorSinTipoDeVectorTest() {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
         val vector = Vector(locacion)
-        val exception = assertThrows<NullPropertyException> { vectorService.crearVector(vector) }
+        val exception = assertThrows<EmptyPropertyException> { vectorService.crearVector(vector) }
 
-        assertEquals("La propiedad tipo es null", exception.message)
+        assertEquals("La propiedad tipo esta vacia", exception.message)
     }
 
     @Test

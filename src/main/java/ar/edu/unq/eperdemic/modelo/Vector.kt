@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 @Entity
 class Vector() {

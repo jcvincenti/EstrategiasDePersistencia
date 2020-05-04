@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
+import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
 
@@ -45,6 +45,13 @@ class UbicacionServiceTest {
     fun crearUbicacionTest(){
         val ubicacion = ubicacionService.crearUbicacion("Adrogue")
         Assert.assertEquals("Adrogue", ubicacion.nombreUbicacion)
+    }
+
+    @Test
+    fun crearUbicacionSinNombreTest() {
+        val exception = assertThrows<EmptyPropertyException> {ubicacionService.crearUbicacion("")}
+        Assert.assertEquals("La propiedad nombreUbicacion esta vacia", exception.message)
+
     }
 
     @Test
