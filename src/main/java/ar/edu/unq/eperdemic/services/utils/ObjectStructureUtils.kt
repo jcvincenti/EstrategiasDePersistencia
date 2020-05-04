@@ -10,6 +10,10 @@ import kotlin.reflect.jvm.javaGetter
 
 object ObjectStructureUtils {
 
+    /**
+     * Metodo para validar que la estructura de un objeto no contenga nulls o strings vacios
+     * Nota: los ID estan exceptuados de este chequeo
+     */
     fun checkNullAttributes(o: Any) {
         val properties = o::class.declaredMemberProperties.filter{ isFieldAccessible(it) }
         properties.forEach {
