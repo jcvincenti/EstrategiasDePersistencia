@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.services.utils
 
 
-import ar.edu.unq.eperdemic.services.exceptions.NullPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
@@ -20,7 +20,7 @@ object ObjectStructureUtils {
         val properties = o::class.declaredMemberProperties.filter{ isFieldAccessible(it) }
         properties.forEach {
             if (isNullOrEmpty(it, o)) {
-                throw NullPropertyException("La propiedad ${it.name} esta vacia")
+                throw EmptyPropertyException("La propiedad ${it.name} esta vacia")
             }
         }
     }
