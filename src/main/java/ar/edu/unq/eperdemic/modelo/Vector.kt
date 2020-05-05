@@ -55,6 +55,12 @@ class Vector() {
         }
     }
 
+    fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion
+
+    fun moverse(ubicacion: Ubicacion?) {
+        nombreDeLocacionActual = ubicacion
+    }
+
 }
 
 

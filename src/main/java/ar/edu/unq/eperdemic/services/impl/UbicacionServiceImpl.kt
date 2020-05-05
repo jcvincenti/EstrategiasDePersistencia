@@ -17,8 +17,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
 
-        if (vector.nombreDeLocacionActual!!.nombreUbicacion != nombreUbicacion){
-            vector.nombreDeLocacionActual = ubicacion
+        if (vector.puedeMoverse(ubicacion)) {
+            vector.moverse(ubicacion)
             TransactionRunner.runTrx {
                 contagiarZona(vector, nombreUbicacion)
                 vectorService.actualizarVector(vector)
@@ -27,9 +27,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     private fun contagiarZona(vector: Vector?, locacion: String?) {
-        if (vector != null && vector.estaInfectado()){
-            // te agregue el chequeo de estaInfectado porque dice en el tp que si no estaInfectado no hace nada
-            // igual esto se no haria falta y usarias lo del modelo, pero para que corran los test mientras lo deje
+        if (vector != null && vector.estaInfectado()) {
             val vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
             vectores.removeIf { v -> v.id == vector.id }
             vectorService.contagiar(vector, vectores)
