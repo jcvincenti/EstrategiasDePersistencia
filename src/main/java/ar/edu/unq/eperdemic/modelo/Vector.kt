@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import javax.persistence.*
 
 @Entity
@@ -8,14 +9,14 @@ class Vector() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
     @ManyToOne
-    @JoinColumn(name="nombre_de_locacion_actual", nullable = false)
+    @JoinColumn(name = "nombre_de_locacion_actual", nullable = false)
     var nombreDeLocacionActual: Ubicacion? = null
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "vector_especie",
             joinColumns = [JoinColumn(name = "especie_id")],
-            inverseJoinColumns = [JoinColumn(name= "vector_id")])
+            inverseJoinColumns = [JoinColumn(name = "vector_id")])
     var especies: MutableList<Especie> = mutableListOf()
-    @Column(name="tipo_de_vector", nullable = false)
+    @Column(name = "tipo_de_vector", nullable = false)
     var tipo: TipoDeVectorEnum? = null
 
     constructor(nombreDeLocacionActual: Ubicacion) : this() {
@@ -25,6 +26,25 @@ class Vector() {
     fun infectar(especie: Especie) = this.especies.add(especie)
 
     fun estaInfectado() = this.especies.isNotEmpty()
+
+    fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo!!.puedeSerInfectadoPor(tipo)
+
+    fun contagiar(vector: Vector) {
+        if (!estaInfectado()) {
+            throw VectorNoInfectadoException("El vector no esta infectado")
+        }
+
+        if (vector.puedeSerInfectadoPor(tipo!!)) {
+            especies.forEach { especie ->
+                infectar(vector, especie)
+            }
+        }
+    }
+
+    fun infectar(vector: Vector, especie: Especie) {
+        vector.infectar(especie)
+        // TODO impelentar bien, esto es para que corra
+    }
 
 }
 

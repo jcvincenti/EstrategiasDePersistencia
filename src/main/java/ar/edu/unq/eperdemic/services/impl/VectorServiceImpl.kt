@@ -13,11 +13,8 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach {
-                vector -> if (vector.tipo!!.puedeSerInfectadoPor(vectorInfectado.tipo!!)) {
-                    vectorInfectado.especies.forEach {
-                        especie -> infectar(vector, especie)
-                        }
-                }
+                vector -> vectorInfectado.contagiar(vector)
+                actualizarVector(vector)
             }
         }
     }
