@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import javax.persistence.*
 
 @Entity
@@ -29,6 +30,10 @@ class Vector() {
     fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo!!.puedeSerInfectadoPor(tipo)
 
     fun contagiar(vector: Vector) {
+        if (!estaInfectado()) {
+            throw VectorNoInfectadoException("El vector no esta infectado")
+        }
+        
         if (vector.puedeSerInfectadoPor(tipo!!)) {
             especies.forEach { especie ->
                 infectar(vector, especie)
