@@ -25,8 +25,8 @@ class Vector() {
     }
 
     fun infectar(especie: Especie) {
-        if (esContagioExitoso(especie.getCapacidadDeContagio(this.tipo!!)!!)) {
-            this.especies.add(especie)
+        if (especie.esContagioExitoso(this.tipo!!)) {
+            especies.add(especie)
         }
     }
 
@@ -43,15 +43,6 @@ class Vector() {
             }
         } else {
             throw VectorNoInfectadoException("El vector no esta infectado")
-        }
-    }
-
-    fun esContagioExitoso(factorDeContagio: Int) : Boolean {
-        val factorDeContagioExitoso = factorDeContagio.plus(Random.nextInt(1, 10))
-        return if (factorDeContagioExitoso > 50) {
-            Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
-        } else {
-            Random.nextInt(1, 100) < factorDeContagioExitoso
         }
     }
 
