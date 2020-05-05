@@ -14,6 +14,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         TransactionRunner.runTrx {
             vectores.forEach {
                 vector -> vectorInfectado.contagiar(vector)
+                actualizarVector(vector)
             }
         }
     }

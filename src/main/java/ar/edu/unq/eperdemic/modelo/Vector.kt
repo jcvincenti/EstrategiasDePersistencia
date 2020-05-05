@@ -33,7 +33,7 @@ class Vector() {
         if (!estaInfectado()) {
             throw VectorNoInfectadoException("El vector no esta infectado")
         }
-        
+
         if (vector.puedeSerInfectadoPor(tipo!!)) {
             especies.forEach { especie ->
                 infectar(vector, especie)
@@ -42,7 +42,8 @@ class Vector() {
     }
 
     fun infectar(vector: Vector, especie: Especie) {
-        // TODO implementar
+        vector.infectar(especie)
+        // TODO impelentar bien, esto es para que corra
     }
 
 }

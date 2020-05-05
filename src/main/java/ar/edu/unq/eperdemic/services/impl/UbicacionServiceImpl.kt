@@ -27,7 +27,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     private fun contagiarZona(vector: Vector?, locacion: String?) {
-        if (vector != null){
+        if (vector != null && vector.estaInfectado()){
+            // te agregue el chequeo de estaInfectado porque dice en el tp que si no estaInfectado no hace nada
+            // igual esto se no haria falta y usarias lo del modelo, pero para que corran los test mientras lo deje
             val vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
             vectores.removeIf { v -> v.id == vector.id }
             vectorService.contagiar(vector, vectores)

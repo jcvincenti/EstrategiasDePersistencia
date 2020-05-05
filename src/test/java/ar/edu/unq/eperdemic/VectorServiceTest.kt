@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -139,5 +140,14 @@ class VectorServiceTest {
         // el vector 3 tiene que tener una especie y tiene que ser la misma que la del vector infectado
         assertEquals(1, vectorService.enfermedades(3).size)
         assertEquals(cordobes!!.especies.get(0).id, vectorService.enfermedades(3).get(0).id)
+    }
+
+    @Test
+    fun contagiarConVectorNoInfectadoTest() {
+        val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
+
+        val exception = assertThrows<VectorNoInfectadoException> { vectorService.contagiar(cordobes!!, vectores) }
+
+        assertEquals("El vector no esta infectado", exception.message)
     }
 }
