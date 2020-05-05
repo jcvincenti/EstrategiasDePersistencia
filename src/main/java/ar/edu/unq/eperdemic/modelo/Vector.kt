@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import javax.persistence.*
+import kotlin.random.Random
 
 @Entity
 class Vector() {
@@ -23,27 +24,35 @@ class Vector() {
         this.nombreDeLocacionActual = nombreDeLocacionActual
     }
 
-    fun infectar(especie: Especie) = this.especies.add(especie)
+    fun infectar(especie: Especie) {
+        if (esContagioExitoso(especie.getCapacidadDeContagio(this.tipo!!)!!)) {
+            this.especies.add(especie)
+        }
+    }
 
     fun estaInfectado() = this.especies.isNotEmpty()
 
     fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo!!.puedeSerInfectadoPor(tipo)
 
     fun contagiar(vector: Vector) {
-        if (!estaInfectado()) {
-            throw VectorNoInfectadoException("El vector no esta infectado")
-        }
-
-        if (vector.puedeSerInfectadoPor(tipo!!)) {
-            especies.forEach { especie ->
-                infectar(vector, especie)
+        if (estaInfectado()) {
+            if (vector.puedeSerInfectadoPor(tipo!!)) {
+                especies.forEach { especie ->
+                    vector.infectar(especie)
+                }
             }
+        } else {
+            throw VectorNoInfectadoException("El vector no esta infectado")
         }
     }
 
-    fun infectar(vector: Vector, especie: Especie) {
-        vector.infectar(especie)
-        // TODO impelentar bien, esto es para que corra
+    fun esContagioExitoso(factorDeContagio: Int) : Boolean {
+        val factorDeContagioExitoso = factorDeContagio.plus(Random.nextInt(1, 10))
+        return if (factorDeContagioExitoso > 50) {
+            Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
+        } else {
+            Random.nextInt(1, 100) < factorDeContagioExitoso
+        }
     }
 
 }
