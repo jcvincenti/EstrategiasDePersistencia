@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
+import javax.persistence.PersistenceException
 
 class UbicacionServiceTest {
 
@@ -45,6 +47,12 @@ class UbicacionServiceTest {
     fun crearUbicacionTest(){
         val ubicacion = ubicacionService.crearUbicacion("Adrogue")
         Assert.assertEquals("Adrogue", ubicacion.nombreUbicacion)
+    }
+
+    @Test
+    fun crearUbicacionExistenteTest(){
+        val exception = assertThrows<EntityAlreadyExistsException>{ubicacionService.crearUbicacion("Bariloche")}
+        Assert.assertEquals("La ubicacion Bariloche ya existe", exception.message)
     }
 
     @Test

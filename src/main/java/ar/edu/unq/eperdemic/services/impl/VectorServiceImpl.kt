@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import org.hibernate.exception.ConstraintViolationException
 import kotlin.random.Random
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
@@ -34,8 +35,12 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     override fun crearVector(vector: Vector): Vector {
         ObjectStructureUtils.checkEmptyAttributes(vector)
-        TransactionRunner.runTrx {
-            vectorDAO.guardar(vector)
+        try {
+            TransactionRunner.runTrx {
+                vectorDAO.guardar(vector)
+            }
+        } catch (exception: ConstraintViolationException) {
+            throw EntityNotFoundException("No se encontro la ubicacion ${vector.nombreDeLocacionActual}")
         }
         return vector
     }

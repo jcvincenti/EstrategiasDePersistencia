@@ -148,14 +148,12 @@ class VectorServiceTest {
         assertEquals("El vector no esta infectado", exception.message)
     }
 
-    @Disabled
     @Test
     fun crearVectorConUbicacionInexistente() {
         var pibe = Vector()
         pibe.nombreDeLocacionActual = "pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
-        vectorService.crearVector(pibe)
-        // TODO: ver de meter la validacion correspondiente a esto, por ahora tira la exception del a base
-
+        val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
+        assertEquals("No se encontro la ubicacion pibelandia", exception.message)
     }
 }
