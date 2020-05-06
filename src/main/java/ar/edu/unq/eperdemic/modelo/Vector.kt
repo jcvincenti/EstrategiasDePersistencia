@@ -27,8 +27,8 @@ class Vector() {
     }
 
     fun infectar(especie: Especie) {
-        if (esContagioExitoso(especie.getCapacidadDeContagio(this.tipo!!)!!)) {
-            this.especies.add(especie)
+        if (especie.esContagioExitoso(this.tipo!!)) {
+            especies.add(especie)
         }
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
+import kotlin.random.Random
 
 @Entity
 class Especie() {
@@ -23,6 +24,15 @@ class Especie() {
     }
 
     fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
-        return this.patogeno!!.getCapacidadDeContagio(tipoVector)
+        return patogeno!!.getCapacidadDeContagio(tipoVector)
+    }
+
+    fun esContagioExitoso(tipoVector: TipoDeVectorEnum) : Boolean {
+        val factorDeContagioExitoso = getCapacidadDeContagio(tipoVector)!!.plus(Random.nextInt(1, 10))
+        return if (factorDeContagioExitoso > 50) {
+            Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
+        } else {
+            Random.nextInt(1, 100) < factorDeContagioExitoso
+        }
     }
 }
