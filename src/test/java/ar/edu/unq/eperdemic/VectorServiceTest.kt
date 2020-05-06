@@ -49,12 +49,12 @@ class VectorServiceTest {
     @Test
     fun crearVectorTest() {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
-        val vector = Vector(locacion)
+        val vector = Vector(locacion.nombreUbicacion!!)
         vector.tipo = TipoDeVectorEnum.Persona
         vectorService.crearVector(vector)
 
         assertEquals(5, vector.id)
-        assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!.nombreUbicacion)
+        assertEquals("Locacion-Test", vector.nombreDeLocacionActual!!)
     }
 
     @Test
@@ -69,7 +69,7 @@ class VectorServiceTest {
     @Test
     fun crearVectorSinTipoDeVectorTest() {
         val locacion = ubicacionService.crearUbicacion("Locacion-Test")
-        val vector = Vector(locacion)
+        val vector = Vector(locacion.nombreUbicacion!!)
         val exception = assertThrows<EmptyPropertyException> { vectorService.crearVector(vector) }
 
         assertEquals("La propiedad tipo esta vacia", exception.message)
@@ -79,7 +79,7 @@ class VectorServiceTest {
     fun recuperarVectorTest() {
         val vector = vectorService.recuperarVector(1)
 
-        assertEquals("Buenos Aires", vector.nombreDeLocacionActual!!.nombreUbicacion)
+        assertEquals("Buenos Aires", vector.nombreDeLocacionActual!!)
         assertEquals(1, vector.id)
     }
 
@@ -149,5 +149,14 @@ class VectorServiceTest {
         val exception = assertThrows<VectorNoInfectadoException> { vectorService.contagiar(cordobes!!, vectores) }
 
         assertEquals("El vector no esta infectado", exception.message)
+    }
+
+    @Test
+    fun crearVectorConUbicacionInexistente() {
+        var pibe = Vector()
+        pibe.nombreDeLocacionActual = "pibelandia"
+        pibe.tipo = TipoDeVectorEnum.Persona
+        vectorService.crearVector(pibe)
+
     }
 }

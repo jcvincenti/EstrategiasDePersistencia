@@ -18,7 +18,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val ubicacion = recuperarUbicacion(nombreUbicacion)
 
         if (vector.puedeMoverse(ubicacion)) {
-            vector.moverse(ubicacion)
+            vector.moverse(ubicacion!!.nombreUbicacion)
             TransactionRunner.runTrx {
                 contagiarZona(vector, nombreUbicacion)
                 vectorService.actualizarVector(vector)
