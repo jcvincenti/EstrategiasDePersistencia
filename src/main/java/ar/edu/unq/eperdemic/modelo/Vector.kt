@@ -9,19 +9,21 @@ class Vector() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
-    @ManyToOne
-    @JoinColumn(name = "nombre_de_locacion_actual", nullable = false)
-    var nombreDeLocacionActual: Ubicacion? = null
+
+    @Column(name = "nombre_de_locacion_actual")
+    var nombreDeLocacionActual: String? = null
+
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "vector_especie",
             joinColumns = [JoinColumn(name = "especie_id")],
             inverseJoinColumns = [JoinColumn(name = "vector_id")])
     var especies: MutableList<Especie> = mutableListOf()
+
     @Column(name = "tipo_de_vector", nullable = false)
     var tipo: TipoDeVectorEnum? = null
 
-    constructor(nombreDeLocacionActual: Ubicacion) : this() {
-        this.nombreDeLocacionActual = nombreDeLocacionActual
+    constructor(ubicacion: String) : this() {
+        this.nombreDeLocacionActual = ubicacion
     }
 
     fun infectar(especie: Especie) {
@@ -46,10 +48,10 @@ class Vector() {
         }
     }
 
-    fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion
+    fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion!!.nombreubicacion
 
-    fun moverse(ubicacion: Ubicacion?) {
-        nombreDeLocacionActual = ubicacion
+    fun moverse(ubicacion: String?) {
+        this.nombreDeLocacionActual = ubicacion
     }
 
 }
