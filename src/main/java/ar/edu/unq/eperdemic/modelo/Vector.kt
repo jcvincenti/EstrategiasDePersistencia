@@ -48,7 +48,7 @@ class Vector() {
         }
     }
 
-    fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion!!.nombreubicacion
+    fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion!!.nombreUbicacion
 
     fun moverse(ubicacion: String?) {
         this.nombreDeLocacionActual = ubicacion
