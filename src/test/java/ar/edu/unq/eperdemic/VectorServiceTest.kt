@@ -16,10 +16,8 @@ import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.*
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.Spy
 
 class VectorServiceTest {
-    @Spy
     var vectorService = VectorServiceImpl(HibernateVectorDAO())
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
@@ -97,22 +95,24 @@ class VectorServiceTest {
 
     @Test
     fun infectarHumanoContagioExitosoTest() {
-        doReturn(true).`when`(vectorService).esContagioExitoso(anyInt())
+        val paperasSpy = spy(paperas)
+        doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
         Assert.assertTrue(cordobes!!.especies.isEmpty())
 
-        vectorService.infectar(cordobes!!, paperas!!)
+        vectorService.infectar(cordobes!!, paperasSpy!!)
 
         Assert.assertFalse(cordobes!!.especies.isEmpty())
     }
 
     @Test
     fun infectarHumanoContagioNoExitosoTest() {
-        doReturn(false).`when`(vectorService).esContagioExitoso(anyInt())
+        val paperasSpy = spy(paperas)
+        doReturn(false).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
         Assert.assertTrue(cordobes!!.especies.isEmpty())
 
-        vectorService.infectar(cordobes!!, paperas!!)
+        vectorService.infectar(cordobes!!, paperasSpy!!)
 
         Assert.assertTrue(cordobes!!.especies.isEmpty())
     }
