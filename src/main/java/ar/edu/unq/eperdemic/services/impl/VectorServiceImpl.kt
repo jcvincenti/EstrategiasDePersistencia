@@ -20,11 +20,10 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
      override fun infectar(vector: Vector, especie: Especie) {
-        if (esContagioExitoso(especie.getCapacidadDeContagio(vector.tipo!!)!!))
-            vector.infectar(especie)
-            TransactionRunner.runTrx {
-                vectorDAO.actualizar(vector)
-            }
+        vector.infectar(especie)
+        TransactionRunner.runTrx {
+            vectorDAO.actualizar(vector)
+        }
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
@@ -58,15 +57,6 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     fun actualizarVector(vector: Vector){
         TransactionRunner.runTrx {
             vectorDAO.actualizar(vector)
-        }
-    }
-
-    open fun esContagioExitoso(factorDeContagio: Int) : Boolean {
-        val factorDeContagioExitoso = factorDeContagio.plus(Random.nextInt(1, 10))
-        return if (factorDeContagioExitoso > 50) {
-            Random.nextInt(factorDeContagioExitoso-50, 100) < factorDeContagioExitoso
-        } else {
-            Random.nextInt(1, 100) < factorDeContagioExitoso
         }
     }
 
