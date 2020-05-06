@@ -9,7 +9,6 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
-import javax.persistence.PersistenceException
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
@@ -47,12 +46,11 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val ubicacion = Ubicacion(nombreUbicacion)
         ObjectStructureUtils.checkEmptyAttributes(ubicacion)
-        try {
-            TransactionRunner.runTrx {
-                ubicacionDAO.guardar(ubicacion)
-            }
-        } catch (exception: PersistenceException) {
+        if (existeUbicacion(nombreUbicacion)) {
             throw EntityAlreadyExistsException("La ubicacion ${nombreUbicacion} ya existe")
+        }
+        TransactionRunner.runTrx {
+            ubicacionDAO.guardar(ubicacion)
         }
         return ubicacion
     }
@@ -61,5 +59,11 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         return TransactionRunner.runTrx {
             ubicacionDAO.recuperar(nombreUbicacion)
         } ?: throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${nombreUbicacion}")
+    }
+
+    private fun existeUbicacion(nombreUbicacion: String): Boolean {
+        return TransactionRunner.runTrx {
+            ubicacionDAO.recuperar(nombreUbicacion)
+        } != null
     }
 }
