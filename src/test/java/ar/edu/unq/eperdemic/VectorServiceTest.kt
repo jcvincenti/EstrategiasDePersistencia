@@ -154,6 +154,6 @@ class VectorServiceTest {
         pibe.nombreDeLocacionActual = "pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
         val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
-        assertEquals("No se encontro la ubicacion pibelandia", exception.message)
+        assertEquals("No se encontro una ubicacion con el nombre pibelandia", exception.message)
     }
 }

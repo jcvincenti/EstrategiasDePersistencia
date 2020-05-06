@@ -40,7 +40,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                 vectorDAO.guardar(vector)
             }
         } catch (exception: ConstraintViolationException) {
-            throw EntityNotFoundException("No se encontro la ubicacion ${vector.nombreDeLocacionActual}")
+            throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${vector.nombreDeLocacionActual}")
         }
         return vector
     }
