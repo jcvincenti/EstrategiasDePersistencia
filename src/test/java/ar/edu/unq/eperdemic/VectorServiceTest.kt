@@ -5,8 +5,8 @@ import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -63,7 +63,7 @@ class VectorServiceTest {
 
     @Test
     fun crearVectorSinTipoDeVectorTest() {
-        val locacion = ubicacionService.crearUbicacion("Locacion-Test")
+        val locacion = ubicacionService.crearUbicacion("Locacion-Test-2")
         val vector = Vector(locacion.nombreUbicacion!!)
         val exception = assertThrows<EmptyPropertyException> { vectorService.crearVector(vector) }
 
@@ -148,14 +148,13 @@ class VectorServiceTest {
         assertEquals("El vector no esta infectado", exception.message)
     }
 
-    @Disabled
     @Test
     fun crearVectorConUbicacionInexistente() {
         var pibe = Vector()
-        pibe.nombreDeLocacionActual = "pibelandia"
+        pibe.nombreDeLocacionActual = "Pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
-        vectorService.crearVector(pibe)
-        // TODO: ver de meter la validacion correspondiente a esto, por ahora tira la exception del a base
+        val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
+        assertEquals("La entidad Ubicacion no existe", exception.message)
 
     }
 }
