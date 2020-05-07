@@ -5,10 +5,10 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
@@ -46,10 +46,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val ubicacion = Ubicacion(nombreUbicacion)
         ObjectStructureUtils.checkEmptyAttributes(ubicacion)
-        if (existeUbicacion(nombreUbicacion)) {
-            throw EntityAlreadyExistsException("La ubicacion ${nombreUbicacion} ya existe")
-        }
         TransactionRunner.runTrx {
+            validateEntityDoesNotExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.guardar(ubicacion)
         }
         return ubicacion
@@ -58,7 +56,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion? {
         return TransactionRunner.runTrx {
             ubicacionDAO.recuperar(nombreUbicacion)
-        } ?: throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${nombreUbicacion}")
+        } ?: throw EntityNotFoundException("La entidad Ubicacion no existe")
     }
 
     private fun existeUbicacion(nombreUbicacion: String): Boolean {

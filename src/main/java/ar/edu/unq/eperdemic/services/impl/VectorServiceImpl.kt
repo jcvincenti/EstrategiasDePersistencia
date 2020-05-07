@@ -2,14 +2,13 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.*
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
-    val ubicacionDao = HibernateUbicacionDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
@@ -35,10 +34,8 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     override fun crearVector(vector: Vector): Vector {
         ObjectStructureUtils.checkEmptyAttributes(vector)
-        if (!existeUbicacion(vector.nombreDeLocacionActual!!)){
-            throw EntityNotFoundException("No se encontro una ubicacion con el nombre ${vector.nombreDeLocacionActual}")
-        }
         TransactionRunner.runTrx {
+            validateEntityExists<Ubicacion>(vector.nombreDeLocacionActual!!)
             vectorDAO.guardar(vector)
         }
         return vector
@@ -47,10 +44,11 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun recuperarVector(vectorId: Int): Vector {
         return TransactionRunner.runTrx {
             vectorDAO.recuperar(vectorId)
-        } ?: throw EntityNotFoundException("No se encontro un vector con el id ${vectorId}")
+        } ?: throw EntityNotFoundException("La entidad Vector no existe")
     }
 
     override fun borrarVector(vectorId: Int) {
+        TransactionRunner.runTrx { validateEntityExists<Vector>(vectorId) }
         TransactionRunner.runTrx {
             val vector = Vector()
             vector.id = vectorId
@@ -66,13 +64,8 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     fun getVectoresByLocacion(locacion: String?): List<Vector> {
         return TransactionRunner.runTrx {
+            validateEntityExists<Ubicacion>(locacion!!)
             vectorDAO.getVectoresByLocacion(locacion)
         }
-    }
-
-    private fun existeUbicacion(nombreUbicacion: String): Boolean {
-        return TransactionRunner.runTrx {
-            ubicacionDao.recuperar(nombreUbicacion)
-        } != null
     }
 }

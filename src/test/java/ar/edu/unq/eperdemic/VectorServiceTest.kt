@@ -82,7 +82,7 @@ class VectorServiceTest {
     fun recuperarVectorNoExistenteTest() {
         val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(100) }
 
-        assertEquals("No se encontro un vector con el id 100", exception.message)
+        assertEquals("La entidad Vector no existe", exception.message)
     }
 
     @Test
@@ -90,7 +90,13 @@ class VectorServiceTest {
         vectorService.borrarVector(3)
         
         val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(3) }
-        assertEquals("No se encontro un vector con el id 3", exception.message)
+        assertEquals("La entidad Vector no existe", exception.message)
+    }
+
+    @Test
+    fun borrarVectorInexistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> { vectorService.borrarVector(15) }
+        assertEquals("La entidad Vector no existe", exception.message)
     }
 
     @Test
@@ -151,9 +157,9 @@ class VectorServiceTest {
     @Test
     fun crearVectorConUbicacionInexistente() {
         var pibe = Vector()
-        pibe.nombreDeLocacionActual = "pibelandia"
+        pibe.nombreDeLocacionActual = "Pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
         val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
-        assertEquals("No se encontro una ubicacion con el nombre pibelandia", exception.message)
+        assertEquals("La entidad Ubicacion no existe", exception.message)
     }
 }

@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
+import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -52,7 +53,7 @@ class UbicacionServiceTest {
     @Test
     fun crearUbicacionExistenteTest(){
         val exception = assertThrows<EntityAlreadyExistsException>{ubicacionService.crearUbicacion("Bariloche")}
-        Assert.assertEquals("La ubicacion Bariloche ya existe", exception.message)
+        Assert.assertEquals("La entidad Ubicacion ya existe", exception.message)
     }
 
     @Test
@@ -66,6 +67,12 @@ class UbicacionServiceTest {
     fun recuperarUbicacionTest() {
         val ubicacion = ubicacionService.recuperarUbicacion("Entre Rios")
         Assert.assertEquals(ubicacion!!.nombreUbicacion, "Entre Rios")
+    }
+
+    @Test
+    fun recuperarUbicacionInexistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> { ubicacionService.recuperarUbicacion("Tucuman") }
+        assertEquals("La entidad Ubicacion no existe", exception.message)
     }
 
     @Test
@@ -101,7 +108,7 @@ class UbicacionServiceTest {
     @Test
     fun moverAUbicacionInexistenteTest() {
         val exception = assertThrows<EntityNotFoundException> {ubicacionService.mover(1, "Chaco")}
-        Assert.assertEquals("No se encontro una ubicacion con el nombre Chaco", exception.message )
+        Assert.assertEquals("La entidad Ubicacion no existe", exception.message )
     }
 
     @ExperimentalStdlibApi
@@ -133,5 +140,12 @@ class UbicacionServiceTest {
         ubicacionService.expandir("Cordoba")
 
         Assert.assertFalse(vectorService.recuperarVector(jorgeId!!).estaInfectado())
+    }
+
+    @ExperimentalStdlibApi
+    @Test
+    fun expandirUbicacionInexistenteTest(){
+        val exception = assertThrows<EntityNotFoundException> { ubicacionService.expandir("Bernal") }
+        assertEquals("La entidad Ubicacion no existe", exception.message)
     }
 }
