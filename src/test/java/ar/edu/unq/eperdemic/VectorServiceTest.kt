@@ -5,8 +5,8 @@ import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
+import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -63,7 +63,7 @@ class VectorServiceTest {
 
     @Test
     fun crearVectorSinTipoDeVectorTest() {
-        val locacion = ubicacionService.crearUbicacion("Locacion-Test-2")
+        val locacion = ubicacionService.crearUbicacion("Locacion-Test")
         val vector = Vector(locacion.nombreUbicacion!!)
         val exception = assertThrows<EmptyPropertyException> { vectorService.crearVector(vector) }
 
@@ -82,7 +82,7 @@ class VectorServiceTest {
     fun recuperarVectorNoExistenteTest() {
         val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(100) }
 
-        assertEquals("No se encontro un vector con el id 100", exception.message)
+        assertEquals("La entidad Vector con id 100 no existe", exception.message)
     }
 
     @Test
@@ -90,7 +90,13 @@ class VectorServiceTest {
         vectorService.borrarVector(3)
         
         val exception = assertThrows<EntityNotFoundException> { vectorService.recuperarVector(3) }
-        assertEquals("No se encontro un vector con el id 3", exception.message)
+        assertEquals("La entidad Vector con id 3 no existe", exception.message)
+    }
+
+    @Test
+    fun borrarVectorInexistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> { vectorService.borrarVector(15) }
+        assertEquals("La entidad Vector con id 15 no existe", exception.message)
     }
 
     @Test
@@ -154,7 +160,6 @@ class VectorServiceTest {
         pibe.nombreDeLocacionActual = "Pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
         val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
-        assertEquals("La entidad Ubicacion no existe", exception.message)
-
+        assertEquals("La entidad Ubicacion con id Pibelandia no existe", exception.message)
     }
 }

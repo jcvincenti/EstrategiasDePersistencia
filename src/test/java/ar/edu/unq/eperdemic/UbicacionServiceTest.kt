@@ -6,9 +6,11 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
+import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
+import javax.persistence.PersistenceException
 
 class UbicacionServiceTest {
 
@@ -48,6 +51,12 @@ class UbicacionServiceTest {
     }
 
     @Test
+    fun crearUbicacionExistenteTest(){
+        val exception = assertThrows<EntityAlreadyExistsException>{ubicacionService.crearUbicacion("Bariloche")}
+        Assert.assertEquals("La entidad Ubicacion con id Bariloche ya existe", exception.message)
+    }
+
+    @Test
     fun crearUbicacionSinNombreTest() {
         val exception = assertThrows<EmptyPropertyException> {ubicacionService.crearUbicacion("")}
         Assert.assertEquals("La propiedad nombreUbicacion esta vacia", exception.message)
@@ -58,6 +67,12 @@ class UbicacionServiceTest {
     fun recuperarUbicacionTest() {
         val ubicacion = ubicacionService.recuperarUbicacion("Entre Rios")
         Assert.assertEquals(ubicacion!!.nombreUbicacion, "Entre Rios")
+    }
+
+    @Test
+    fun recuperarUbicacionInexistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> { ubicacionService.recuperarUbicacion("Tucuman") }
+        assertEquals("La entidad Ubicacion con id Tucuman no existe", exception.message)
     }
 
     @Test
@@ -93,7 +108,7 @@ class UbicacionServiceTest {
     @Test
     fun moverAUbicacionInexistenteTest() {
         val exception = assertThrows<EntityNotFoundException> {ubicacionService.mover(1, "Chaco")}
-        Assert.assertEquals("No se encontro una ubicacion con el nombre Chaco", exception.message )
+        Assert.assertEquals("La entidad Ubicacion con id Chaco no existe", exception.message )
     }
 
     @ExperimentalStdlibApi
@@ -125,5 +140,12 @@ class UbicacionServiceTest {
         ubicacionService.expandir("Cordoba")
 
         Assert.assertFalse(vectorService.recuperarVector(jorgeId!!).estaInfectado())
+    }
+
+    @ExperimentalStdlibApi
+    @Test
+    fun expandirUbicacionInexistenteTest(){
+        val exception = assertThrows<EntityNotFoundException> { ubicacionService.expandir("Bernal") }
+        assertEquals("La entidad Ubicacion con id Bernal no existe", exception.message)
     }
 }
