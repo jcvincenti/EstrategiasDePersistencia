@@ -11,6 +11,6 @@ inline fun <reified T> entityNotFound(id: String) {
 
 inline fun <reified T> entityExists(id: String)  {
     val dao = HibernateDAO(T::class.java)
-    if (dao.recuperar(id) == null)
+    if (dao.recuperar(id) != null)
         throw EntityNotFoundException("La entidad ${T::class.simpleName} ya existe")
 }
