@@ -7,17 +7,17 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 inline fun <reified T> validateEntityExists(id: String) {
     val dao = HibernateDAO(T::class.java)
     if (dao.recuperar(id) == null)
-        throw EntityNotFoundException("La entidad ${T::class.simpleName} no existe")
+        throw EntityNotFoundException("La entidad ${T::class.simpleName} con id ${id} no existe")
 }
 
 inline fun <reified T> validateEntityExists(id: Int) {
     val dao = HibernateDAO(T::class.java)
     if (dao.recuperar(id) == null)
-        throw EntityNotFoundException("La entidad ${T::class.simpleName} no existe")
+        throw EntityNotFoundException("La entidad ${T::class.simpleName} con id ${id} no existe")
 }
 
 inline fun <reified T> validateEntityDoesNotExists(id: String)  {
     val dao = HibernateDAO(T::class.java)
     if (dao.recuperar(id) != null)
-        throw EntityAlreadyExistsException("La entidad ${T::class.simpleName} ya existe")
+        throw EntityAlreadyExistsException("La entidad ${T::class.simpleName} con id ${id} ya existe")
 }

@@ -53,7 +53,7 @@ class UbicacionServiceTest {
     @Test
     fun crearUbicacionExistenteTest(){
         val exception = assertThrows<EntityAlreadyExistsException>{ubicacionService.crearUbicacion("Bariloche")}
-        Assert.assertEquals("La entidad Ubicacion ya existe", exception.message)
+        Assert.assertEquals("La entidad Ubicacion con id Bariloche ya existe", exception.message)
     }
 
     @Test
@@ -72,7 +72,7 @@ class UbicacionServiceTest {
     @Test
     fun recuperarUbicacionInexistenteTest() {
         val exception = assertThrows<EntityNotFoundException> { ubicacionService.recuperarUbicacion("Tucuman") }
-        assertEquals("La entidad Ubicacion no existe", exception.message)
+        assertEquals("La entidad Ubicacion con id Tucuman no existe", exception.message)
     }
 
     @Test
@@ -108,7 +108,7 @@ class UbicacionServiceTest {
     @Test
     fun moverAUbicacionInexistenteTest() {
         val exception = assertThrows<EntityNotFoundException> {ubicacionService.mover(1, "Chaco")}
-        Assert.assertEquals("La entidad Ubicacion no existe", exception.message )
+        Assert.assertEquals("La entidad Ubicacion con id Chaco no existe", exception.message )
     }
 
     @ExperimentalStdlibApi
@@ -146,6 +146,6 @@ class UbicacionServiceTest {
     @Test
     fun expandirUbicacionInexistenteTest(){
         val exception = assertThrows<EntityNotFoundException> { ubicacionService.expandir("Bernal") }
-        assertEquals("La entidad Ubicacion no existe", exception.message)
+        assertEquals("La entidad Ubicacion con id Bernal no existe", exception.message)
     }
 }

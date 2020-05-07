@@ -44,7 +44,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun recuperarVector(vectorId: Int): Vector {
         return TransactionRunner.runTrx {
             vectorDAO.recuperar(vectorId)
-        } ?: throw EntityNotFoundException("La entidad Vector no existe")
+        } ?: throw EntityNotFoundException("La entidad Vector con id ${vectorId} no existe")
     }
 
     override fun borrarVector(vectorId: Int) {
