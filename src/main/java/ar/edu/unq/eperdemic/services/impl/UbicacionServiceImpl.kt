@@ -58,10 +58,4 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             ubicacionDAO.recuperar(nombreUbicacion)
         } ?: throw EntityNotFoundException("La entidad Ubicacion con id ${nombreUbicacion} no existe")
     }
-
-    private fun existeUbicacion(nombreUbicacion: String): Boolean {
-        return TransactionRunner.runTrx {
-            ubicacionDAO.recuperar(nombreUbicacion)
-        } != null
-    }
 }
