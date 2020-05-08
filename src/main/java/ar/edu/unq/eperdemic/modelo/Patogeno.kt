@@ -10,8 +10,8 @@ class Patogeno() : Serializable{
     var id : Int? = null
     @Column(name = "cantidad_de_especies")
     var cantidadDeEspecies: Int = 0
-    var defensa: Int = 0
-    var letalidad: Int = 0
+    var defensa: Int? = 0
+    var letalidad: Int? = 0
     var tipo: String? = null
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
@@ -38,25 +38,4 @@ class Patogeno() : Serializable{
     fun setCapacidadDeContagio(tipoVector: TipoDeVectorEnum, capacidad: Int) {
         this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio = capacidad
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Patogeno
-
-        if (tipo != other.tipo) return false
-        if (id != other.id) return false
-        if (cantidadDeEspecies != other.cantidadDeEspecies) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = tipo.hashCode()
-        result = 31 * result + (id ?: 0)
-        result = 31 * result + cantidadDeEspecies
-        return result
-    }
-
 }

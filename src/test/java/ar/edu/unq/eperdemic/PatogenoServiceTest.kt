@@ -40,7 +40,7 @@ class PatogenoServiceTest {
         val patogeno = Patogeno("test-tipo")
         patogeno.id = patogenoService.crearPatogeno(patogeno)
         Assert.assertEquals(6, patogeno.id)
-        Assert.assertEquals(patogeno, patogenoService.recuperarPatogeno(6))
+        Assert.assertEquals(patogeno.id, patogenoService.recuperarPatogeno(6).id)
     }
 
     @Disabled
