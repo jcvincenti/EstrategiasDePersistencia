@@ -1,4 +1,8 @@
-package ar.edu.unq.eperdemic.persistencia.dao.jdbc
+package ar.edu.unq.eperdemic.persistencia.dao
 
-class EspecieDAO {
+import ar.edu.unq.eperdemic.modelo.Especie
+
+interface EspecieDAO {
+    fun recuperar(especieId: Int) : Especie?
+    fun actualizar(especie: Especie)
 }
