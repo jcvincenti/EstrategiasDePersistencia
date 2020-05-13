@@ -12,4 +12,5 @@ interface PatogenoService {
     fun cantidadDeInfectados (especieId: Int) : Int
     fun esPandemia (especieId: Int) : Boolean
     fun recuperarEspecie(id: Int): Especie
+    fun actualizarEspecie(especie: Especie)
 }
