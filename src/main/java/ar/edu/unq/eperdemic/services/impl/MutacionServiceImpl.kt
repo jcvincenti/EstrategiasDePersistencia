@@ -12,15 +12,13 @@ import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     override fun mutar(especieId: Int, mutacionId: Int) {
-        var especie = TransactionRunner.runTrx {
-            patogenoService.recuperarEspecie(especieId)
-        }
+        val especie = patogenoService.recuperarEspecie(especieId)
         TransactionRunner.runTrx {
             validateEntityExists<Mutacion>(mutacionId)
             val mutacion = mutacionDAO.recuperar(mutacionId)
             especie!!.mutar(mutacion!!)
-            patogenoService.actualizarEspecie(especie)
         }
+        patogenoService.actualizarEspecie(especie)
     }
 
     override fun crearMutacion(mutacion: Mutacion): Mutacion {
