@@ -8,6 +8,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 import javax.validation.ValidationException
 
 
@@ -59,8 +60,9 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun recuperarEspecie(id: Int): Especie {
         return TransactionRunner.runTrx {
+            validateEntityExists<Especie>(id)
             especieDAO.recuperar(id)
-        }?: throw EntityNotFoundException("No se encontro una Especie con el id ${id}")
+        }
     }
 
     override fun actualizarEspecie(especie: Especie) {

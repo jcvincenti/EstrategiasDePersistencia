@@ -77,7 +77,7 @@ class MutacionServiceTest {
     @Test
     fun mutarEspecieInexistenteTest(){
         val exception = assertThrows<EntityNotFoundException> { mutacionService.mutar(100, 1) }
-        assertEquals("No se encontro una Especie con el id 100", exception.message)
+        assertEquals("La entidad Especie con id 100 no existe", exception.message)
     }
 
     @Test

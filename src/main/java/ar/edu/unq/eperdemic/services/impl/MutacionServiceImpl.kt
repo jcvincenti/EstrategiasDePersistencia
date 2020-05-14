@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
 class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
@@ -15,7 +16,8 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
             patogenoService.recuperarEspecie(especieId)
         }
         TransactionRunner.runTrx {
-            val mutacion = mutacionDAO.recuperar(mutacionId)?: throw EntityNotFoundException("La entidad Mutacion con id ${mutacionId} no existe")
+            validateEntityExists<Mutacion>(mutacionId)
+            val mutacion = mutacionDAO.recuperar(mutacionId)
             especie!!.mutar(mutacion!!)
             patogenoService.actualizarEspecie(especie)
         }
