@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
@@ -55,7 +56,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun recuperarUbicacion(nombreUbicacion: String): Ubicacion? {
         return TransactionRunner.runTrx {
+            validateEntityExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.recuperar(nombreUbicacion)
-        } ?: throw EntityNotFoundException("La entidad Ubicacion con id ${nombreUbicacion} no existe")
+        }
     }
 }

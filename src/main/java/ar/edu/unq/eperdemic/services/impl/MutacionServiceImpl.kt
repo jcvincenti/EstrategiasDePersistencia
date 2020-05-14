@@ -2,16 +2,22 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.persistencia.dao.MutacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.MutacionService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
 class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
-
-
+    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     override fun mutar(especieId: Int, mutacionId: Int) {
-        TODO("Not yet implemented")
+        val especie = patogenoService.recuperarEspecie(especieId)
+        TransactionRunner.runTrx {
+            val mutacion = mutacionDAO.recuperar(mutacionId)
+            especie!!.mutar(mutacion!!)
+        }
+        patogenoService.actualizarEspecie(especie)
     }
 
     override fun crearMutacion(mutacion: Mutacion): Mutacion {
@@ -24,7 +30,8 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
 
     override fun recuperarMutacion(mutacionId: Int): Mutacion {
         return TransactionRunner.runTrx {
+            validateEntityExists<Mutacion>(mutacionId)
             mutacionDAO.recuperar(mutacionId)
-        } ?: throw EntityNotFoundException("La entidad Mutacion con id ${mutacionId} no existe")
+        }
     }
 }

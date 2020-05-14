@@ -12,6 +12,9 @@ class Mutacion() {
     var valorAIncrementar: Int = 0
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinTable(name = "mutacion_mutaciones_requeridas",
+            joinColumns = [JoinColumn(name = "mutacion_id")],
+            inverseJoinColumns = [JoinColumn(name = "mutacion_requerida_id")])
     var mutacionesRequeridas: MutableSet<Mutacion> = HashSet()
 
     constructor(atributo: String, adn: Int, valor: Int) : this() {

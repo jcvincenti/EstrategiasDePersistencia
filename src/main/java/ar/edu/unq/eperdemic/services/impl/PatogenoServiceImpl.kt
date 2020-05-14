@@ -2,14 +2,19 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 import javax.validation.ValidationException
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
+
+    val especieDAO: EspecieDAO = HibernateEspecieDAO()
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
         return TransactionRunner.runTrx {
@@ -54,6 +59,15 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun recuperarEspecie(id: Int): Especie {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx {
+            validateEntityExists<Especie>(id)
+            especieDAO.recuperar(id)
+        }
+    }
+
+    override fun actualizarEspecie(especie: Especie) {
+        TransactionRunner.runTrx {
+            especieDAO.actualizar(especie)
+        }
     }
 }
