@@ -18,7 +18,6 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
             val mutacion = mutacionDAO.recuperar(mutacionId)?: throw EntityNotFoundException("La entidad Mutacion con id ${mutacionId} no existe")
             especie!!.mutar(mutacion!!)
             patogenoService.actualizarEspecie(especie)
-            patogenoService.actualizarPatogeno(especie.patogeno!!)
         }
     }
 

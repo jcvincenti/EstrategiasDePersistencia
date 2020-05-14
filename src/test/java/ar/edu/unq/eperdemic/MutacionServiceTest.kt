@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Mutacion
-import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
@@ -66,7 +65,6 @@ class MutacionServiceTest {
         val especie = patogenoService.recuperarEspecie(1)
         assertEquals(1, especie!!.mutaciones.size)
         assertEquals(1, especie.mutaciones.first().id )
-        assertEquals(10,especie.patogeno!!.defensa)
     }
 
     @Test
@@ -75,9 +73,6 @@ class MutacionServiceTest {
         val especie = patogenoService.recuperarEspecie(1)
         assertEquals(0, especie!!.mutaciones.size)
         assertTrue(especie.mutaciones.isEmpty() )
-        assertEquals(100,especie.patogeno!!.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
-        assertEquals(0,especie.patogeno!!.getCapacidadDeContagio(TipoDeVectorEnum.Animal))
-        assertEquals(0,especie.patogeno!!.getCapacidadDeContagio(TipoDeVectorEnum.Insecto))
     }
     @Test
     fun mutarEspecieInexistenteTest(){

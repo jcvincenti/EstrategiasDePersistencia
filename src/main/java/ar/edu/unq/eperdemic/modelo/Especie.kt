@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-import javax.management.AttributeNotFoundException
 import javax.persistence.*
 import kotlin.random.Random
 
@@ -12,7 +11,7 @@ class Especie() {
     var nombre: String? = null
     @Column(name = "pais_de_origen")
     var paisDeOrigen: String? = null
-    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL])
     var patogeno: Patogeno? = null
     @ManyToMany(mappedBy = "especies")
     var vectores: MutableSet<Vector> = HashSet()
@@ -38,17 +37,6 @@ class Especie() {
         if (mutaciones.containsAll(mutacion.mutacionesRequeridas) && mutacion.adnRequerido <= adn) {
             mutaciones.add(mutacion)
             adn -= mutacion.adnRequerido
-            when(mutacion.atributoAIncrementar) {
-                "capacidadDeContagio" -> {
-                    patogeno!!.setCapacidadDeContagio(TipoDeVectorEnum.Persona, mutacion.valorAIncrementar)
-                    patogeno!!.setCapacidadDeContagio(TipoDeVectorEnum.Animal, mutacion.valorAIncrementar)
-                    patogeno!!.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, mutacion.valorAIncrementar)
-                }
-                "letalidad" -> patogeno!!.letalidad = patogeno!!.letalidad?.plus(mutacion.valorAIncrementar)
-                "defensa" -> patogeno!!.defensa = patogeno!!.defensa?.plus(mutacion.valorAIncrementar)
-                else -> throw AttributeNotFoundException("El atributo ${mutacion.atributoAIncrementar} no existe")
-            }
-
         }
     }
     fun esContagioExitoso(tipoVector: TipoDeVectorEnum) : Boolean {
