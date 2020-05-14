@@ -33,7 +33,8 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
 
     override fun recuperarMutacion(mutacionId: Int): Mutacion {
         return TransactionRunner.runTrx {
+            validateEntityExists<Mutacion>(mutacionId)
             mutacionDAO.recuperar(mutacionId)
-        } ?: throw EntityNotFoundException("La entidad Mutacion con id ${mutacionId} no existe")
+        }
     }
 }
