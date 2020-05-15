@@ -16,15 +16,15 @@ class Ubicacion() {
         this.nombreUbicacion = nombreUbicacion
     }
 
-    fun vectoresTotales(): Int = this.vectores.size
+    private fun vectoresTotales(): Int = this.vectores.size
 
-    fun vectoresInfectados(): Int {
+    private fun vectoresInfectados(): Int {
         return this.vectores.count {
             it.estaInfectado()
         }
     }
 
-    fun especieConMasVectoresInfectados(): String {
+    private fun especieConMasVectoresInfectados(): String {
         val especies = this.vectores.flatMap { it.especies }
 
         if (especies.isNotEmpty()) {
@@ -34,5 +34,13 @@ class Ubicacion() {
                     .key.nombre!!
         }
         return ""
+    }
+
+    fun generarReporte(): ReporteDeContagios {
+        val totales = vectoresTotales()
+        val infectados = vectoresInfectados()
+        val especie = especieConMasVectoresInfectados()
+
+        return ReporteDeContagios(totales, infectados, especie)
     }
 }
