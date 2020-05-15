@@ -8,6 +8,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 import javax.validation.ValidationException
 
@@ -17,12 +18,9 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     val especieDAO: EspecieDAO = HibernateEspecieDAO()
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
+        ObjectStructureUtils.checkEmptyAttributes(patogeno)
         return TransactionRunner.runTrx {
-            try {
                 patogenoDAO.crear(patogeno)
-            } catch (exception: ValidationException) {
-                throw NoSePudoCrearPatogenoException("La capacidad de contagio debe ser menor o igual a 100")
-            }
         }
     }
 
