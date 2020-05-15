@@ -4,20 +4,20 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
+import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
+import junit.framework.Assert.assertFalse
 import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
 
-    private val patogenoService = PatogenoServiceImpl(JDBCPatogenoDAO())
-    private val dataService = DataServiceJDBC()
+    private val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
+    private val dataService = DataServiceHibernate()
 
     @BeforeEach
     fun init() {
@@ -104,5 +104,10 @@ class PatogenoServiceTest {
         // TODO reimplementar
         //val exception = assertThrows<NoSePudoAgregarEspecieException> {patogenoService.agregarEspecie(99, "test-especie", "test-pais")}
         //Assert.assertEquals("Patogeno con id 99 inexistente", exception.message)
+    }
+
+    @Test
+    fun esPandemiaTest(){
+        assertFalse(patogenoService.esPandemia(1))
     }
 }

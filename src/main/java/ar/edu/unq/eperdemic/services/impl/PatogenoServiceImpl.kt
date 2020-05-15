@@ -2,20 +2,23 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
-import javax.validation.ValidationException
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     val especieDAO: EspecieDAO = HibernateEspecieDAO()
+    val ubicacionDAO: UbicacionDAO = HibernateUbicacionDAO()
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
         ObjectStructureUtils.checkEmptyAttributes(patogeno)
@@ -51,7 +54,15 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun esPandemia(especieId: Int): Boolean {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx {
+            val ubicaciones = ubicacionDAO.recuperarTodas()
+
+            ubicacionesDeEspecie(especieId).size > (ubicaciones.size / 2)
+        }
+    }
+
+    private fun ubicacionesDeEspecie(especieId: Int): List<Ubicacion> {
+        return especieDAO.findUbicacionesDeEspecie(especieId)
     }
 
     override fun recuperarEspecie(id: Int): Especie {
