@@ -2,8 +2,10 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
+import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
@@ -28,10 +30,8 @@ class PatogenoServiceTest {
 
     @Test
     fun setFactorDeContagioMayorACienTest() {
-        val patogenoServiceHibernate = PatogenoServiceImpl(HibernatePatogenoDAO())
         var patogeno = Patogeno("Hongo")
-        patogeno.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 150)
-        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoServiceHibernate.crearPatogeno(patogeno)}
+        val exception = assertThrows<CapacidadDeContagioInvalidaException> {patogeno.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 150)}
         Assert.assertEquals("La capacidad de contagio debe ser menor o igual a 100", exception.message )
     }
 
@@ -43,6 +43,13 @@ class PatogenoServiceTest {
         Assert.assertEquals(patogeno.id, patogenoService.recuperarPatogeno(6).id)
     }
 
+    @Test
+    fun crearPatogenoSinTipoTest(){
+        val patogeno = Patogeno()
+        val exception = assertThrows<EmptyPropertyException> { patogenoService.crearPatogeno(patogeno) }
+
+        Assert.assertEquals("La propiedad tipo esta vacia", exception.message)
+    }
     @Disabled
     @Test
     fun crearPatogenoExistenteTest() {
