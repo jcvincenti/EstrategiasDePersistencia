@@ -71,28 +71,6 @@ class JDBCPatogenoDAO : PatogenoDAO {
         }
     }
 
-    override fun existePatogenoConTipo(tipo: String) : Boolean {
-        return execute { conn: Connection ->
-            val ps = conn.prepareStatement("SELECT id FROM patogeno WHERE tipo = ?")
-            ps.setString(1, tipo)
-            val resultSet = ps.executeQuery()
-            val existe = resultSet.next()
-            ps.close()
-            existe
-        }
-    }
-
-    override fun existePatogenoConId(id: Int) : Boolean {
-        return execute { conn: Connection ->
-            val ps = conn.prepareStatement("SELECT id FROM patogeno WHERE id = ?")
-            ps.setInt(1, id)
-            val resultSet = ps.executeQuery()
-            val existe = resultSet.next()
-            ps.close()
-            existe
-        }
-    }
-
     fun eliminarPatogenos() {
         return execute { conn: Connection ->
             val st = conn.createStatement()
