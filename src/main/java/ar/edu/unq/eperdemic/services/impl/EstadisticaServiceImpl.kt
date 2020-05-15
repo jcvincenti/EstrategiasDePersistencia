@@ -19,10 +19,7 @@ class EstadisticaServiceImpl() : EstadisticasService {
 
     override fun reporteDeContagios(nombreUbicacion: String): ReporteDeContagios {
         val ubicacion = ubicacionService.recuperarUbicacion(nombreUbicacion)
-        val totales = ubicacion!!.vectoresTotales()
-        val infectados = ubicacion.vectoresInfectados()
-        val especie = ubicacion.especieConMasVectoresInfectados()
 
-        return ReporteDeContagios(totales, infectados, especie)
+        return ubicacion!!.generarReporte()
     }
 }
