@@ -35,12 +35,7 @@ object ObjectStructureUtils {
 
     private fun isNullOrEmpty(property: KProperty1<*, *>, o: Any) : Boolean {
         val field = o.javaClass.getDeclaredField(property.name)
-        val propertyValue =
-                try {
-                    property.javaGetter!!.invoke(o)
-                } catch (e: InvocationTargetException) {
-                    null
-                }
+        val propertyValue = try { property.javaGetter!!.invoke(o) } catch (e: InvocationTargetException) { null }
         return field.name != "id" && propertyValue == null ||
                 property.javaGetter!!.returnType == String::class.java &&
                 (propertyValue == "" || propertyValue == null)
