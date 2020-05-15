@@ -6,6 +6,8 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.DataService
 
+fun main() = DataServiceHibernate().crearSetDeDatosIniciales()
+
 class DataServiceHibernate : DataService {
     val hibernateDao = HibernateDataDAO()
 
