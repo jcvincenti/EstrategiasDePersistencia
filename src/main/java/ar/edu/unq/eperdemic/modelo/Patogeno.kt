@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import java.io.Serializable
 import javax.persistence.*
 
@@ -36,6 +37,9 @@ class Patogeno() : Serializable{
     }
 
     fun setCapacidadDeContagio(tipoVector: TipoDeVectorEnum, capacidad: Int) {
-        this.capacidadDeContagio.find{it.tipo == tipoVector}!!.factorDeContagio = capacidad
+        if (capacidad > 100 || capacidad < 0) {
+            throw CapacidadDeContagioInvalidaException("La capacidad de contagio debe ser menor o igual a 100")
+        }
+        this.capacidadDeContagio.find { it.tipo == tipoVector }!!.factorDeContagio = capacidad
     }
 }
