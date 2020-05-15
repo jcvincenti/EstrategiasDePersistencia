@@ -6,7 +6,7 @@ import javax.persistence.*
 class Mutacion() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null
+    var id: Int = 0
     var atributoAIncrementar: String = ""
     var adnRequerido: Int = 0
     var valorAIncrementar: Int = 0

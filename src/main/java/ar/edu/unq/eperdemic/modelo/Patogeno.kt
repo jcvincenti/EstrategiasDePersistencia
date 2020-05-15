@@ -7,7 +7,7 @@ import javax.persistence.*
 class Patogeno() : Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Int? = null
+    var id : Int = 0
     @Column(name = "cantidad_de_especies")
     var cantidadDeEspecies: Int = 0
     var defensa: Int = 0

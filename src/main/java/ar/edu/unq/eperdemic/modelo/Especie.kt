@@ -7,7 +7,7 @@ import kotlin.random.Random
 class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null
+    var id: Int = 0
     lateinit var nombre: String
     @Column(name = "pais_de_origen")
     lateinit var paisDeOrigen: String
