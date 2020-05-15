@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.utils
 
 
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Modifier
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
@@ -34,7 +35,7 @@ object ObjectStructureUtils {
 
     private fun isNullOrEmpty(property: KProperty1<*, *>, o: Any) : Boolean {
         val field = o.javaClass.getDeclaredField(property.name)
-        val propertyValue = property.javaGetter!!.invoke(o)
+        val propertyValue = try { property.javaGetter!!.invoke(o) } catch (e: InvocationTargetException) { null }
         return field.name != "id" && propertyValue == null ||
                 property.javaGetter!!.returnType == String::class.java &&
                 (propertyValue == "" || propertyValue == null)

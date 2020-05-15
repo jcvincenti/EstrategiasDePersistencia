@@ -13,7 +13,7 @@ class VectorFrontendDTO(val tipoDeVector : TipoDeVector,
     fun aModelo() : Vector {
         var vector = Vector()
         vector.nombreDeLocacionActual = nombreDeUbicacionPresente
-        vector.tipo = TipoDeVectorEnum.parseTipo(tipoDeVector.name)
+        vector.tipo = TipoDeVectorEnum.parseTipo(tipoDeVector.name)!!
         return vector
     }
 }

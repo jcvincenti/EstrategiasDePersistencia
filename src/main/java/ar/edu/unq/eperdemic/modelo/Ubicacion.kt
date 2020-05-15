@@ -10,7 +10,7 @@ import javax.persistence.OneToMany
 class Ubicacion() {
     @Id
     @Column(name = "nombre_ubicacion", nullable = false, unique = true)
-    var nombreUbicacion: String? = null
+    lateinit var nombreUbicacion: String
 
     @OneToMany(mappedBy = "nombreDeLocacionActual", targetEntity = Vector::class)
     var vectores: List<Vector> = mutableListOf()
