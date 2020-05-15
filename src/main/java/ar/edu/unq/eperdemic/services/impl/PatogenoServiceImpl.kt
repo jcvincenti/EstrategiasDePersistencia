@@ -13,7 +13,6 @@ import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
-import javax.validation.ValidationException
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
@@ -60,12 +59,12 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         return TransactionRunner.runTrx {
             val ubicaciones = ubicacionDAO.recuperarTodas()
 
-            lugaresPresentes(especieId).size > (ubicaciones.size / 2)
+            ubicacionesDeEspecie(especieId).size > (ubicaciones.size / 2)
         }
     }
 
-    private fun lugaresPresentes(especieId: Int): List<Ubicacion> {
-        return especieDAO.getLugaresPresenteEspecie(especieId)
+    private fun ubicacionesDeEspecie(especieId: Int): List<Ubicacion> {
+        return especieDAO.findUbicacionesDeEspecie(especieId)
     }
 
     override fun recuperarEspecie(id: Int): Especie {

@@ -4,15 +4,13 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
 import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
-import ar.edu.unq.eperdemic.utils.jdbc.DataServiceJDBC
-import junit.framework.Assert.assertTrue
+import junit.framework.Assert.assertFalse
 import org.junit.Assert
 import org.junit.jupiter.api.*
 
@@ -108,7 +106,7 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun pandemia(){
-        assertTrue(patogenoService.esPandemia(1))
+    fun esPandemiaTest(){
+        assertFalse(patogenoService.esPandemia(1))
     }
 }
