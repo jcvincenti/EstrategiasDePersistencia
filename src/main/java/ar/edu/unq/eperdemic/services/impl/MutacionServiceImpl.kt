@@ -14,8 +14,7 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
     override fun mutar(especieId: Int, mutacionId: Int) {
         val especie = patogenoService.recuperarEspecie(especieId)
         TransactionRunner.runTrx {
-            val mutacion = mutacionDAO.recuperar(mutacionId)
-            especie!!.mutar(mutacion!!)
+            especie!!.mutar(recuperarMutacion(mutacionId)!!)
         }
         patogenoService.actualizarEspecie(especie)
     }

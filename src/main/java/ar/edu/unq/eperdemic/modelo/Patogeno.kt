@@ -10,9 +10,9 @@ class Patogeno() : Serializable{
     var id : Int? = null
     @Column(name = "cantidad_de_especies")
     var cantidadDeEspecies: Int = 0
-    var defensa: Int? = 0
-    var letalidad: Int? = 0
-    var tipo: String? = null
+    var defensa: Int = 0
+    var letalidad: Int = 0
+    lateinit var tipo: String
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "patogeno_factor_de_contagio",

@@ -11,7 +11,7 @@ class Vector() {
     var id: Int? = null
 
     @Column(name = "nombre_de_locacion_actual")
-    var nombreDeLocacionActual: String? = null
+    lateinit var nombreDeLocacionActual: String
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "vector_especie",
@@ -20,25 +20,25 @@ class Vector() {
     var especies: MutableList<Especie> = mutableListOf()
 
     @Column(name = "tipo_de_vector", nullable = false)
-    var tipo: TipoDeVectorEnum? = null
+    lateinit var tipo: TipoDeVectorEnum
 
     constructor(ubicacion: String) : this() {
         this.nombreDeLocacionActual = ubicacion
     }
 
     fun infectar(especie: Especie) {
-        if (especie.esContagioExitoso(this.tipo!!)) {
+        if (especie.esContagioExitoso(this.tipo)) {
             especies.add(especie)
         }
     }
 
     fun estaInfectado() = this.especies.isNotEmpty()
 
-    fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo!!.puedeSerInfectadoPor(tipo)
+    fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo.puedeSerInfectadoPor(tipo)
 
     fun contagiar(vector: Vector) {
         if (estaInfectado()) {
-            if (vector.puedeSerInfectadoPor(tipo!!)) {
+            if (vector.puedeSerInfectadoPor(tipo)) {
                 especies.forEach { especie ->
                     vector.infectar(especie)
                 }
@@ -50,7 +50,7 @@ class Vector() {
 
     fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion!!.nombreUbicacion
 
-    fun moverse(ubicacion: String?) {
+    fun moverse(ubicacion: String) {
         this.nombreDeLocacionActual = ubicacion
     }
 
