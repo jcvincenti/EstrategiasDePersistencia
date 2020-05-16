@@ -5,7 +5,6 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
@@ -20,7 +19,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val ubicacion = recuperarUbicacion(nombreUbicacion)
 
         if (vector.puedeMoverse(ubicacion)) {
-            vector.moverse(ubicacion!!.nombreUbicacion!!)
+            vector.moverse(ubicacion!!.nombreUbicacion)
             TransactionRunner.runTrx {
                 contagiarZona(vector, nombreUbicacion)
                 vectorService.actualizarVector(vector)
@@ -58,6 +57,12 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         return TransactionRunner.runTrx {
             validateEntityExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.recuperar(nombreUbicacion)
+        }
+    }
+
+    fun cantidadUbicaciones(): Long {
+        return TransactionRunner.runTrx {
+            ubicacionDAO.cantidadUbicaciones()
         }
     }
 }
