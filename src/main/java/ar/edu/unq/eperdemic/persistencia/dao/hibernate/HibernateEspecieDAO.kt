@@ -15,10 +15,13 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
             join e.vectores v
             group by e.id, v.tipo
             having v.tipo in ('${TipoDeVectorEnum.Persona.name}', '${TipoDeVectorEnum.Animal.name}')
+            order by count(e.id)
         """.trimIndent()
         val query = session.createQuery(hql, Especie::class.java)
-        return query.resultList
+        // se utiliza asReversed porque la query no ordena de forma descendente
+        return query.resultList.asReversed()
     }
+
     override fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
         val session = TransactionRunner.currentSession
         val hql = (
