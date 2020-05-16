@@ -1,19 +1,26 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
+import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
+import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
-import junit.framework.Assert.assertFalse
+import junit.framework.Assert.*
 import org.junit.Assert
 import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
 
     private val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
+    private val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    private val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     private val dataService = DataServiceHibernate()
 
     @BeforeEach
@@ -105,10 +112,28 @@ class PatogenoServiceTest {
         assertFalse(patogenoService.esPandemia(1))
     }
 
-    @Disabled
     @Test
     fun esPandemiaTest(){
-        // TODO implementar
+        val gripe = patogenoService.recuperarEspecie(1)
+        val cordobes = vectorService.recuperarVector(4)
+        val barilochense = vectorService.recuperarVector(3)
+        val pampeano = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"La Pampa")
+                .aModelo()
+        val quilmenho = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Quilmes")
+                .aModelo()
+        val vectores = listOf(cordobes, barilochense, pampeano, quilmenho)
+        vectores.forEach {
+                it.especies.add(gripe)
+        }
+
+        vectorService.crearVector(pampeano)
+        vectorService.crearVector(quilmenho)
+        vectorService.actualizarVector(cordobes)
+        vectorService.actualizarVector(barilochense)
+
+        assertEquals(5, patogenoService.cantidadUbicacionesDeEspecie(1))
+        assertEquals(9, ubicacionService.cantidadUbicaciones())
+        assertTrue(patogenoService.esPandemia(1))
     }
 
 }
