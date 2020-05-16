@@ -15,11 +15,4 @@ open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), P
         TODO("Not yet implemented")
     }
 
-    override fun existePatogenoConTipo(tipo: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun existePatogenoConId(id: Int): Boolean {
-        TODO("Not yet implemented")
-    }
 }

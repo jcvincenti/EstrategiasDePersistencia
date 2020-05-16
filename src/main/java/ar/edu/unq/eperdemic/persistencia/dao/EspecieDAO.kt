@@ -6,5 +6,6 @@ interface EspecieDAO {
     fun guardar(especie: Especie)
     fun recuperar(especieId: Int) : Especie
     fun actualizar(especie: Especie)
+    fun cantidadUbicacionesDeEspecie(especieId: Int): Long
     fun lideres() : List<Especie>
 }

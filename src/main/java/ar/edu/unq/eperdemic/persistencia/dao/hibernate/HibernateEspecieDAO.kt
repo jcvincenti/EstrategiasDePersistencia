@@ -19,4 +19,19 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         val query = session.createQuery(hql, Especie::class.java)
         return query.resultList
     }
+    override fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
+        val session = TransactionRunner.currentSession
+        val hql = (
+                """
+                    select count(*)
+                    from Ubicacion u
+                    join u.vectores v
+                    join v.especies ve
+                    where ve.id = :especieId
+                """.trimIndent()
+                )
+        val query = session.createQuery(hql, Long::class.javaObjectType)
+        query.setParameter("especieId", especieId)
+        return query.singleResult
+    }
 }

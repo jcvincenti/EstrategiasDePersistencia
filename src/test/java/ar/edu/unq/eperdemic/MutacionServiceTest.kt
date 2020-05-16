@@ -63,7 +63,7 @@ class MutacionServiceTest {
     fun mutarEspecieTest() {
         mutacionService.mutar(1, 1)
         val especie = patogenoService.recuperarEspecie(1)
-        assertEquals(1, especie!!.mutaciones.size)
+        assertEquals(1, especie.mutaciones.size)
         assertEquals(1, especie.mutaciones.first().id )
     }
 
@@ -71,7 +71,7 @@ class MutacionServiceTest {
     fun mutarEspecieQueNoCumpleLosRequisitosTest(){
         mutacionService.mutar(1, 2)
         val especie = patogenoService.recuperarEspecie(1)
-        assertEquals(0, especie!!.mutaciones.size)
+        assertEquals(0, especie.mutaciones.size)
         assertTrue(especie.mutaciones.isEmpty() )
     }
     @Test

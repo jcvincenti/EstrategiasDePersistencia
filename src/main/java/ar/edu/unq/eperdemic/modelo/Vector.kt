@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
 import javax.persistence.*
-import kotlin.random.Random
 
 @Entity
 class Vector() {
