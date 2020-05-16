@@ -15,8 +15,8 @@ class Vector() {
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "vector_especie",
-            joinColumns = [JoinColumn(name = "especie_id")],
-            inverseJoinColumns = [JoinColumn(name = "vector_id")])
+            joinColumns = [JoinColumn(name = "vector_id")],
+            inverseJoinColumns = [JoinColumn(name = "especie_id")])
     var especies: MutableList<Especie> = mutableListOf()
 
     @Column(name = "tipo_de_vector", nullable = false)

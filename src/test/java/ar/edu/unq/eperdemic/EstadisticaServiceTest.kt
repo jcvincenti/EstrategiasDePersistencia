@@ -11,6 +11,7 @@ import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 
 
 class EstadisticaServiceTest {
@@ -21,8 +22,11 @@ class EstadisticaServiceTest {
     var virus: Patogeno? = null
     var paperas: Especie? = null
     var corona: Especie? = null
+    var gripe: Especie? = null
     var cordobes: Vector? = null
-    var otroCordobes: Vector? = null
+    var animalCordobes: Vector? = null
+    var portenho: Vector? = null
+    var insectoBarilochense: Vector? = null
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
@@ -30,8 +34,11 @@ class EstadisticaServiceTest {
         virus = patogenoService.recuperarPatogeno(1)
         paperas = virus!!.crearEspecie("Paperas", "Yugoslavia")
         corona = virus!!.crearEspecie("Coronavirus","China")
+        gripe = patogenoService.recuperarEspecie(1)
         cordobes = vectorService.recuperarVector(4)
-        otroCordobes = vectorService.recuperarVector(2)
+        animalCordobes = vectorService.recuperarVector(2)
+        portenho = vectorService.recuperarVector(1)
+        insectoBarilochense = vectorService.recuperarVector(3)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Animal, 100)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 100)
@@ -55,7 +62,7 @@ class EstadisticaServiceTest {
     @Test
     fun reporteDeContagiosConDosVectoresInfectadosTest(){
         vectorService.infectar(cordobes!!, paperas!!)
-        vectorService.infectar(otroCordobes!!, corona!!)
+        vectorService.infectar(animalCordobes!!, corona!!)
         vectorService.infectar(cordobes!!, corona!!)
 
         val reporte = estadisticaService.reporteDeContagios("Cordoba")
@@ -72,5 +79,25 @@ class EstadisticaServiceTest {
         assertEquals(0, reporte.vectoresPresentes)
         assertEquals(0, reporte.vectoresInfecatods)
         assertEquals("",reporte.nombreDeEspecieMasInfecciosa)
+    }
+
+    @Test
+    fun lideresTest() {
+        val gripeSpy = Mockito.spy(gripe)
+        Mockito.doReturn(true).`when`(gripeSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(gripeSpy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val h1n1Spy = Mockito.spy(patogenoService.recuperarEspecie(2))
+        Mockito.doReturn(true).`when`(h1n1Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(h1n1Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val anginasSpy = Mockito.spy(patogenoService.recuperarEspecie(3))
+        Mockito.doReturn(true).`when`(anginasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(anginasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        vectorService.infectar(cordobes!!, gripeSpy!!)
+        vectorService.infectar(animalCordobes!!, gripeSpy!!)
+        vectorService.infectar(cordobes!!, h1n1Spy!!)
+        vectorService.infectar(animalCordobes!!, h1n1Spy!!)
+        vectorService.infectar(cordobes!!, anginasSpy!!)
+        vectorService.infectar(animalCordobes!!, anginasSpy!!)
+        val lideres = estadisticaService.lideres()
     }
 }
