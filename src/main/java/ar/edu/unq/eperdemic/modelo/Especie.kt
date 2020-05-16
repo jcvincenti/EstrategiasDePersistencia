@@ -11,7 +11,7 @@ class Especie() {
     lateinit var nombre: String
     @Column(name = "pais_de_origen")
     lateinit var paisDeOrigen: String
-    @ManyToOne(cascade = [CascadeType.MERGE])
+    @ManyToOne(cascade = [CascadeType.REFRESH])
     lateinit var patogeno: Patogeno
     @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY)
     var vectores: MutableSet<Vector> = HashSet()
