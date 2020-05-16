@@ -20,20 +20,20 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
         if (vector.puedeMoverse(ubicacion)) {
             vector.moverse(ubicacion!!.nombreUbicacion)
-            contagiarZona(vector, nombreUbicacion)
             TransactionRunner.runTrx {
                 vectorService.actualizarVector(vector)
             }
+            contagiarZona(vector, nombreUbicacion)
         }
     }
 
     private fun contagiarZona(vector: Vector?, locacion: String?) {
-        val vectores: List<Vector> = mutableListOf()
+        var vectores: List<Vector> = mutableListOf()
 
         if (vector != null && vector.estaInfectado()) {
             TransactionRunner.runTrx {
-                val vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
-                vectores.removeIf { v -> v.id == vector.id }
+                vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
+                (vectores as MutableList<Vector>).removeIf { v -> v.id == vector.id }
             }
             vectorService.contagiar(vector!!, vectores)
         }
