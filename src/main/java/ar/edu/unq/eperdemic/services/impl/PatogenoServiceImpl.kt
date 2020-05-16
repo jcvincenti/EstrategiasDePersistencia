@@ -2,10 +2,8 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -18,7 +16,7 @@ import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     val especieDAO: EspecieDAO = HibernateEspecieDAO()
-    val ubicacionDAO: UbicacionDAO = HibernateUbicacionDAO()
+    val ubicacionService: UbicacionServiceImpl = UbicacionServiceImpl(HibernateUbicacionDAO())
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
         ObjectStructureUtils.checkEmptyAttributes(patogeno)
@@ -39,7 +37,7 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         // TODO reimplementar
         val patogeno = patogenoDAO.recuperar(id)
         val especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
-        patogenoDAO.actualizar(patogeno!!)
+        patogenoDAO.actualizar(patogeno)
         return especieCreada
     }
 
@@ -55,14 +53,15 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     override fun esPandemia(especieId: Int): Boolean {
         return TransactionRunner.runTrx {
-            val ubicaciones = ubicacionDAO.recuperarTodas()
-
-            ubicacionesDeEspecie(especieId).size > (ubicaciones.size / 2)
+            val ubicaciones = ubicacionService.cantidadUbicaciones()
+            cantidadUbicacionesDeEspecie(especieId) > (ubicaciones / 2)
         }
     }
 
-    private fun ubicacionesDeEspecie(especieId: Int): List<Ubicacion> {
-        return especieDAO.findUbicacionesDeEspecie(especieId)
+    fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
+        return TransactionRunner.runTrx {
+            especieDAO.cantidadUbicacionesDeEspecie(especieId)
+        }
     }
 
     override fun recuperarEspecie(id: Int): Especie {

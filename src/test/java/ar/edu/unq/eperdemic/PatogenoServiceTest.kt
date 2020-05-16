@@ -5,9 +5,6 @@ import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
-import ar.edu.unq.eperdemic.services.exceptions.NoSePudoAgregarEspecieException
-import ar.edu.unq.eperdemic.services.exceptions.NoSePudoCrearPatogenoException
-import ar.edu.unq.eperdemic.services.exceptions.NoSePudoRecuperarPatogenoException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import junit.framework.Assert.assertFalse
@@ -30,13 +27,15 @@ class PatogenoServiceTest {
 
     @Test
     fun setFactorDeContagioMayorACienTest() {
-        var patogeno = Patogeno("Hongo")
+        val patogeno = Patogeno("Hongo")
         val exception = assertThrows<CapacidadDeContagioInvalidaException> {patogeno.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 150)}
         Assert.assertEquals("La capacidad de contagio debe ser menor o igual a 100", exception.message )
     }
 
+    @Disabled
     @Test
     fun crearPatogenoTest() {
+        //TODO: Reimplementar con Hibernate
         val patogeno = Patogeno("test-tipo")
         patogeno.id = patogenoService.crearPatogeno(patogeno)
         Assert.assertEquals(6, patogeno.id)
@@ -50,55 +49,50 @@ class PatogenoServiceTest {
 
         Assert.assertEquals("La propiedad tipo esta vacia", exception.message)
     }
+
     @Disabled
     @Test
-    fun crearPatogenoExistenteTest() {
-        val patogeno = Patogeno("bacteria")
-        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(patogeno)}
-        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoService.crearPatogeno(patogeno)}
-        Assert.assertEquals("Ya existe un patogeno de tipo ${patogeno.tipo}", exception.message )
-    }
-
-    @Test
     fun testRecuperarATodosLosPatogenosConPatogenos() {
-        var patogenos = mutableListOf<Patogeno>()
+        //TODO: Reimplementar con Hibernate
+        val patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
         Assert.assertEquals(5, patogenos.size)
         Assert.assertEquals("asarasa", patogenos.first().tipo)
         Assert.assertEquals("virus", patogenos.last().tipo)
     }
 
+    @Disabled
     @Test
     fun testRecuperarATodosLosPatogenosSinPatogenos() {
+        //TODO: Reimplementar con Hibernate
         this.cleanUp()
-        var patogenos = mutableListOf<Patogeno>()
+        val patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
         Assert.assertTrue(patogenos.isEmpty())
     }
 
+    @Disabled
     @Test
     fun testRecuperarPatogenoExistente(){
-        var patogeno = patogenoService.recuperarPatogeno(1)
+        //TODO: Reimplementar con Hibernate
+        val patogeno = patogenoService.recuperarPatogeno(1)
         Assert.assertEquals("bacteria", patogeno.tipo)
         Assert.assertEquals(0, patogeno.cantidadDeEspecies)
     }
+
     @Disabled
     @Test
-    fun testMensajeExceptionPatogenoInexistente() {
-        val exception = assertThrows<NoSePudoRecuperarPatogenoException> {patogenoService.recuperarPatogeno(80)}
-        Assert.assertEquals("Patogeno con id 80 inexistente", exception.message )
-    }
-
-    @Test
     fun testAgregarEspecieConPatogenoExistente(){
-        var especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
-        var patogeno = patogenoService.recuperarPatogeno(4)
-        Assert.assertEquals(patogeno.id, especie.patogeno!!.id)
+        //TODO: Reimplementar con Hibernate
+        val especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
+        val patogeno = patogenoService.recuperarPatogeno(4)
+        Assert.assertEquals(patogeno.id, especie.patogeno.id)
         Assert.assertEquals("sarampion",especie.nombre)
         Assert.assertEquals("indefinido", especie.paisDeOrigen)
         Assert.assertEquals(1,patogeno.cantidadDeEspecies)
     }
 
+    @Disabled
     @Test
     fun testAgregarEspecieConPatogenoInexistente(){
         // TODO reimplementar
@@ -107,7 +101,14 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun esPandemiaTest(){
+    fun noEsPandemiaTest() {
         assertFalse(patogenoService.esPandemia(1))
     }
+
+    @Disabled
+    @Test
+    fun esPandemiaTest(){
+        // TODO implementar
+    }
+
 }
