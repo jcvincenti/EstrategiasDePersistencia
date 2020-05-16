@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import junit.framework.Assert.assertEquals
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
@@ -80,7 +81,7 @@ class EstadisticaServiceTest {
         assertEquals(0, reporte.vectoresInfecatods)
         assertEquals("",reporte.nombreDeEspecieMasInfecciosa)
     }
-
+    @Disabled
     @Test
     fun lideresTest() {
         val gripeSpy = Mockito.spy(gripe)
