@@ -20,8 +20,8 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
      override fun infectar(vector: Vector, especie: Especie) {
-        vector.infectar(especie)
         TransactionRunner.runTrx {
+            vector.infectar(especie)
             vectorDAO.actualizar(vector)
         }
     }

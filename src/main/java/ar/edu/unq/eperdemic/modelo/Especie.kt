@@ -11,9 +11,9 @@ class Especie() {
     lateinit var nombre: String
     @Column(name = "pais_de_origen")
     lateinit var paisDeOrigen: String
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     lateinit var patogeno: Patogeno
-    @ManyToMany(mappedBy = "especies", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY)
     var vectores: MutableSet<Vector> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)
