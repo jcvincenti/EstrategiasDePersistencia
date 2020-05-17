@@ -48,7 +48,9 @@ class DataServiceHibernate : DataService {
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto,"Bariloche")
                         .aModelo(),
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Cordoba")
-                        .aModelo()
+                        .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Bariloche")
+                .aModelo()
         )
     }
 

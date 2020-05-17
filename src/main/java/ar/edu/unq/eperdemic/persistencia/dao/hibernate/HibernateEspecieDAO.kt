@@ -45,11 +45,11 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
             select e
             from Especie e
             join e.vectores v
-            group by e.id
-            having v.tipo in '${TipoDeVectorEnum.Persona.name}'
-            order by count(e.id)
+            group by e.id, v.tipo
+            having v.tipo in ('${TipoDeVectorEnum.Persona.name}')
+            order by count(e.id) desc
         """.trimIndent()
         val query = session.createQuery(hql, Especie::class.java)
-        return query.setFirstResult(0).uniqueResult()
+        return query.resultList[0]
     }
 }
