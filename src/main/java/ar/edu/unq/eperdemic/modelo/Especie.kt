@@ -11,17 +11,17 @@ class Especie() {
     lateinit var nombre: String
     @Column(name = "pais_de_origen")
     lateinit var paisDeOrigen: String
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne(cascade = [CascadeType.REFRESH, CascadeType.REMOVE])
     lateinit var patogeno: Patogeno
-    @ManyToMany(mappedBy = "especies")
+    @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY)
     var vectores: MutableSet<Vector> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "especie_mutacion",
             joinColumns = [JoinColumn(name = "especie_id")],
             inverseJoinColumns = [JoinColumn(name = "mutacion_id")])
-    var mutaciones: MutableSet<Mutacion> = HashSet();
-    var adn = 0;
+    var mutaciones: MutableSet<Mutacion> = HashSet()
+    var adn = 0
 
     constructor(patogeno: Patogeno, nombreEspecie: String, paisDeOrigen: String) : this() {
         this.patogeno = patogeno

@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
 
@@ -34,11 +35,15 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
-        // TODO reimplementar
-        val patogeno = patogenoDAO.recuperar(id)
-        val especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
-        patogenoDAO.actualizar(patogeno)
-        return especieCreada
+        var especieCreada: Especie? = null
+        TransactionRunner.runTrx {
+            validateEntityExists<Patogeno>(id)
+            val patogeno = patogenoDAO.recuperar(id)
+            especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
+            especieDAO.guardar(especieCreada!!)
+            patogenoDAO.actualizar(patogeno)
+        }
+        return especieCreada!!
     }
 
     override fun actualizarPatogeno(patogeno: Patogeno) {

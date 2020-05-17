@@ -8,12 +8,14 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import junit.framework.Assert.*
 import org.junit.Assert
+import org.junit.Assert.assertFalse
 import org.junit.jupiter.api.*
 
 class PatogenoServiceTest {
@@ -39,14 +41,12 @@ class PatogenoServiceTest {
         Assert.assertEquals("La capacidad de contagio debe ser menor o igual a 100", exception.message )
     }
 
-    @Disabled
     @Test
     fun crearPatogenoTest() {
-        //TODO: Reimplementar con Hibernate
         val patogeno = Patogeno("test-tipo")
         patogeno.id = patogenoService.crearPatogeno(patogeno)
-        Assert.assertEquals(6, patogeno.id)
-        Assert.assertEquals(patogeno.id, patogenoService.recuperarPatogeno(6).id)
+        Assert.assertEquals(3, patogeno.id)
+        Assert.assertEquals(patogeno.id, patogenoService.recuperarPatogeno(3).id)
     }
 
     @Test
@@ -55,6 +55,18 @@ class PatogenoServiceTest {
         val exception = assertThrows<EmptyPropertyException> { patogenoService.crearPatogeno(patogeno) }
 
         Assert.assertEquals("La propiedad tipo esta vacia", exception.message)
+    }
+
+    @Disabled
+    @Test
+    fun crearPatogenoExistenteTest() {
+        //TODO: Reimplementer con Hibernate
+        /*
+        val patogeno = Patogeno("bacteria")
+        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(patogeno)}
+        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoService.crearPatogeno(patogeno)}
+        Assert.assertEquals("Ya existe un patogeno de tipo ${patogeno.tipo}", exception.message )
+        */
     }
 
     @Disabled
@@ -78,33 +90,28 @@ class PatogenoServiceTest {
         Assert.assertTrue(patogenos.isEmpty())
     }
 
-    @Disabled
     @Test
     fun testRecuperarPatogenoExistente(){
-        //TODO: Reimplementar con Hibernate
         val patogeno = patogenoService.recuperarPatogeno(1)
-        Assert.assertEquals("bacteria", patogeno.tipo)
-        Assert.assertEquals(0, patogeno.cantidadDeEspecies)
+        Assert.assertEquals("Virus", patogeno.tipo)
+        Assert.assertEquals(2, patogeno.cantidadDeEspecies)
     }
 
     @Disabled
     @Test
     fun testAgregarEspecieConPatogenoExistente(){
-        //TODO: Reimplementar con Hibernate
-        val especie = patogenoService.agregarEspecie(4, "sarampion", "indefinido")
-        val patogeno = patogenoService.recuperarPatogeno(4)
-        Assert.assertEquals(patogeno.id, especie.patogeno.id)
+        var especie = patogenoService.agregarEspecie(1, "sarampion", "indefinido")
+        var patogeno = patogenoService.recuperarPatogeno(1)
+        Assert.assertEquals(patogeno.id, especie.patogeno!!.id)
         Assert.assertEquals("sarampion",especie.nombre)
         Assert.assertEquals("indefinido", especie.paisDeOrigen)
-        Assert.assertEquals(1,patogeno.cantidadDeEspecies)
+        Assert.assertEquals(3,patogeno.cantidadDeEspecies)
     }
 
-    @Disabled
     @Test
     fun testAgregarEspecieConPatogenoInexistente(){
-        // TODO reimplementar
-        //val exception = assertThrows<NoSePudoAgregarEspecieException> {patogenoService.agregarEspecie(99, "test-especie", "test-pais")}
-        //Assert.assertEquals("Patogeno con id 99 inexistente", exception.message)
+        val exception = assertThrows<EntityNotFoundException> {patogenoService.agregarEspecie(99, "test-especie", "test-pais")}
+        Assert.assertEquals("La entidad Patogeno con id 99 no existe", exception.message)
     }
 
     @Test
