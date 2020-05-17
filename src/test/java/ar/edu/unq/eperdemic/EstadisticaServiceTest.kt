@@ -8,6 +8,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -96,17 +97,47 @@ class EstadisticaServiceTest {
         val especie3Spy = Mockito.spy(especie3)
         Mockito.doReturn(true).`when`(especie3Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
         Mockito.doReturn(true).`when`(especie3Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
-        val especie4 = virus!!.crearEspecie("Especie3", "Argentina")
+        val especie4 = virus!!.crearEspecie("Especie4", "Argentina")
         val especie4Spy = Mockito.spy(especie4)
         Mockito.doReturn(true).`when`(especie4Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
         Mockito.doReturn(true).`when`(especie4Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val especie5 = virus!!.crearEspecie("Especie5", "Argentina")
+        val especie5Spy = Mockito.spy(especie5)
+        Mockito.doReturn(true).`when`(especie5Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie5Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val especie6 = virus!!.crearEspecie("Especie6", "Argentina")
+        val especie6Spy = Mockito.spy(especie6)
+        Mockito.doReturn(true).`when`(especie6Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie6Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val especie7 = virus!!.crearEspecie("Especie7", "Argentina")
+        val especie7Spy = Mockito.spy(especie7)
+        Mockito.doReturn(true).`when`(especie7Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie7Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val especie8 = virus!!.crearEspecie("Especie8", "Argentina")
+        val especie8Spy = Mockito.spy(especie8)
+        Mockito.doReturn(true).`when`(especie8Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie8Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
         vectorService.infectar(cordobes!!, especie1Spy!!)
         vectorService.infectar(animalCordobes!!, especie1Spy)
+        // especie 2 será la que haya infectado mas vectores
         vectorService.infectar(cordobes!!, especie2Spy!!)
         vectorService.infectar(animalCordobes!!, especie2Spy)
         vectorService.infectar(portenho!!, especie2Spy)
         vectorService.infectar(cordobes!!, especie3Spy!!)
         vectorService.infectar(animalCordobes!!, especie3Spy)
+        vectorService.infectar(cordobes!!, especie4Spy!!)
+        vectorService.infectar(animalCordobes!!, especie4Spy)
+        vectorService.infectar(cordobes!!, especie5Spy!!)
+        vectorService.infectar(animalCordobes!!, especie5Spy)
+        vectorService.infectar(cordobes!!, especie6Spy!!)
+        vectorService.infectar(animalCordobes!!, especie6Spy)
+        vectorService.infectar(cordobes!!, especie7Spy!!)
+        vectorService.infectar(animalCordobes!!, especie7Spy)
+        vectorService.infectar(cordobes!!, especie8Spy!!)
+        vectorService.infectar(animalCordobes!!, especie8Spy)
         val lideres = estadisticaService.lideres()
+        assertEquals(lideres.size, 10)
+        assertEquals(lideres.first().nombre, "Especie2")
+        assertEquals(lideres.last().nombre, "H1N1")
     }
 }

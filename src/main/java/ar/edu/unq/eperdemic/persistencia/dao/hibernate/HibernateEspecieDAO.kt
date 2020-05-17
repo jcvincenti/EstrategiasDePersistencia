@@ -18,8 +18,9 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
             order by count(e.id)
         """.trimIndent()
         val query = session.createQuery(hql, Especie::class.java)
-        // se utiliza asReversed porque la query no ordena de forma descendente
-        return query.resultList.asReversed()
+        // se utiliza asReversed porque la query no ordena de forma descendente correctamente
+        // se utiliza subList debido a que query.setMaxElements cambia el orden de la lista
+        return query.resultList.asReversed().subList(0,10)
     }
 
     override fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
