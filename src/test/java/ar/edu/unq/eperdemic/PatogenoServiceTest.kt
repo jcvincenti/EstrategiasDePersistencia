@@ -115,6 +115,20 @@ class PatogenoServiceTest {
     }
 
     @Test
+    fun recuperarEspecieTest() {
+        val especie = patogenoService.recuperarEspecie(1)
+
+        Assert.assertEquals("Gripe", especie.nombre)
+        Assert.assertEquals("China", especie.paisDeOrigen)
+    }
+
+    @Test
+    fun recuperarEspecieInexistenteTest() {
+        val exception = assertThrows<EntityNotFoundException> {patogenoService.recuperarEspecie(100)}
+        Assert.assertEquals("La entidad Especie con id 100 no existe", exception.message)
+    }
+
+    @Test
     fun noEsPandemiaTest() {
         assertFalse(patogenoService.esPandemia(1))
     }
