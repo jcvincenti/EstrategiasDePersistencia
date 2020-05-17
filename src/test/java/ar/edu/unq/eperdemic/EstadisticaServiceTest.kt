@@ -140,4 +140,14 @@ class EstadisticaServiceTest {
         assertEquals(lideres.first().nombre, "Especie2")
         assertEquals(lideres.last().nombre, "H1N1")
     }
+
+    @Test
+    fun especieLiderTest(){
+        vectorService.infectar(cordobes!!, corona!!)
+        vectorService.infectar(cordobes!!, paperas!!)
+        vectorService.infectar(portenho!!, corona!!)
+
+        assertEquals(corona, estadisticaService.especieLider())
+    }
+
 }
