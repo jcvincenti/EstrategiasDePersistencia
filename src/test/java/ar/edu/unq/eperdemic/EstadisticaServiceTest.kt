@@ -29,6 +29,7 @@ class EstadisticaServiceTest {
     var animalCordobes: Vector? = null
     var portenho: Vector? = null
     var insectoBarilochense: Vector? = null
+    var barilochense: Vector? = null
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
@@ -41,6 +42,7 @@ class EstadisticaServiceTest {
         animalCordobes = vectorService.recuperarVector(2)
         portenho = vectorService.recuperarVector(1)
         insectoBarilochense = vectorService.recuperarVector(3)
+        barilochense = vectorService.recuperarVector(5)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Animal, 100)
         virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Persona, 100)
@@ -140,4 +142,28 @@ class EstadisticaServiceTest {
         assertEquals(lideres.first().nombre, "Especie2")
         assertEquals(lideres.last().nombre, "H1N1")
     }
+
+    @Test
+    fun especieLiderTest(){
+        var especie1 = virus!!.crearEspecie("Especie1", "Argentina")
+        val especie1Spy = Mockito.spy(especie1)
+        Mockito.doReturn(true).`when`(especie1Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie1Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val especie2 = virus!!.crearEspecie("Especie2", "Argentina")
+        val especie2Spy = Mockito.spy(especie2)
+        Mockito.doReturn(true).`when`(especie2Spy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(especie2Spy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+
+        vectorService.infectar(cordobes!!, especie1Spy)
+        vectorService.infectar(cordobes!!, especie2Spy)
+        vectorService.infectar(portenho!!, especie1Spy)
+
+        assertEquals("Especie1", estadisticaService.especieLider().nombre)
+
+        vectorService.infectar(portenho!!, especie2Spy)
+        vectorService.infectar(barilochense!!, especie2Spy)
+
+        assertEquals("Especie2", estadisticaService.especieLider().nombre)
+    }
+
 }

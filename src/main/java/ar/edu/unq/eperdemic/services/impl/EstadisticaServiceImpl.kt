@@ -13,7 +13,7 @@ class EstadisticaServiceImpl() : EstadisticasService {
     val especieHibernateDao = HibernateEspecieDAO()
 
     override fun especieLider(): Especie {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx { especieHibernateDao.findEspecieLider() }
     }
 
     override fun lideres(): List<Especie> {

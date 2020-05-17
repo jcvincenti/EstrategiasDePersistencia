@@ -38,4 +38,18 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         query.setParameter("especieId", especieId)
         return query.singleResult
     }
+
+    override fun findEspecieLider(): Especie {
+        val session = TransactionRunner.currentSession
+        val hql = """
+            select e
+            from Especie e
+            join e.vectores v
+            group by e.id, v.tipo
+            having v.tipo in ('${TipoDeVectorEnum.Persona.name}')
+            order by count(e.id) desc
+        """.trimIndent()
+        val query = session.createQuery(hql, Especie::class.java)
+        return query.resultList[0]
+    }
 }

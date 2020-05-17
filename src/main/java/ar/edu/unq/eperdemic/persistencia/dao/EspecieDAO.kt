@@ -8,4 +8,5 @@ interface EspecieDAO {
     fun actualizar(especie: Especie)
     fun cantidadUbicacionesDeEspecie(especieId: Int): Long
     fun lideres() : List<Especie>
-}
+    fun findEspecieLider() : Especie
+ }
