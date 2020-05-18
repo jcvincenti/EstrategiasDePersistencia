@@ -57,14 +57,14 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         val session = TransactionRunner.currentSession
         val hql = (
                 """
-                    select count(*)
+                    select count(e.id)
                     from Especie e
                     join e.vectores v
-                    where v.id = :especieId
+                    where e.id = :especieId
                 """.trimIndent()
                 )
-        val query = session.createQuery(hql, Int::class.javaObjectType)
+        val query = session.createQuery(hql, Long::class.javaObjectType)
         query.setParameter("especieId", especieId)
-        return query.singleResult
+        return query.singleResult.toInt()
     }
 }
