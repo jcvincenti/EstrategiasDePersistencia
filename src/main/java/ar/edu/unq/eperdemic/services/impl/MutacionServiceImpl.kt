@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.persistencia.dao.MutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.MutacionService
-import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
@@ -14,7 +13,7 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
     override fun mutar(especieId: Int, mutacionId: Int) {
         val especie = patogenoService.recuperarEspecie(especieId)
         TransactionRunner.runTrx {
-            especie!!.mutar(recuperarMutacion(mutacionId)!!)
+            especie.mutar(recuperarMutacion(mutacionId))
         }
         patogenoService.actualizarEspecie(especie)
     }

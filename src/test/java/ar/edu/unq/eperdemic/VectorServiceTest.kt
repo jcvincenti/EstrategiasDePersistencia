@@ -22,18 +22,15 @@ class VectorServiceTest {
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
     val dataService = DataServiceHibernate()
-    var virus: Patogeno? = null
-    var paperas: Especie? = null
-    var cordobes: Vector? = null
+    lateinit var paperas: Especie
+    lateinit var cordobes: Vector
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
         MockitoAnnotations.initMocks(this)
         dataService.crearSetDeDatosIniciales()
-        virus = patogenoService.recuperarPatogeno(1)
-        paperas = virus!!.crearEspecie("Paperas", "Yugoslavia")
+        paperas = patogenoService.recuperarEspecie(3)
         cordobes = vectorService.recuperarVector(4)
-        virus!!.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
     }
 
     @AfterEach
@@ -104,11 +101,11 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        Assert.assertTrue(cordobes!!.especies.isEmpty())
+        Assert.assertTrue(cordobes.especies.isEmpty())
 
-        vectorService.infectar(cordobes!!, paperasSpy!!)
+        vectorService.infectar(cordobes, paperasSpy!!)
 
-        Assert.assertFalse(cordobes!!.especies.isEmpty())
+        Assert.assertFalse(cordobes.especies.isEmpty())
     }
 
     @Test
@@ -116,18 +113,18 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(false).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        Assert.assertTrue(cordobes!!.especies.isEmpty())
+        Assert.assertTrue(cordobes.especies.isEmpty())
 
-        vectorService.infectar(cordobes!!, paperasSpy!!)
+        vectorService.infectar(cordobes, paperasSpy!!)
 
-        Assert.assertTrue(cordobes!!.especies.isEmpty())
+        Assert.assertTrue(cordobes.especies.isEmpty())
     }
 
     @Test
     fun getEnfermedadesTest(){
         val enfermedades = vectorService.enfermedades(1)
 
-        Assert.assertTrue(enfermedades.size == 3)
+        assertEquals(5,enfermedades.size)
     }
 
     @Test
@@ -135,21 +132,21 @@ class VectorServiceTest {
         // el vector con id 2 es un animal, el vector con id 3 es un insecto
         val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
 
-        vectorService.infectar(cordobes!!, paperas!!)
-        vectorService.contagiar(cordobes!!, vectores)
+        vectorService.infectar(cordobes, paperas)
+        vectorService.contagiar(cordobes, vectores)
 
         // el vector 2 no tiene que tener especies porque no pudo ser infectado por una Persona
         assertEquals(0, vectorService.enfermedades(2).size)
         // el vector 3 tiene que tener una especie y tiene que ser la misma que la del vector infectado
         assertEquals(1, vectorService.enfermedades(3).size)
-        assertEquals(cordobes!!.especies.get(0).id, vectorService.enfermedades(3).get(0).id)
+        assertEquals(cordobes.especies[0].id, vectorService.enfermedades(3)[0].id)
     }
 
     @Test
     fun contagiarConVectorNoInfectadoTest() {
         val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3))
 
-        val exception = assertThrows<VectorNoInfectadoException> { vectorService.contagiar(cordobes!!, vectores) }
+        val exception = assertThrows<VectorNoInfectadoException> { vectorService.contagiar(cordobes, vectores) }
 
         assertEquals("El vector no esta infectado", exception.message)
     }

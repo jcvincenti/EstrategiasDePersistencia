@@ -30,7 +30,7 @@ class Especie() {
     }
 
     fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
-        return patogeno!!.getCapacidadDeContagio(tipoVector)
+        return patogeno.getCapacidadDeContagio(tipoVector)
     }
 
     fun mutar(mutacion: Mutacion) {
