@@ -26,13 +26,13 @@ class VectorFrontendDTOTest {
         val vectorAnimal =  VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Animal, "Berazategui")
         val vectorInsecto =  VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Insecto, "Lanus")
 
-        Assert.assertEquals(vectorPersona.nombreDeUbicacionPresente, vectorPersona.aModelo().nombreDeLocacionActual!!)
-        Assert.assertEquals(vectorPersona.tipoDeVector.name, vectorPersona.aModelo().tipo!!.name)
+        Assert.assertEquals(vectorPersona.nombreDeUbicacionPresente, vectorPersona.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorPersona.tipoDeVector.name, vectorPersona.aModelo().tipo.name)
 
-        Assert.assertEquals(vectorAnimal.nombreDeUbicacionPresente, vectorAnimal.aModelo().nombreDeLocacionActual!!)
-        Assert.assertEquals(vectorAnimal.tipoDeVector.name, vectorAnimal.aModelo().tipo!!.name)
+        Assert.assertEquals(vectorAnimal.nombreDeUbicacionPresente, vectorAnimal.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorAnimal.tipoDeVector.name, vectorAnimal.aModelo().tipo.name)
 
-        Assert.assertEquals(vectorInsecto.nombreDeUbicacionPresente, vectorInsecto.aModelo().nombreDeLocacionActual!!)
-        Assert.assertEquals(vectorInsecto.tipoDeVector.name, vectorInsecto.aModelo().tipo!!.name)
+        Assert.assertEquals(vectorInsecto.nombreDeUbicacionPresente, vectorInsecto.aModelo().nombreDeLocacionActual)
+        Assert.assertEquals(vectorInsecto.tipoDeVector.name, vectorInsecto.aModelo().tipo.name)
     }
 }

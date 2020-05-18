@@ -31,7 +31,7 @@ class Ubicacion() {
             return especies.groupingBy { it }
                     .eachCount()
                     .maxBy { it.value }!!
-                    .key.nombre!!
+                    .key.nombre
         }
         return ""
     }

@@ -35,7 +35,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
                 vectores = vectorService.getVectoresByLocacion(locacion).toMutableList()
                 (vectores as MutableList<Vector>).removeIf { v -> v.id == vector.id }
             }
-            vectorService.contagiar(vector!!, vectores)
+            vectorService.contagiar(vector, vectores)
         }
     }
 

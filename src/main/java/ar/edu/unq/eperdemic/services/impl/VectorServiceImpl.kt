@@ -35,7 +35,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun crearVector(vector: Vector): Vector {
         ObjectStructureUtils.checkEmptyAttributes(vector)
         TransactionRunner.runTrx {
-            validateEntityExists<Ubicacion>(vector.nombreDeLocacionActual!!)
+            validateEntityExists<Ubicacion>(vector.nombreDeLocacionActual)
             vectorDAO.guardar(vector)
         }
         return vector

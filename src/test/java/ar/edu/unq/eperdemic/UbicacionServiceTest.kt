@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
-import javax.persistence.PersistenceException
 
 class UbicacionServiceTest {
 
@@ -26,9 +25,9 @@ class UbicacionServiceTest {
     @Spy
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
     val dataService = DataServiceHibernate()
-    var portenho: Vector? = null
-    var cordobes: Vector? = null
-    var insecto: Vector? = null
+    lateinit var portenho: Vector
+    lateinit var cordobes: Vector
+    lateinit var insecto: Vector
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
@@ -77,32 +76,32 @@ class UbicacionServiceTest {
 
     @Test
     fun moverConVectorInfectadoTest(){
-        Assert.assertEquals("Buenos Aires", portenho!!.nombreDeLocacionActual)
-        Assert.assertTrue(portenho!!.estaInfectado())
-        Assert.assertFalse(cordobes!!.estaInfectado())
+        Assert.assertEquals("Buenos Aires", portenho.nombreDeLocacionActual)
+        Assert.assertTrue(portenho.estaInfectado())
+        Assert.assertFalse(cordobes.estaInfectado())
 
         ubicacionService.mover(1, "Cordoba")
         portenho = vectorService.recuperarVector(1)
         cordobes = vectorService.recuperarVector(4)
 
         //El portenho cambio su ubicacion a "Cordoba" y el Cordobes ahora esta infectado
-        Assert.assertEquals("Cordoba", portenho!!.nombreDeLocacionActual)
-        Assert.assertTrue(cordobes!!.estaInfectado())
+        Assert.assertEquals("Cordoba", portenho.nombreDeLocacionActual)
+        Assert.assertTrue(cordobes.estaInfectado())
     }
 
     @Test
     fun moverConVectorNoInfectadoTest(){
-        Assert.assertEquals("Bariloche", insecto!!.nombreDeLocacionActual)
-        Assert.assertFalse(insecto!!.estaInfectado())
-        Assert.assertFalse(cordobes!!.estaInfectado())
+        Assert.assertEquals("Bariloche", insecto.nombreDeLocacionActual)
+        Assert.assertFalse(insecto.estaInfectado())
+        Assert.assertFalse(cordobes.estaInfectado())
 
         ubicacionService.mover(3, "Cordoba")
         insecto = vectorService.recuperarVector(3)
         cordobes = vectorService.recuperarVector(4)
 
         //El Insecto cambio su ubicacion a "Cordoba" pero el cordobes no se infecto
-        Assert.assertEquals("Cordoba", insecto!!.nombreDeLocacionActual)
-        Assert.assertFalse(cordobes!!.estaInfectado())
+        Assert.assertEquals("Cordoba", insecto.nombreDeLocacionActual)
+        Assert.assertFalse(cordobes.estaInfectado())
     }
 
     @Test
@@ -134,7 +133,7 @@ class UbicacionServiceTest {
         jorge.tipo = TipoDeVectorEnum.Persona
         val jorgeId = vectorService.crearVector(jorge).id
 
-        Assert.assertFalse(cordobes!!.estaInfectado())
+        Assert.assertFalse(cordobes.estaInfectado())
         Assert.assertFalse(jorge.estaInfectado())
 
         ubicacionService.expandir("Cordoba")
