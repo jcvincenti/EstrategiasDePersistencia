@@ -2,11 +2,13 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.VectorNoInfectadoException
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.impl.MutacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -21,6 +23,7 @@ class VectorServiceTest {
     var vectorService = VectorServiceImpl(HibernateVectorDAO())
     val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
+    val mutacionService = MutacionServiceImpl(HibernateMutacionDAO())
     val dataService = DataServiceHibernate()
     lateinit var paperas: Especie
     lateinit var cordobes: Vector
@@ -159,4 +162,39 @@ class VectorServiceTest {
         val exception = assertThrows<EntityNotFoundException> { vectorService.crearVector(pibe) }
         assertEquals("La entidad Ubicacion con id Pibelandia no existe", exception.message)
     }
+
+    @Test
+    fun adnEspecieAumentaAlInfectarYMutaTest(){
+        val barilochese = vectorService.recuperarVector(5)
+        val pampeano = vectorService.recuperarVector(6)
+        val entrerriano = Vector()
+        entrerriano.nombreDeLocacionActual = "Entre Rios"
+        entrerriano.tipo = TipoDeVectorEnum.Persona
+        vectorService.crearVector(entrerriano)
+        val catamarquenho = Vector()
+        catamarquenho.nombreDeLocacionActual = "Catamarca"
+        catamarquenho.tipo = TipoDeVectorEnum.Persona
+        vectorService.crearVector(catamarquenho)
+        val mutacion = Mutacion("defensa", 1.00F, 10)
+        mutacionService.crearMutacion(mutacion)
+
+        vectorService.infectar(barilochese, paperas)
+
+        assertEquals(0.20F, paperas.adn)
+
+        vectorService.infectar(pampeano, paperas)
+        vectorService.infectar(cordobes, paperas)
+
+        assertEquals(0.60F, paperas.adn)
+
+        vectorService.infectar(entrerriano, paperas)
+        vectorService.infectar(catamarquenho, paperas)
+
+        assertEquals(1.00F, paperas.adn)
+
+        mutacionService.mutar(paperas.id, mutacion.id)
+
+        assertEquals(0.0F, paperas.adn)
+    }
+
 }
