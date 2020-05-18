@@ -76,9 +76,7 @@ class DataServiceHibernate : DataService {
             }
 
             vectores.forEach {
-                vector -> vector.especies.forEach {
-                hibernateDao.create(it)
-            }
+                vector ->
                 hibernateDao.create(vector)
             }
             mutaciones.forEach {
