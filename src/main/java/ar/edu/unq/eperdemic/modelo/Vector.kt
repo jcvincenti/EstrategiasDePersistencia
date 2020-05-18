@@ -28,6 +28,9 @@ class Vector() {
     fun infectar(especie: Especie) {
         if (especie.esContagioExitoso(this.tipo)) {
             especies.add(especie)
+            if(this.tipo == TipoDeVectorEnum.Persona) {
+                especie.adn += 0.20F
+            }
         }
     }
 

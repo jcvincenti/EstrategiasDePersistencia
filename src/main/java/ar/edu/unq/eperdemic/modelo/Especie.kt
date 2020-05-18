@@ -21,7 +21,7 @@ class Especie() {
             joinColumns = [JoinColumn(name = "especie_id")],
             inverseJoinColumns = [JoinColumn(name = "mutacion_id")])
     var mutaciones: MutableSet<Mutacion> = HashSet()
-    var adn = 0
+    var adn: Float = 0.0F
 
     constructor(patogeno: Patogeno, nombreEspecie: String, paisDeOrigen: String) : this() {
         this.patogeno = patogeno

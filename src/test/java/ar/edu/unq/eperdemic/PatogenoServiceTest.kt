@@ -17,6 +17,7 @@ import junit.framework.Assert.*
 import org.junit.Assert
 import org.junit.Assert.assertFalse
 import org.junit.jupiter.api.*
+import org.mockito.Mockito
 
 class PatogenoServiceTest {
 
@@ -157,4 +158,24 @@ class PatogenoServiceTest {
         assertTrue(patogenoService.esPandemia(1))
     }
 
+    @Test
+    fun cantidadDeInfectadosTest(){
+        val gripe = patogenoService.recuperarEspecie(1)
+        val cordobes = vectorService.recuperarVector(1)
+        val portenho = vectorService.recuperarVector(4)
+        val barilochense = vectorService.recuperarVector(5)
+
+        vectorService.infectar(cordobes, gripe)
+
+        assertEquals(1,patogenoService.cantidadDeInfectados(gripe.id))
+
+        vectorService.infectar(portenho, gripe)
+
+        assertEquals(2,patogenoService.cantidadDeInfectados(gripe.id))
+
+        vectorService.infectar(barilochense, gripe)
+
+        assertEquals(3,patogenoService.cantidadDeInfectados(gripe.id))
+
+    }
 }

@@ -31,24 +31,24 @@ class MutacionServiceTest {
 
     @Test
     fun crearMutacionTest(){
-        val mutacion = Mutacion("defensa", 5, 10)
+        val mutacion = Mutacion("defensa", 5F, 10)
         mutacionService.crearMutacion(mutacion)
 
         Assert.assertEquals("defensa", mutacion.atributoAIncrementar)
-        Assert.assertEquals(5, mutacion.adnRequerido)
+        Assert.assertEquals(5.0, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
     }
 
     @Test
     fun recuperarMutacionCreadaTest(){
-        val mutacionACrear = Mutacion("letalidad", 5, 10)
+        val mutacionACrear = Mutacion("letalidad", 5F, 10)
         mutacionService.crearMutacion(mutacionACrear)
 
         val mutacion = mutacionService.recuperarMutacion(4)
 
         Assert.assertEquals("letalidad", mutacion.atributoAIncrementar)
-        Assert.assertEquals(5, mutacion.adnRequerido)
+        Assert.assertEquals(5.0, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
     }

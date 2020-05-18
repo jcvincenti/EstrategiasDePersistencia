@@ -20,9 +20,9 @@ class DataServiceHibernate : DataService {
         createDataSet(patogenos, ubicaciones, vectores, mutaciones)
     }
     private fun crearMutaciones() : List<Mutacion> {
-        return mutableListOf(Mutacion("defensa", 0, 10),
-                Mutacion("capacidadDeContagio", 5, 10),
-                Mutacion("Letalidad", 5, 10))
+        return mutableListOf(Mutacion("defensa", 0f, 10),
+                Mutacion("capacidadDeContagio", 5f, 10),
+                Mutacion("Letalidad", 5f, 10))
 
     }
 
