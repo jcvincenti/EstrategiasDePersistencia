@@ -194,7 +194,7 @@ class VectorServiceTest {
 
         mutacionService.mutar(paperas.id, mutacion.id)
 
-        assertEquals(0.0F, paperas.adn)
+        assertEquals(0.0F, patogenoService.recuperarEspecie(paperas.id).adn)
     }
 
 }
