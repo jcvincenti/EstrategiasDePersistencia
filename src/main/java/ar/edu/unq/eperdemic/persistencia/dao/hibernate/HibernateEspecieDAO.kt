@@ -11,8 +11,8 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         val session = TransactionRunner.currentSession
         val hql = """
             select e
-            from Especie e
-            join e.vectores v
+            from Vector v
+            join v.especies e
             group by e.id, v.tipo
             having v.tipo in ('${TipoDeVectorEnum.Persona.name}', '${TipoDeVectorEnum.Animal.name}')
             order by count(e.id)
@@ -43,8 +43,8 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         val session = TransactionRunner.currentSession
         val hql = """
             select e
-            from Especie e
-            join e.vectores v
+            from Vector v
+            join v.especies e
             group by e.id, v.tipo
             having v.tipo in ('${TipoDeVectorEnum.Persona.name}')
             order by count(e.id) desc

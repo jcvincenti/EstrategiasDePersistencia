@@ -14,8 +14,6 @@ class Especie() {
     lateinit var paisDeOrigen: String
     @ManyToOne(cascade = [CascadeType.REFRESH, CascadeType.REMOVE])
     lateinit var patogeno: Patogeno
-    @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var vectores: MutableSet<Vector> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "especie_mutacion",
