@@ -35,7 +35,7 @@ class MutacionServiceTest {
         mutacionService.crearMutacion(mutacion)
 
         Assert.assertEquals("defensa", mutacion.atributoAIncrementar)
-        Assert.assertEquals(5.0, mutacion.adnRequerido)
+        Assert.assertEquals(5.0F, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
     }
@@ -48,7 +48,7 @@ class MutacionServiceTest {
         val mutacion = mutacionService.recuperarMutacion(4)
 
         Assert.assertEquals("letalidad", mutacion.atributoAIncrementar)
-        Assert.assertEquals(5.0, mutacion.adnRequerido)
+        Assert.assertEquals(5.0F, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
     }

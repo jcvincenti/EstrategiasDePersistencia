@@ -164,10 +164,9 @@ class PatogenoServiceTest {
         val cordobes = vectorService.recuperarVector(4)
         val barilochense = vectorService.recuperarVector(5)
 
-        //vectorService.infectar(cordobes, gripe)
-        vectorService.infectar(cordobes, patogenoService.recuperarEspecie(1))
 
-        //assertEquals(1,patogenoService.cantidadDeInfectados(gripe.id))
+        vectorService.infectar(cordobes, patogenoService.recuperarEspecie(1))
+        // se espera que la cantidad de infectados sea 2 porque el dataService ya infecta a uno con gripe
         assertEquals(2,patogenoService.cantidadDeInfectados(1))
 
         vectorService.infectar(pampeano, patogenoService.recuperarEspecie(1))

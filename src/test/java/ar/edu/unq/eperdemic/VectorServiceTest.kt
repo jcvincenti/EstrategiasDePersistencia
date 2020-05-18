@@ -48,7 +48,7 @@ class VectorServiceTest {
         vector.tipo = TipoDeVectorEnum.Persona
         vectorService.crearVector(vector)
 
-        assertEquals(6, vector.id)
+        assertEquals(7, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
