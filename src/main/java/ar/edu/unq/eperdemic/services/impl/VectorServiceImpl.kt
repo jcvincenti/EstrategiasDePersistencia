@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.*
+import org.hibernate.Hibernate
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 

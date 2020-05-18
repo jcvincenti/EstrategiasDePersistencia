@@ -58,8 +58,8 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         val hql = (
                 """
                     select count(e.id)
-                    from Especie e
-                    join e.vectores v
+                    from Vector v
+                    join v.especies e
                     where e.id = :especieId
                 """.trimIndent()
                 )

@@ -12,7 +12,7 @@ class Vector() {
     @Column(name = "nombre_de_locacion_actual")
     lateinit var nombreDeLocacionActual: String
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(name = "vector_especie",
             joinColumns = [JoinColumn(name = "vector_id")],
             inverseJoinColumns = [JoinColumn(name = "especie_id")])

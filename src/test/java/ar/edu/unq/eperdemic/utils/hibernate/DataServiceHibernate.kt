@@ -15,7 +15,10 @@ class DataServiceHibernate : DataService {
         val vectores = crearVectores()
         val especies = crearEspecies(patogenos)
         val mutaciones = crearMutaciones()
-        vectores.get(0).especies.addAll(especies)
+        TransactionRunner.runTrx {
+            vectores.get(0).especies.addAll(especies)
+        }
+
 
         createDataSet(patogenos, ubicaciones, vectores, mutaciones)
     }
@@ -50,7 +53,9 @@ class DataServiceHibernate : DataService {
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Cordoba")
                         .aModelo(),
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Bariloche")
-                .aModelo()
+                .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"La Pampa")
+                        .aModelo()
         )
     }
 
@@ -71,7 +76,10 @@ class DataServiceHibernate : DataService {
             }
 
             vectores.forEach {
-                vector -> hibernateDao.create(vector)
+                vector -> vector.especies.forEach {
+                hibernateDao.create(it)
+            }
+                hibernateDao.create(vector)
             }
             mutaciones.forEach {
                 mutacion -> hibernateDao.create(mutacion)

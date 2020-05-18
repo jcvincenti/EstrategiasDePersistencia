@@ -160,23 +160,23 @@ class PatogenoServiceTest {
 
     @Test
     fun cantidadDeInfectadosTest(){
-        val gripe = patogenoService.recuperarEspecie(1)
-        //val cordobes = vectorService.recuperarVector(1)
-        val portenho = vectorService.recuperarVector(4)
+        val pampeano = vectorService.recuperarVector(6)
+        val cordobes = vectorService.recuperarVector(4)
         val barilochense = vectorService.recuperarVector(5)
 
         //vectorService.infectar(cordobes, gripe)
+        vectorService.infectar(cordobes, patogenoService.recuperarEspecie(1))
 
         //assertEquals(1,patogenoService.cantidadDeInfectados(gripe.id))
+        assertEquals(2,patogenoService.cantidadDeInfectados(1))
 
-        vectorService.infectar(portenho, gripe)
+        vectorService.infectar(pampeano, patogenoService.recuperarEspecie(1))
 
-        //Se espera que haya 2 infectados ya que el crearSetDeDatos ya creo un vector infectado.
-        assertEquals(2,patogenoService.cantidadDeInfectados(gripe.id))
+        assertEquals(3,patogenoService.cantidadDeInfectados(1))
 
-        vectorService.infectar(barilochense, gripe)
+        vectorService.infectar(barilochense, patogenoService.recuperarEspecie(1))
 
-        assertEquals(3,patogenoService.cantidadDeInfectados(gripe.id))
+        assertEquals(4,patogenoService.cantidadDeInfectados(1))
 
     }
 }

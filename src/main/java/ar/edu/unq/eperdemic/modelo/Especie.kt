@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import org.hibernate.annotations.Cascade
 import javax.persistence.*
 import kotlin.random.Random
 
@@ -13,7 +14,7 @@ class Especie() {
     lateinit var paisDeOrigen: String
     @ManyToOne(cascade = [CascadeType.REFRESH, CascadeType.REMOVE])
     lateinit var patogeno: Patogeno
-    @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "especies", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var vectores: MutableSet<Vector> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)
