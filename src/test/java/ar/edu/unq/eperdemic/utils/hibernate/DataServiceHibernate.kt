@@ -20,9 +20,9 @@ class DataServiceHibernate : DataService {
         createDataSet(patogenos, ubicaciones, vectores, mutaciones)
     }
     private fun crearMutaciones() : List<Mutacion> {
-        return mutableListOf(Mutacion("defensa", 0, 10),
-                Mutacion("capacidadDeContagio", 5, 10),
-                Mutacion("Letalidad", 5, 10))
+        return mutableListOf(Mutacion("defensa", 0f, 10),
+                Mutacion("capacidadDeContagio", 5f, 10),
+                Mutacion("Letalidad", 5f, 10))
 
     }
 
@@ -52,7 +52,9 @@ class DataServiceHibernate : DataService {
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Cordoba")
                         .aModelo(),
                 VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Bariloche")
-                .aModelo()
+                .aModelo(),
+                VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"La Pampa")
+                        .aModelo()
         )
     }
 
@@ -77,7 +79,8 @@ class DataServiceHibernate : DataService {
             }
 
             vectores.forEach {
-                vector -> hibernateDao.create(vector)
+                vector ->
+                hibernateDao.create(vector)
             }
             mutaciones.forEach {
                 mutacion -> hibernateDao.create(mutacion)

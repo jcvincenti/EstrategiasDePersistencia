@@ -60,9 +60,15 @@ class EstadisticaServiceTest {
 
     @Test
     fun reporteDeContagiosConDosVectoresInfectadosTest(){
-        vectorService.infectar(cordobes, paperas)
-        vectorService.infectar(animalCordobes, corona)
-        vectorService.infectar(cordobes, corona)
+        val coronaSpy = Mockito.spy(corona)
+        Mockito.doReturn(true).`when`(coronaSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(coronaSpy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        val paperasSpy = Mockito.spy(paperas)
+        Mockito.doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+        Mockito.doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
+        vectorService.infectar(cordobes!!, paperasSpy!!)
+        vectorService.infectar(animalCordobes!!, coronaSpy!!)
+        vectorService.infectar(cordobes!!, coronaSpy!!)
 
         val reporte = estadisticaService.reporteDeContagios("Cordoba")
 

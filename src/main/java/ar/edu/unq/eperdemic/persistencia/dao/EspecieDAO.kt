@@ -9,4 +9,5 @@ interface EspecieDAO {
     fun cantidadUbicacionesDeEspecie(especieId: Int): Long
     fun lideres() : List<Especie>
     fun findEspecieLider() : Especie
+    fun cantidadDeInfectados(especieId: Int) : Int
  }

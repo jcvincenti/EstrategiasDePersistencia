@@ -52,7 +52,9 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun cantidadDeInfectados(especieId: Int): Int {
-        TODO("Not yet implemented")
+       return TransactionRunner.runTrx {
+            especieDAO.cantidadDeInfectados(especieId)
+        }
     }
 
     override fun esPandemia(especieId: Int): Boolean {

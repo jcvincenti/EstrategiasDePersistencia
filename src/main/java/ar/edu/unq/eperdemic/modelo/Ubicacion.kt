@@ -28,10 +28,10 @@ class Ubicacion() {
         val especies = this.vectores.flatMap { it.especies }
 
         if (especies.isNotEmpty()) {
-            return especies.groupingBy { it }
+            return especies.groupingBy { it.nombre }
                     .eachCount()
                     .maxBy { it.value }!!
-                    .key.nombre
+                    .key
         }
         return ""
     }
