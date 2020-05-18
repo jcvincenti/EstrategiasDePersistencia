@@ -8,7 +8,7 @@ open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), P
     //TODO: Ver despues si cambiamos la interface. Esto quedo del tp de JDBC
     override fun crear(patogeno: Patogeno): Int {
         guardar(patogeno)
-        return patogeno.id!!
+        return patogeno.id
     }
 
     override fun recuperarATodos(): List<Patogeno> {

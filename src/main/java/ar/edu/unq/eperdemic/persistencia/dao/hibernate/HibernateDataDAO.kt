@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.DataDAO
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernateDataDAO : DataDAO {
-    val hibernateVectorDao = HibernateVectorDAO()
 
     override fun clear() {
         val session = TransactionRunner.currentSession

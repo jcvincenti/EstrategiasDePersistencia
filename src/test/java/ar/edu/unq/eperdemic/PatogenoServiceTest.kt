@@ -95,15 +95,15 @@ class PatogenoServiceTest {
     fun testRecuperarPatogenoExistente(){
         val patogeno = patogenoService.recuperarPatogeno(1)
         Assert.assertEquals("Virus", patogeno.tipo)
-        Assert.assertEquals(2, patogeno.cantidadDeEspecies)
+        Assert.assertEquals(4, patogeno.cantidadDeEspecies)
     }
 
     @Disabled
     @Test
     fun testAgregarEspecieConPatogenoExistente(){
-        var especie = patogenoService.agregarEspecie(1, "sarampion", "indefinido")
-        var patogeno = patogenoService.recuperarPatogeno(1)
-        Assert.assertEquals(patogeno.id, especie.patogeno!!.id)
+        val especie = patogenoService.agregarEspecie(1, "sarampion", "indefinido")
+        val patogeno = patogenoService.recuperarPatogeno(1)
+        Assert.assertEquals(patogeno.id, especie.patogeno.id)
         Assert.assertEquals("sarampion",especie.nombre)
         Assert.assertEquals("indefinido", especie.paisDeOrigen)
         Assert.assertEquals(3,patogeno.cantidadDeEspecies)

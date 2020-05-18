@@ -10,7 +10,6 @@ import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.exceptions.*
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
-import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
 

@@ -15,10 +15,7 @@ class DataServiceHibernate : DataService {
         val vectores = crearVectores()
         val especies = crearEspecies(patogenos)
         val mutaciones = crearMutaciones()
-        TransactionRunner.runTrx {
-            vectores.get(0).especies.addAll(especies)
-        }
-
+        vectores[0].especies.addAll(especies)
 
         createDataSet(patogenos, ubicaciones, vectores, mutaciones)
     }
@@ -33,6 +30,8 @@ class DataServiceHibernate : DataService {
         val virus = Patogeno("Virus")
         val bacteria = Patogeno("Bacteria")
         virus.setCapacidadDeContagio(TipoDeVectorEnum.Persona,100)
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Insecto, 100)
+        virus.setCapacidadDeContagio(TipoDeVectorEnum.Animal, 100)
         bacteria.setCapacidadDeContagio(TipoDeVectorEnum.Persona,100)
         return listOf(virus, bacteria)
     }
@@ -60,9 +59,13 @@ class DataServiceHibernate : DataService {
     }
 
     private fun crearEspecies(patogenos : List<Patogeno>) : List<Especie> {
-        return listOf(patogenos.get(0).crearEspecie("Gripe","China"),
-                patogenos.get(0).crearEspecie("H1N1", "Uruguay"),
-                patogenos.get(1).crearEspecie("Angina", "Argentina"))
+        val virus = patogenos[0]
+        val bacteria = patogenos[1]
+        return listOf(virus.crearEspecie("Gripe","China"),
+                virus.crearEspecie("H1N1", "Uruguay"),
+                virus.crearEspecie("Paperas", "Yugoslavia"),
+                virus.crearEspecie("Coronavirus","China"),
+                bacteria.crearEspecie("Angina", "Argentina"))
     }
 
     private fun createDataSet(patogenos: List<Patogeno>, ubicaciones: List<Ubicacion>, vectores: List<Vector>, mutaciones: List<Mutacion>) {
