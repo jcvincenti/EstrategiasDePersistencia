@@ -70,21 +70,21 @@ class PatogenoServiceTest {
         */
     }
 
-    @Disabled
     @Test
     fun testRecuperarATodosLosPatogenosConPatogenos() {
-        //TODO: Reimplementar con Hibernate
+        val hongo = Patogeno("Hongo")
+        val protozoo = Patogeno("Protozoo")
+        patogenoService.crearPatogeno(hongo)
+        patogenoService.crearPatogeno(protozoo)
         val patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
-        Assert.assertEquals(5, patogenos.size)
-        Assert.assertEquals("asarasa", patogenos.first().tipo)
-        Assert.assertEquals("virus", patogenos.last().tipo)
+        Assert.assertEquals(4, patogenos.size)
+        Assert.assertEquals("Bacteria", patogenos.first().tipo)
+        Assert.assertEquals("Virus", patogenos.last().tipo)
     }
 
-    @Disabled
     @Test
     fun testRecuperarATodosLosPatogenosSinPatogenos() {
-        //TODO: Reimplementar con Hibernate
         this.cleanUp()
         val patogenos = mutableListOf<Patogeno>()
         patogenos.addAll(patogenoService.recuperarATodosLosPatogenos())
@@ -98,7 +98,7 @@ class PatogenoServiceTest {
         Assert.assertEquals(4, patogeno.cantidadDeEspecies)
     }
 
-    @Disabled
+
     @Test
     fun testAgregarEspecieConPatogenoExistente(){
         val especie = patogenoService.agregarEspecie(1, "sarampion", "indefinido")
@@ -106,7 +106,7 @@ class PatogenoServiceTest {
         Assert.assertEquals(patogeno.id, especie.patogeno.id)
         Assert.assertEquals("sarampion",especie.nombre)
         Assert.assertEquals("indefinido", especie.paisDeOrigen)
-        Assert.assertEquals(3,patogeno.cantidadDeEspecies)
+        Assert.assertEquals(5,patogeno.cantidadDeEspecies)
     }
 
     @Test

@@ -1,7 +1,10 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), PatogenoDAO {
 
@@ -12,7 +15,14 @@ open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), P
     }
 
     override fun recuperarATodos(): List<Patogeno> {
-        TODO("Not yet implemented")
+            val session = TransactionRunner.currentSession
+            val hql = """
+            select p
+            from Patogeno p
+            order by tipo ASC
+            """.trimIndent()
+            val query = session.createQuery(hql, Patogeno::class.java)
+            return query.resultList
     }
 
 }
