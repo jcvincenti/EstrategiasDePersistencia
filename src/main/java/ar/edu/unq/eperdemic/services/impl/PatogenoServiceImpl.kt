@@ -31,7 +31,11 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
         }?: throw EntityNotFoundException("No se encontro un patogeno con el id ${id}")
     }
 
-    override fun recuperarATodosLosPatogenos(): List<Patogeno> = patogenoDAO.recuperarATodos()
+    override fun recuperarATodosLosPatogenos(): List<Patogeno> {
+        return TransactionRunner.runTrx {
+            patogenoDAO.recuperarATodos()
+        }
+    }
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
         var especieCreada: Especie? = null
