@@ -8,4 +8,5 @@ interface VectorDAO {
     fun borrar(vector: Vector)
     fun actualizar(vector: Vector)
     fun getVectoresByLocacion(locacion: String?) : List<Vector>
+    fun getVectorRandomEnLocacion(locacion: String?) : Vector
 }

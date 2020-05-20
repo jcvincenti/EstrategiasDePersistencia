@@ -13,14 +13,14 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
-            vectores.forEach {
-                vector -> vectorInfectado.contagiar(vector)
+            vectores.forEach { vector ->
+                vectorInfectado.contagiar(vector)
                 actualizarVector(vector)
             }
         }
     }
 
-     override fun infectar(vector: Vector, especie: Especie) {
+    override fun infectar(vector: Vector, especie: Especie) {
         TransactionRunner.runTrx {
             vector.infectar(especie)
             vectorDAO.actualizar(vector)
@@ -57,7 +57,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         }
     }
 
-    fun actualizarVector(vector: Vector){
+    fun actualizarVector(vector: Vector) {
         TransactionRunner.runTrx {
             vectorDAO.actualizar(vector)
         }
@@ -67,6 +67,13 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         return TransactionRunner.runTrx {
             validateEntityExists<Ubicacion>(locacion!!)
             vectorDAO.getVectoresByLocacion(locacion)
+        }
+    }
+
+    fun getVectorRandomEnLocacion(locacion: String?): Vector {
+        return TransactionRunner.runTrx {
+            validateEntityExists<Ubicacion>(locacion!!)
+            vectorDAO.getVectorRandomEnLocacion(locacion)
         }
     }
 }
