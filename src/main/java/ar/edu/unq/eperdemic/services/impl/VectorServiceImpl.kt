@@ -29,7 +29,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     override fun enfermedades(vectorId: Int): List<Especie> {
         return TransactionRunner.runTrx {
-            vectorDAO.recuperar(vectorId)!!.especies
+            vectorDAO.enfermedades(vectorId)
         }
     }
 

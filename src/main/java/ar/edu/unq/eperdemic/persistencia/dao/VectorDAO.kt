@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Vector
 
 interface VectorDAO {
@@ -9,4 +10,5 @@ interface VectorDAO {
     fun actualizar(vector: Vector)
     fun getVectoresByLocacion(locacion: String?) : List<Vector>
     fun getVectorRandomEnLocacion(locacion: String?) : Vector
+    fun enfermedades(vectorId: Int): List<Especie>
 }
