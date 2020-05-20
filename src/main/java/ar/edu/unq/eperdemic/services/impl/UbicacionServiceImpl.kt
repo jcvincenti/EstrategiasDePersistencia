@@ -39,10 +39,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         }
     }
 
-    @ExperimentalStdlibApi
     override fun expandir(nombreUbicacion: String) {
-        val vectoresEnUbicacion = vectorService.getVectoresByLocacion(nombreUbicacion)
-        val vectorInfectado = vectoresEnUbicacion.filter {vector -> vector.estaInfectado()}.randomOrNull()
+        val vectorInfectado = vectorService.getVectorRandomEnLocacion(nombreUbicacion)
         contagiarZona(vectorInfectado, nombreUbicacion)
     }
 

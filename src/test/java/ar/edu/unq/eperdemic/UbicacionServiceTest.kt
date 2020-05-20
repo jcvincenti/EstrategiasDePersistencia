@@ -110,7 +110,6 @@ class UbicacionServiceTest {
         Assert.assertEquals("La entidad Ubicacion con id Chaco no existe", exception.message )
     }
 
-    @ExperimentalStdlibApi
     @Test
     fun expandirVectorInfectadoTest(){
         val buenosAires = ubicacionService.recuperarUbicacion("Buenos Aires")
@@ -125,7 +124,6 @@ class UbicacionServiceTest {
         Assert.assertTrue(vectorService.recuperarVector(carlosId!!).estaInfectado())
     }
 
-    @ExperimentalStdlibApi
     @Test
     fun expandirVectorNoInfectadoTest(){
         val cordoba = ubicacionService.recuperarUbicacion("Cordoba")
@@ -141,7 +139,6 @@ class UbicacionServiceTest {
         Assert.assertFalse(vectorService.recuperarVector(jorgeId!!).estaInfectado())
     }
 
-    @ExperimentalStdlibApi
     @Test
     fun expandirUbicacionInexistenteTest(){
         val exception = assertThrows<EntityNotFoundException> { ubicacionService.expandir("Bernal") }
