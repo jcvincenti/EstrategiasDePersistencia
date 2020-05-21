@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-import org.hibernate.annotations.Cascade
 import javax.persistence.*
 import kotlin.random.Random
 
@@ -29,7 +28,17 @@ class Especie() {
     }
 
     fun getCapacidadDeContagio(tipoVector: TipoDeVectorEnum) : Int? {
-        return patogeno.getCapacidadDeContagio(tipoVector)
+        return patogeno.getCapacidadDeContagio(tipoVector)!!.plus(getCapacidadDeContagioDeMutaciones())
+    }
+
+    private fun getCapacidadDeContagioDeMutaciones(): Int {
+        var capacidadDeContagio = 0
+        mutaciones.forEach{ mutacion ->
+            if (mutacion.atributoAIncrementar == "capacidadDeContagio") {
+                capacidadDeContagio += mutacion.valorAIncrementar
+            }
+        }
+        return capacidadDeContagio
     }
 
     fun mutar(mutacion: Mutacion) {
@@ -38,6 +47,7 @@ class Especie() {
             adn -= mutacion.adnRequerido
         }
     }
+
     fun esContagioExitoso(tipoVector: TipoDeVectorEnum) : Boolean {
         val factorDeContagioExitoso = getCapacidadDeContagio(tipoVector)!!.plus(Random.nextInt(1, 10))
         return if (factorDeContagioExitoso > 50) {

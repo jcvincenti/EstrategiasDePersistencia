@@ -71,6 +71,10 @@ class JDBCPatogenoDAO : PatogenoDAO {
         }
     }
 
+    override fun existePatogenoConTipo(tipo: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     fun eliminarPatogenos() {
         return execute { conn: Connection ->
             val st = conn.createStatement()
