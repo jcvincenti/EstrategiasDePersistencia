@@ -32,13 +32,7 @@ class Especie() {
     }
 
     private fun getCapacidadDeContagioDeMutaciones(): Int {
-        var capacidadDeContagio = 0
-        mutaciones.forEach{ mutacion ->
-            if (mutacion.atributoAIncrementar == "capacidadDeContagio") {
-                capacidadDeContagio += mutacion.valorAIncrementar
-            }
-        }
-        return capacidadDeContagio
+        return mutaciones.sumBy { if (it.atributoAIncrementar == "capacidadDeContagio")  it.valorAIncrementar else 0  }
     }
 
     fun mutar(mutacion: Mutacion) {

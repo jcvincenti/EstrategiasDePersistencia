@@ -16,7 +16,8 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), Vector
 
         return query.resultList
     }
-    override fun getVectorRandomEnLocacion(nombreDeLocacionActual: String?) : Vector {
+
+    override fun getVectorRandomEnLocacion(nombreDeLocacionActual: String?) : Vector? {
         val session = TransactionRunner.currentSession
         val hql = """
             select v
@@ -28,7 +29,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), Vector
         val query = session.createQuery(hql, Vector::class.java)
         query.setParameter("nombreDeLocacionActual", nombreDeLocacionActual)
 
-        return query.resultList[0]
+        return query.resultList.firstOrNull()
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
