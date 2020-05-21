@@ -178,7 +178,7 @@ class VectorServiceTest {
 
     @Test
     fun adnEspecieAumentaAlInfectarYMutaTest(){
-        val mutacion = Mutacion("defensa", 1.00F, 10)
+        val mutacion = Mutacion(AtributoEnum.Defensa, 1.00F, 10)
         mutacionService.crearMutacion(mutacion)
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
@@ -230,7 +230,7 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        val mutacion = Mutacion("capacidadDeContagio", 1.0F, 10)
+        val mutacion = Mutacion(AtributoEnum.CapacidadDeContagio, 1.0F, 10)
         mutacionService.crearMutacion(mutacion)
 
         assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
@@ -255,7 +255,7 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        val mutacion = Mutacion("letalidad", 1.0F, 10)
+        val mutacion = Mutacion(AtributoEnum.Letalidad, 1.0F, 10)
         mutacionService.crearMutacion(mutacion)
 
         assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))

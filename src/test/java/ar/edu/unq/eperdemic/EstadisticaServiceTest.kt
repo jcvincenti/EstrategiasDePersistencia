@@ -66,9 +66,9 @@ class EstadisticaServiceTest {
         val paperasSpy = Mockito.spy(paperas)
         Mockito.doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
         Mockito.doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Animal)
-        vectorService.infectar(cordobes!!, paperasSpy!!)
-        vectorService.infectar(animalCordobes!!, coronaSpy!!)
-        vectorService.infectar(cordobes!!, coronaSpy!!)
+        vectorService.infectar(cordobes, paperasSpy!!)
+        vectorService.infectar(animalCordobes, coronaSpy!!)
+        vectorService.infectar(cordobes, coronaSpy)
 
         val reporte = estadisticaService.reporteDeContagios("Cordoba")
 

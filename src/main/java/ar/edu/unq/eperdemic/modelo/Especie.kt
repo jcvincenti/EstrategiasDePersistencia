@@ -32,7 +32,7 @@ class Especie() {
     }
 
     private fun getCapacidadDeContagioDeMutaciones(): Int {
-        return mutaciones.sumBy { if (it.atributoAIncrementar == "capacidadDeContagio")  it.valorAIncrementar else 0  }
+        return mutaciones.sumBy { if (it.atributoAIncrementar == AtributoEnum.CapacidadDeContagio)  it.valorAIncrementar else 0  }
     }
 
     fun mutar(mutacion: Mutacion) {

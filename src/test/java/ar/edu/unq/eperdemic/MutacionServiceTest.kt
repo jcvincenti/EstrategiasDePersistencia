@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.modelo.AtributoEnum
 import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
@@ -32,10 +33,10 @@ class MutacionServiceTest {
 
     @Test
     fun crearMutacionTest(){
-        val mutacion = Mutacion("defensa", 5F, 10)
+        val mutacion = Mutacion(AtributoEnum.Defensa, 5F, 10)
         mutacionService.crearMutacion(mutacion)
 
-        Assert.assertEquals("defensa", mutacion.atributoAIncrementar)
+        Assert.assertEquals(AtributoEnum.Defensa, mutacion.atributoAIncrementar)
         Assert.assertEquals(5.0F, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
@@ -43,12 +44,12 @@ class MutacionServiceTest {
 
     @Test
     fun recuperarMutacionCreadaTest(){
-        val mutacionACrear = Mutacion("letalidad", 5F, 10)
+        val mutacionACrear = Mutacion(AtributoEnum.Letalidad, 5F, 10)
         mutacionService.crearMutacion(mutacionACrear)
 
         val mutacion = mutacionService.recuperarMutacion(4)
 
-        Assert.assertEquals("letalidad", mutacion.atributoAIncrementar)
+        Assert.assertEquals(AtributoEnum.Letalidad, mutacion.atributoAIncrementar)
         Assert.assertEquals(5.0F, mutacion.adnRequerido)
         Assert.assertEquals(10, mutacion.valorAIncrementar)
         Assert.assertTrue(mutacion.mutacionesRequeridas.isEmpty())
