@@ -44,7 +44,6 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         contagiarZona(vectorInfectado, nombreUbicacion)
     }
 
-
     override fun crearUbicacion(nombreUbicacion: String): Ubicacion {
         val ubicacion = Ubicacion(nombreUbicacion)
         ObjectStructureUtils.checkEmptyAttributes(ubicacion)

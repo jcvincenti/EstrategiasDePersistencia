@@ -21,6 +21,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), Vector
         val hql = """
             select v
             from Vector v
+            join v.especies
             where v.nombreDeLocacionActual = :nombreDeLocacionActual
             order by rand()
             """.trimIndent()

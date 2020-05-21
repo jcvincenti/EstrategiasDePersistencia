@@ -13,6 +13,7 @@ class Patogeno() : Serializable{
     var cantidadDeEspecies: Int = 0
     var defensa: Int = 0
     var letalidad: Int = 0
+    @Column(unique = true)
     lateinit var tipo: String
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
