@@ -7,7 +7,7 @@ class Mutacion() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
-    var atributoAIncrementar: String = ""
+    lateinit var atributoAIncrementar: AtributoEnum
     var adnRequerido: Float = 0.0F
     var valorAIncrementar: Int = 0
 
@@ -17,7 +17,7 @@ class Mutacion() {
             inverseJoinColumns = [JoinColumn(name = "mutacion_requerida_id")])
     var mutacionesRequeridas: MutableSet<Mutacion> = HashSet()
 
-    constructor(atributo: String, adn: Float, valor: Int) : this() {
+    constructor(atributo: AtributoEnum, adn: Float, valor: Int) : this() {
         this.atributoAIncrementar = atributo
         this.adnRequerido = adn
         this.valorAIncrementar = valor
