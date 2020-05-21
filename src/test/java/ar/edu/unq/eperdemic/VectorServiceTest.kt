@@ -13,7 +13,6 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.jupiter.api.*
 import org.mockito.Mockito.*
@@ -27,6 +26,10 @@ class VectorServiceTest {
     val dataService = DataServiceHibernate()
     lateinit var paperas: Especie
     lateinit var cordobes: Vector
+    lateinit var barilochense: Vector
+    lateinit var pampeano: Vector
+    lateinit var entrerriano: Vector
+    lateinit var catamarquenho: Vector
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
@@ -34,6 +37,16 @@ class VectorServiceTest {
         dataService.crearSetDeDatosIniciales()
         paperas = patogenoService.recuperarEspecie(3)
         cordobes = vectorService.recuperarVector(4)
+        barilochense = vectorService.recuperarVector(5)
+        pampeano = vectorService.recuperarVector(6)
+        entrerriano = Vector()
+        entrerriano.nombreDeLocacionActual = "Entre Rios"
+        entrerriano.tipo = TipoDeVectorEnum.Persona
+        vectorService.crearVector(entrerriano)
+        catamarquenho = Vector()
+        catamarquenho.nombreDeLocacionActual = "Catamarca"
+        catamarquenho.tipo = TipoDeVectorEnum.Persona
+        vectorService.crearVector(catamarquenho)
     }
 
     @AfterEach
@@ -48,7 +61,7 @@ class VectorServiceTest {
         vector.tipo = TipoDeVectorEnum.Persona
         vectorService.crearVector(vector)
 
-        assertEquals(7, vector.id)
+        assertEquals(9, vector.id)
         assertEquals("Locacion-Test", vector.nombreDeLocacionActual)
     }
 
@@ -104,11 +117,11 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        Assert.assertTrue(cordobes.especies.isEmpty())
+        assertTrue(cordobes.especies.isEmpty())
 
         vectorService.infectar(cordobes, paperasSpy!!)
 
-        Assert.assertFalse(cordobes.especies.isEmpty())
+        assertFalse(cordobes.especies.isEmpty())
     }
 
     @Test
@@ -116,11 +129,11 @@ class VectorServiceTest {
         val paperasSpy = spy(paperas)
         doReturn(false).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        Assert.assertTrue(cordobes.especies.isEmpty())
+        assertTrue(cordobes.especies.isEmpty())
 
         vectorService.infectar(cordobes, paperasSpy!!)
 
-        Assert.assertTrue(cordobes.especies.isEmpty())
+        assertTrue(cordobes.especies.isEmpty())
     }
 
     @Test
@@ -155,7 +168,7 @@ class VectorServiceTest {
     }
 
     @Test
-    fun crearVectorConUbicacionInexistente() {
+    fun crearVectorConUbicacionInexistenteTest() {
         val pibe = Vector()
         pibe.nombreDeLocacionActual = "Pibelandia"
         pibe.tipo = TipoDeVectorEnum.Persona
@@ -165,22 +178,12 @@ class VectorServiceTest {
 
     @Test
     fun adnEspecieAumentaAlInfectarYMutaTest(){
-        val barilochese = vectorService.recuperarVector(5)
-        val pampeano = vectorService.recuperarVector(6)
-        val entrerriano = Vector()
-        entrerriano.nombreDeLocacionActual = "Entre Rios"
-        entrerriano.tipo = TipoDeVectorEnum.Persona
-        vectorService.crearVector(entrerriano)
-        val catamarquenho = Vector()
-        catamarquenho.nombreDeLocacionActual = "Catamarca"
-        catamarquenho.tipo = TipoDeVectorEnum.Persona
-        vectorService.crearVector(catamarquenho)
         val mutacion = Mutacion("defensa", 1.00F, 10)
         mutacionService.crearMutacion(mutacion)
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
 
-        vectorService.infectar(barilochese, paperasSpy)
+        vectorService.infectar(barilochense, paperasSpy)
 
         assertEquals(0.20F, paperasSpy.adn)
 
@@ -211,7 +214,7 @@ class VectorServiceTest {
     }
 
     @Test
-    fun adnNoAumentaInfeccionExitosaANoHumano(){
+    fun adnNoAumentaInfeccionExitosaANoHumanoTest(){
         val paperasSpy = spy(paperas)
         doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
         val animalCordobes = vectorService.recuperarVector(2)
@@ -220,5 +223,55 @@ class VectorServiceTest {
 
         assertFalse(animalCordobes.especies.isEmpty())
         assertEquals(0.0F, paperasSpy.adn)
+    }
+
+    @Test
+    fun mutarEspecieConIncrementoDeCapacidadDeContagioTest() {
+        val paperasSpy = spy(paperas)
+        doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+
+        val mutacion = Mutacion("capacidadDeContagio", 1.0F, 10)
+        mutacionService.crearMutacion(mutacion)
+
+        assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
+        assertEquals(0.0F, paperasSpy.adn)
+
+        vectorService.infectar(catamarquenho, paperasSpy)
+        vectorService.infectar(cordobes, paperasSpy)
+        vectorService.infectar(barilochense, paperasSpy)
+        vectorService.infectar(pampeano, paperasSpy)
+        vectorService.infectar(entrerriano, paperasSpy)
+
+        assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
+        assertEquals(1.0F, paperasSpy.adn)
+
+        mutacionService.mutar(paperas.id, mutacion.id)
+
+        assertEquals(110, patogenoService.recuperarEspecie(paperas.id).getCapacidadDeContagio(TipoDeVectorEnum.Persona))
+    }
+
+    @Test
+    fun mutarEspecieSinIncrementoDeCapacidadDeContagioTest() {
+        val paperasSpy = spy(paperas)
+        doReturn(true).`when`(paperasSpy)!!.esContagioExitoso(TipoDeVectorEnum.Persona)
+
+        val mutacion = Mutacion("letalidad", 1.0F, 10)
+        mutacionService.crearMutacion(mutacion)
+
+        assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
+        assertEquals(0.0F, paperasSpy.adn)
+
+        vectorService.infectar(catamarquenho, paperasSpy)
+        vectorService.infectar(cordobes, paperasSpy)
+        vectorService.infectar(barilochense, paperasSpy)
+        vectorService.infectar(pampeano, paperasSpy)
+        vectorService.infectar(entrerriano, paperasSpy)
+
+        assertEquals(100, paperasSpy.getCapacidadDeContagio(TipoDeVectorEnum.Persona))
+        assertEquals(1.0F, paperasSpy.adn)
+
+        mutacionService.mutar(paperas.id, mutacion.id)
+
+        assertEquals(100, patogenoService.recuperarEspecie(paperas.id).getCapacidadDeContagio(TipoDeVectorEnum.Persona))
     }
 }

@@ -8,6 +8,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
+import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
@@ -58,16 +59,11 @@ class PatogenoServiceTest {
         Assert.assertEquals("La propiedad tipo esta vacia", exception.message)
     }
 
-    @Disabled
     @Test
     fun crearPatogenoExistenteTest() {
-        //TODO: Reimplementer con Hibernate
-        /*
         val patogeno = Patogeno("bacteria")
-        Assertions.assertThrows(NoSePudoCrearPatogenoException::class.java) {patogenoService.crearPatogeno(patogeno)}
-        val exception = assertThrows<NoSePudoCrearPatogenoException> {patogenoService.crearPatogeno(patogeno)}
-        Assert.assertEquals("Ya existe un patogeno de tipo ${patogeno.tipo}", exception.message )
-        */
+        val exception = assertThrows<EntityAlreadyExistsException> {patogenoService.crearPatogeno(patogeno)}
+        Assert.assertEquals("La entidad Patogeno con tipo bacteria ya existe", exception.message )
     }
 
     @Test

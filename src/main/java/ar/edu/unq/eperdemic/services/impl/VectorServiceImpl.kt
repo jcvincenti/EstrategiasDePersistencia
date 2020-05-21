@@ -70,7 +70,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         }
     }
 
-    fun getVectorRandomEnLocacion(locacion: String?): Vector {
+    fun getVectorRandomEnLocacion(locacion: String?): Vector? {
         return TransactionRunner.runTrx {
             validateEntityExists<Ubicacion>(locacion!!)
             vectorDAO.getVectorRandomEnLocacion(locacion)

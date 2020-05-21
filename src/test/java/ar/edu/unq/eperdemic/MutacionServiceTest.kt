@@ -19,6 +19,7 @@ class MutacionServiceTest {
     val dataService = DataServiceHibernate()
     val mutacionService = MutacionServiceImpl(HibernateMutacionDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
+
     @BeforeEach
     fun crearSetDeDatosIniciales() {
         dataService.crearSetDeDatosIniciales()
@@ -74,6 +75,7 @@ class MutacionServiceTest {
         assertEquals(0, especie.mutaciones.size)
         assertTrue(especie.mutaciones.isEmpty() )
     }
+
     @Test
     fun mutarEspecieInexistenteTest(){
         val exception = assertThrows<EntityNotFoundException> { mutacionService.mutar(100, 1) }
