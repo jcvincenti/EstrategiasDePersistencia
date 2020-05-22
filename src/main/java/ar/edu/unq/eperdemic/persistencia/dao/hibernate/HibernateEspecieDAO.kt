@@ -12,14 +12,12 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
             select e
             from Vector v
             join v.especies e
-            group by e.id, v.tipo
-            having v.tipo in ('${TipoDeVectorEnum.Persona.name}', '${TipoDeVectorEnum.Animal.name}')
-            order by count(e.id)
+            where v.tipo in (${TipoDeVectorEnum.Persona.ordinal}, ${TipoDeVectorEnum.Animal.ordinal})
+            group by e 
+            order by count(v) desc
         """.trimIndent()
         val query = session.createQuery(hql, Especie::class.java)
-        // se utiliza asReversed porque la query no ordena de forma descendente correctamente
-        // se utiliza subList debido a que query.setMaxElements cambia el orden de la lista
-        return query.resultList.asReversed().subList(0, 10)
+        return query.setMaxResults(10).resultList
     }
 
     override fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
@@ -44,12 +42,12 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
             select e
             from Vector v
             join v.especies e
-            group by e.id, v.tipo
-            having v.tipo in ('${TipoDeVectorEnum.Persona.name}')
-            order by count(e.id) desc
+            where v.tipo in (${TipoDeVectorEnum.Persona.ordinal})
+            group by e 
+            order by count(v) desc
         """.trimIndent()
         val query = session.createQuery(hql, Especie::class.java)
-        return query.resultList[0]
+        return query.resultList.first()
     }
 
     override fun cantidadDeInfectados(especieId: Int): Int {
