@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao.neo4j
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector
 import org.neo4j.driver.v1.*
-import java.sql.Connection
+
 
 object Neo4JConnector {
     val driver: Driver
