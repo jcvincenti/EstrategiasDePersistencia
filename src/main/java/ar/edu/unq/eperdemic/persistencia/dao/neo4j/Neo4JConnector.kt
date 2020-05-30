@@ -1,5 +1,5 @@
 package ar.edu.unq.eperdemic.persistencia.dao.neo4j
-import org.neo4j.driver.v1.*
+import org.neo4j.driver.*
 
 
 object Neo4JConnector {
@@ -11,9 +11,7 @@ object Neo4JConnector {
         val username = env.getOrDefault("USER", "neo4j")
         val password = env.getOrDefault("PASSWORD", "root")
 
-        driver = GraphDatabase.driver(url, AuthTokens.basic(username, password),
-                Config.build().withLogging(Logging.slf4j()).toConfig()
-        )
+        driver = GraphDatabase.driver(url, AuthTokens.basic(username, password))
     }
 
     fun <T> execute(bloque: (Session) -> T) : T {
