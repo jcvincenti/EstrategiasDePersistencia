@@ -1,5 +1,9 @@
 package ar.edu.unq.eperdemic.persistencia.dao.neo4j
-import org.neo4j.driver.*
+
+import org.neo4j.driver.AuthTokens
+import org.neo4j.driver.Driver
+import org.neo4j.driver.GraphDatabase
+import org.neo4j.driver.Session
 
 
 object Neo4JConnector {
