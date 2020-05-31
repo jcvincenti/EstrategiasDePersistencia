@@ -76,6 +76,7 @@ class DataServiceHibernate : DataService {
 
             ubicaciones.forEach{
                 ubicacion -> hibernateDao.create(ubicacion)
+
             }
 
             vectores.forEach {

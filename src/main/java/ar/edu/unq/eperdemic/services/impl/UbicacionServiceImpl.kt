@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
@@ -13,6 +14,7 @@ import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    val neo4jUbicacionDao = Neo4JUbicacionDAO()
 
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
@@ -51,6 +53,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             validateEntityDoesNotExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.guardar(ubicacion)
         }
+        neo4jUbicacionDao.crearUbicacion(ubicacion)
         return ubicacion
     }
 

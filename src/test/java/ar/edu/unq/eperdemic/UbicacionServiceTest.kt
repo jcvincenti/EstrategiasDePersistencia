@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
+import ar.edu.unq.eperdemic.utils.neo4j.DataServiceNeo4j
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
@@ -25,6 +26,7 @@ class UbicacionServiceTest {
     @Spy
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
     val dataService = DataServiceHibernate()
+    val neo4jDataService = DataServiceNeo4j()
     lateinit var portenho: Vector
     lateinit var cordobes: Vector
     lateinit var insecto: Vector
@@ -33,6 +35,7 @@ class UbicacionServiceTest {
     fun crearSetDeDatosIniciales() {
         MockitoAnnotations.initMocks(this);
         dataService.crearSetDeDatosIniciales()
+        neo4jDataService.crearSetDeDatosIniciales()
         portenho = vectorService.recuperarVector(1)
         insecto = vectorService.recuperarVector(3)
         cordobes = vectorService.recuperarVector(4)
@@ -41,6 +44,7 @@ class UbicacionServiceTest {
     @AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
+        neo4jDataService.eliminarTodo()
     }
 
     @Test
