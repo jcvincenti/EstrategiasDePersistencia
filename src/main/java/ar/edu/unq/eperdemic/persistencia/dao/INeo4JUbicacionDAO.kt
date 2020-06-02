@@ -4,4 +4,5 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface INeo4JUbicacionDAO {
     fun crearUbicacion(ubicacion: Ubicacion) : Ubicacion
+    fun conectar(nombreUbicacionOrigen:String, nombreUbicacionDestino:String, tipoDeCamino:String)
 }

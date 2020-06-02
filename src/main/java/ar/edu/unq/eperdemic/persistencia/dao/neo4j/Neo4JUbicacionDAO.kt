@@ -16,6 +16,20 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return ubicacion
     }
 
+    override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
+        execute { session ->
+            session.writeTransaction{
+                val query = "MATCH (ubicacionOrigen: Ubicacion), (ubicacionDestino: Ubicacion)" +
+                        " WHERE ubicacionOrigen.nombreUbicacion = \$nombreUbicacionOrigen AND ubicacionDestino.nombreUbicacion = \$nombreUbicacionDestino" +
+                        " CREATE (ubicacionOrigen)-[:$tipoDeCamino]->(ubicacionDestino)"
+                it.run(query, Values.parameters(
+                        "nombreUbicacionOrigen", nombreUbicacionOrigen,
+                        "nombreUbicacionDestino", nombreUbicacionDestino)
+                )
+            }
+        }
+    }
+
     fun clear() {
         return execute { session ->
             session.run("MATCH (n) DETACH DELETE n")
