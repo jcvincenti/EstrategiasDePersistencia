@@ -19,12 +19,12 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
         execute { session ->
             session.writeTransaction{
-                val query = "MATCH (ubicacion1: Ubicacion), (ubicacion2: Ubicacion)" +
-                        " WHERE ubicacion1.nombreUbicacion = \$nombreUbicacion1 AND ubicacion2.nombreUbicacion = \$nombreUbicacion2" +
-                        " CREATE (ubicacion1)-[:" + tipoDeCamino + "]->(ubicacion2)"
+                val query = "MATCH (ubicacionOrigen: Ubicacion), (ubicacionDestino: Ubicacion)" +
+                        " WHERE ubicacionOrigen.nombreUbicacion = \$nombreUbicacionOrigen AND ubicacionDestino.nombreUbicacion = \$nombreUbicacionDestino" +
+                        " CREATE (ubicacionOrigen)-[:" + tipoDeCamino + "]->(ubicacionDestino)"
                 it.run(query, Values.parameters(
-                        "nombreUbicacion1", nombreUbicacionOrigen,
-                        "nombreUbicacion2", nombreUbicacionDestino)
+                        "nombreUbicacionOrigen", nombreUbicacionOrigen,
+                        "nombreUbicacionDestino", nombreUbicacionDestino)
                 )
             }
         }
