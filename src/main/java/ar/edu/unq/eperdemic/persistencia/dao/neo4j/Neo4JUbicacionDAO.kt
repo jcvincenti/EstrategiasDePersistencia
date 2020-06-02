@@ -21,7 +21,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
             session.writeTransaction{
                 val query = "MATCH (ubicacionOrigen: Ubicacion), (ubicacionDestino: Ubicacion)" +
                         " WHERE ubicacionOrigen.nombreUbicacion = \$nombreUbicacionOrigen AND ubicacionDestino.nombreUbicacion = \$nombreUbicacionDestino" +
-                        " CREATE (ubicacionOrigen)-[:" + tipoDeCamino + "]->(ubicacionDestino)"
+                        " CREATE (ubicacionOrigen)-[:$tipoDeCamino]->(ubicacionDestino)"
                 it.run(query, Values.parameters(
                         "nombreUbicacionOrigen", nombreUbicacionOrigen,
                         "nombreUbicacionDestino", nombreUbicacionDestino)
