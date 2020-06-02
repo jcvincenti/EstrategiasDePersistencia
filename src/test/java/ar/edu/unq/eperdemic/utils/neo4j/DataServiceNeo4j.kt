@@ -17,6 +17,7 @@ class DataServiceNeo4j : DataService {
         ubicaciones.forEach{
             dao.crearUbicacion(it)
         }
+        dao.conectar("Entre Rios", "La Pampa", "terrestre")
     }
 
     override fun eliminarTodo() {
