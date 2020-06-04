@@ -17,7 +17,6 @@ import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
 
     val especieDAO: EspecieDAO = HibernateEspecieDAO()
-    val ubicacionService: UbicacionServiceImpl = UbicacionServiceImpl(HibernateUbicacionDAO())
 
     override fun crearPatogeno(patogeno: Patogeno): Int {
         ObjectStructureUtils.checkEmptyAttributes(patogeno)
