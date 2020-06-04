@@ -20,18 +20,18 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
         return query.setMaxResults(10).resultList
     }
 
-    override fun cantidadUbicacionesDeEspecie(especieId: Int): Long {
+    override fun esPandemia(especieId: Int): Boolean {
         val session = TransactionRunner.currentSession
         val hql = (
                 """
-                    select count(*)
+                    select count(*) > (select count(*) from Ubicacion ub) / 2
                     from Ubicacion u
                     join u.vectores v
                     join v.especies ve
                     where ve.id = :especieId
                 """.trimIndent()
                 )
-        val query = session.createQuery(hql, Long::class.javaObjectType)
+        val query = session.createQuery(hql, Boolean::class.javaObjectType)
         query.setParameter("especieId", especieId)
         return query.singleResult
     }
