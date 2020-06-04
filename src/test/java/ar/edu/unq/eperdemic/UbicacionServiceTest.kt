@@ -159,6 +159,7 @@ class UbicacionServiceTest {
         ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
         ubicacionService.conectar(catamarca!!.nombreUbicacion,cordoba!!.nombreUbicacion,"terrestre")
         val conectados = ubicacionService.conectados(catamarca!!.nombreUbicacion).sortedBy { it.nombreUbicacion }
+        assertEquals(2, conectados.size)
         assertEquals("Cordoba" ,conectados.first().nombreUbicacion)
         assertEquals("Entre Rios" ,conectados.last().nombreUbicacion)
     }
