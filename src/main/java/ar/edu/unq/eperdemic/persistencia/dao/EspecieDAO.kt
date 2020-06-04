@@ -6,7 +6,7 @@ interface EspecieDAO {
     fun guardar(especie: Especie)
     fun recuperar(especieId: Int) : Especie
     fun actualizar(especie: Especie)
-    fun cantidadUbicacionesDeEspecie(especieId: Int): Long
+    fun esPandemia(especieId: Int): Boolean
     fun lideres() : List<Especie>
     fun findEspecieLider() : Especie
     fun cantidadDeInfectados(especieId: Int) : Int

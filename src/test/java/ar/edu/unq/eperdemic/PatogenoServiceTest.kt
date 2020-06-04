@@ -149,7 +149,6 @@ class PatogenoServiceTest {
         vectorService.actualizarVector(cordobes)
         vectorService.actualizarVector(barilochense)
 
-        assertEquals(5, patogenoService.cantidadUbicacionesDeEspecie(1))
         assertEquals(9, ubicacionService.cantidadUbicaciones())
         assertTrue(patogenoService.esPandemia(1))
     }
