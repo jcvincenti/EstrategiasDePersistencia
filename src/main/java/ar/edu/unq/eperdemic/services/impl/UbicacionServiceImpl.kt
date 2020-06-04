@@ -68,6 +68,10 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino)
     }
 
+    override fun conectados(nombreUbicacion: String): List<Ubicacion> {
+        return neo4jUbicacionDao.conectados(nombreUbicacion)
+    }
+
     fun cantidadUbicaciones(): Long {
         return TransactionRunner.runTrx {
             ubicacionDAO.cantidadUbicaciones()

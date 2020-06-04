@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao.neo4j
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.INeo4JUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JConnector.execute
+import org.neo4j.driver.Record
 import org.neo4j.driver.Values
 
 class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
@@ -26,6 +27,20 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
                         "nombreUbicacionOrigen", nombreUbicacionOrigen,
                         "nombreUbicacionDestino", nombreUbicacionDestino)
                 )
+            }
+        }
+    }
+    override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
+        return execute { session ->
+            session.writeTransaction {
+                val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
+                        "RETURN ubicacionConectada"
+                val res = it.run(query, Values.parameters("nombreUbicacion", nombreUbicacion))
+                res.list { record: Record ->
+                    val ubicacion  = record.get(0)
+                    val nombreUbicacion = ubicacion.get("nombreUbicacion").asString()
+                    Ubicacion(nombreUbicacion)
+                }
             }
         }
     }

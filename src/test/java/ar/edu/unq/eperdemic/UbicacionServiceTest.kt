@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -12,6 +13,7 @@ import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import ar.edu.unq.eperdemic.utils.neo4j.DataServiceNeo4j
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -147,5 +149,31 @@ class UbicacionServiceTest {
     fun expandirUbicacionInexistenteTest(){
         val exception = assertThrows<EntityNotFoundException> { ubicacionService.expandir("Bernal") }
         assertEquals("La entidad Ubicacion con id Bernal no existe", exception.message)
+    }
+
+    @Test
+    fun conectadosTest(){
+        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
+        val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
+        val cordoba = ubicacionService.recuperarUbicacion("Cordoba")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,cordoba!!.nombreUbicacion,"terrestre")
+        val conectados = ubicacionService.conectados(catamarca!!.nombreUbicacion).sortedBy { it.nombreUbicacion }
+        assertEquals(2, conectados.size)
+        assertEquals("Cordoba" ,conectados.first().nombreUbicacion)
+        assertEquals("Entre Rios" ,conectados.last().nombreUbicacion)
+    }
+
+    @Test
+    fun noConectadosTest(){
+        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
+        val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
+        ubicacionService.conectar(entreRios!!.nombreUbicacion,catamarca!!.nombreUbicacion,"terrestre")
+        assertTrue(ubicacionService.conectados("Catamarca").isEmpty())
+    }
+
+    @Test
+    fun conectadosListaVaciaTest(){
+        assertTrue(ubicacionService.conectados("Cordoba").isEmpty())
     }
 }
