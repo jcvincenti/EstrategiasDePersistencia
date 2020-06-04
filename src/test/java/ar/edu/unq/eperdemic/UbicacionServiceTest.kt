@@ -164,6 +164,14 @@ class UbicacionServiceTest {
     }
 
     @Test
+    fun noConectadosTest(){
+        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
+        val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
+        ubicacionService.conectar(entreRios!!.nombreUbicacion,catamarca!!.nombreUbicacion,"terrestre")
+        assertTrue(ubicacionService.conectados("Catamarca").isEmpty())
+    }
+
+    @Test
     fun conectadosListaVaciaTest(){
         assertTrue(ubicacionService.conectados("Cordoba").isEmpty())
     }

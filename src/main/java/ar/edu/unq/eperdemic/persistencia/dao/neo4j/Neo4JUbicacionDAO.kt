@@ -33,7 +33,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
         return execute { session ->
             session.writeTransaction {
-                val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})--(ubicacionConectada : Ubicacion)"+
+                val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
                         "RETURN ubicacionConectada"
                 val res = it.run(query, Values.parameters("nombreUbicacion", nombreUbicacion))
                 res.list { record: Record ->
