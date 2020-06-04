@@ -49,7 +49,6 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
             val patogeno = patogenoDAO.recuperar(id)
             especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
             especieDAO.guardar(especieCreada!!)
-            patogenoDAO.actualizar(patogeno)
         }
         return especieCreada!!
     }
@@ -67,10 +66,8 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
     override fun esPandemia(especieId: Int): Boolean {
-        return TransactionRunner.runTrx {
-            val ubicaciones = ubicacionService.cantidadUbicaciones()
-            cantidadUbicacionesDeEspecie(especieId) > (ubicaciones / 2)
-        }
+        val ubicaciones = ubicacionService.cantidadUbicaciones()
+        return cantidadUbicacionesDeEspecie(especieId) > (ubicaciones / 2)
     }
 
     fun cantidadUbicacionesDeEspecie(especieId: Int): Long {

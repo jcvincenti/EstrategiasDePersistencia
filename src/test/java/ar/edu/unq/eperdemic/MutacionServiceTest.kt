@@ -70,6 +70,22 @@ class MutacionServiceTest {
     }
 
     @Test
+    fun mutarConRequisitosTest() {
+        val mutacion = Mutacion(AtributoEnum.Defensa, 0F, 10)
+        mutacion.mutacionesRequeridas.add(mutacionService.recuperarMutacion(1))
+        mutacionService.crearMutacion(mutacion)
+        mutacionService.mutar(1, 4)
+        val especie = patogenoService.recuperarEspecie(1)
+        assertTrue(especie.mutaciones.isEmpty())
+        mutacionService.mutar(1,1)
+        assertEquals(1, patogenoService.recuperarEspecie(1).mutaciones.first().id )
+        assertEquals(1, patogenoService.recuperarEspecie(1).mutaciones.size)
+        mutacionService.mutar(1, 4)
+        assertEquals(2, patogenoService.recuperarEspecie(1).mutaciones.size)
+        assertEquals(4, patogenoService.recuperarEspecie(1).mutaciones.last().id )
+    }
+
+    @Test
     fun mutarEspecieQueNoCumpleLosRequisitosTest(){
         mutacionService.mutar(1, 2)
         val especie = patogenoService.recuperarEspecie(1)
