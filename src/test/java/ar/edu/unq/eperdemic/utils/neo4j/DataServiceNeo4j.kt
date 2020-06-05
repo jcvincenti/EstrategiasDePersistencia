@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.utils.neo4j
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
+import ar.edu.unq.eperdemic.services.runner.Neo4JTransactionRunner
 import ar.edu.unq.eperdemic.utils.DataService
 
 class DataServiceNeo4j : DataService {
@@ -14,14 +15,20 @@ class DataServiceNeo4j : DataService {
     }
 
     override fun crearSetDeDatosIniciales() {
-        ubicaciones.forEach{
-            dao.crearUbicacion(it)
+        ubicaciones.forEach{ u->
+            Neo4JTransactionRunner.runTrx {
+                dao.crearUbicacion(u, it)
+            }
         }
-        dao.conectar("Entre Rios", "La Pampa", "terrestre")
+        Neo4JTransactionRunner.runTrx {
+            dao.conectar("Entre Rios", "La Pampa", "terrestre", it)
+        }
     }
 
     override fun eliminarTodo() {
-        dao.clear()
+        Neo4JTransactionRunner.runTrx {
+            dao.clear(it)
+        }
     }
 
 }
