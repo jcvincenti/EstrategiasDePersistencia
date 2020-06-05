@@ -55,7 +55,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             ubicacionDAO.guardar(ubicacion)
         }
         Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.crearUbicacion(ubicacion)
+            neo4jUbicacionDao.crearUbicacion(ubicacion, it)
         }
         return ubicacion
     }
@@ -69,13 +69,13 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
         Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino)
+            neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino, it)
         }
     }
 
     override fun conectados(nombreUbicacion: String): List<Ubicacion> {
         return Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.conectados(nombreUbicacion)
+            neo4jUbicacionDao.conectados(nombreUbicacion, it)
         }
     }
 

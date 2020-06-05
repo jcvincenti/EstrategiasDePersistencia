@@ -5,22 +5,10 @@ import org.neo4j.driver.Transaction
 object Neo4JTransactionRunner {
     var currentTrx: Transaction? = null
 
-    fun <T> runTrx(bloque: ()->T): T {
-        currentTrx = createTransaction()
-        try {
+    fun <T> runTrx(bloque: (Transaction)->T): T {
+        return Neo4JSessionFactoryProvider.instance.createSession().writeTransaction {
             //codigo de negocio
-            val resultado = bloque()
-            currentTrx!!.commit()
-            currentTrx!!.close()
-            return resultado
-        } catch (e: RuntimeException) {
-            currentTrx!!.rollback()
-            currentTrx!!.close()
-            throw e
+            return@writeTransaction bloque(it)
         }
-    }
-
-    fun createTransaction(): Transaction? {
-        return Neo4JSessionFactoryProvider.instance.createSession().beginTransaction()
     }
 }
