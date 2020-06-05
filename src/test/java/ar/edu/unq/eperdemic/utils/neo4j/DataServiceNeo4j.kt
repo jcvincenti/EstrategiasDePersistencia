@@ -26,7 +26,9 @@ class DataServiceNeo4j : DataService {
     }
 
     override fun eliminarTodo() {
-        dao.clear()
+        Neo4JTransactionRunner.runTrx {
+            dao.clear(it)
+        }
     }
 
 }

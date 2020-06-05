@@ -2,8 +2,6 @@ package ar.edu.unq.eperdemic.persistencia.dao.neo4j
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.INeo4JUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JConnector.execute
-import ar.edu.unq.eperdemic.services.runner.Neo4JTransactionRunner
 import org.neo4j.driver.Record
 import org.neo4j.driver.Transaction
 import org.neo4j.driver.Values
@@ -35,9 +33,8 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         }
     }
 
-    fun clear() {
-        return execute { session ->
-            session.run("MATCH (n) DETACH DELETE n")
-        }
+    fun clear(tx: Transaction) {
+        tx.run("MATCH (n) DETACH DELETE n")
     }
+
 }
