@@ -3,20 +3,12 @@ package ar.edu.unq.eperdemic.services.runner
 import org.neo4j.driver.Session
 import org.neo4j.driver.Transaction
 
-object Neo4JTransactionFactory {
-    private var session: Session? = null
-
-    fun createTransaction(): Transaction? {
-        session = Neo4JSessionFactoryProvider.instance.createSession()
-        return session!!.beginTransaction()
-    }
-}
-
 object Neo4JTransactionRunner {
+    private var session: Session? = null
     var currentTrx: Transaction? = null
 
     fun <T> runTrx(bloque: ()->T): T {
-        currentTrx = Neo4JTransactionFactory.createTransaction()
+        currentTrx = createTransaction()
         try {
             //codigo de negocio
             val resultado = bloque()
@@ -28,5 +20,10 @@ object Neo4JTransactionRunner {
             currentTrx!!.close()
             throw e
         }
+    }
+
+    fun createTransaction(): Transaction? {
+        session = Neo4JSessionFactoryProvider.instance.createSession()
+        return session!!.beginTransaction()
     }
 }

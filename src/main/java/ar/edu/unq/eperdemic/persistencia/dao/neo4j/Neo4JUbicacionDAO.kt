@@ -9,12 +9,9 @@ import org.neo4j.driver.Values
 
 class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     override fun crearUbicacion(ubicacion: Ubicacion) : Ubicacion{
-        execute { session ->
-            session.writeTransaction{
-                val query ="CREATE(ubicacion: Ubicacion {nombreUbicacion: \$nombre})"
-                it.run(query, Values.parameters("nombre", ubicacion.nombreUbicacion))
-            }
-        }
+        val tx = Neo4JTransactionRunner.currentTrx
+        val query ="CREATE(ubicacion: Ubicacion {nombreUbicacion: \$nombre})"
+        tx!!.run(query, Values.parameters("nombre", ubicacion.nombreUbicacion))
         return ubicacion
     }
 
@@ -29,20 +26,15 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
 
     }
     override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
-        return execute { session ->
-            session.writeTransaction {
-                val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
-                        "RETURN ubicacionConectada"
-                val res = it.run(query, Values.parameters("nombreUbicacion", nombreUbicacion))
-                res.list { record: Record ->
-                    val ubicacion  = record.get(0)
-                    val nombreUbicacion = ubicacion.get("nombreUbicacion").asString()
-                    Ubicacion(nombreUbicacion)
-                }
-            }
-
+        val tx = Neo4JTransactionRunner.currentTrx
+        val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
+                "RETURN ubicacionConectada"
+        val res = tx!!.run(query, Values.parameters("nombreUbicacion", nombreUbicacion))
+        return res.list { record: Record ->
+            val ubicacion  = record.get(0)
+            val nombreUbicacion = ubicacion.get("nombreUbicacion").asString()
+            Ubicacion(nombreUbicacion)
         }
-
     }
 
     fun clear() {

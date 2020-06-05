@@ -54,7 +54,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             validateEntityDoesNotExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.guardar(ubicacion)
         }
-        neo4jUbicacionDao.crearUbicacion(ubicacion)
+        Neo4JTransactionRunner.runTrx {
+            neo4jUbicacionDao.crearUbicacion(ubicacion)
+        }
         return ubicacion
     }
 
@@ -72,7 +74,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun conectados(nombreUbicacion: String): List<Ubicacion> {
-        return neo4jUbicacionDao.conectados(nombreUbicacion)
+        return Neo4JTransactionRunner.runTrx {
+            neo4jUbicacionDao.conectados(nombreUbicacion)
+        }
     }
 
     fun cantidadUbicaciones(): Long {

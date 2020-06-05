@@ -16,7 +16,9 @@ class DataServiceNeo4j : DataService {
 
     override fun crearSetDeDatosIniciales() {
         ubicaciones.forEach{
-            dao.crearUbicacion(it)
+            Neo4JTransactionRunner.runTrx {
+                dao.crearUbicacion(it)
+            }
         }
         Neo4JTransactionRunner.runTrx {
             dao.conectar("Entre Rios", "La Pampa", "terrestre")
