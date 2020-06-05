@@ -1,10 +1,8 @@
 package ar.edu.unq.eperdemic.services.runner
 
-import org.neo4j.driver.Session
 import org.neo4j.driver.Transaction
 
 object Neo4JTransactionRunner {
-    private var session: Session? = null
     var currentTrx: Transaction? = null
 
     fun <T> runTrx(bloque: ()->T): T {
@@ -23,7 +21,6 @@ object Neo4JTransactionRunner {
     }
 
     fun createTransaction(): Transaction? {
-        session = Neo4JSessionFactoryProvider.instance.createSession()
-        return session!!.beginTransaction()
+        return Neo4JSessionFactoryProvider.instance.createSession().beginTransaction()
     }
 }
