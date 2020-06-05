@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.runner.Neo4JTransactionRunner
 import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
@@ -65,7 +66,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
-        neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino)
+        Neo4JTransactionRunner.runTrx {
+            neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino)
+        }
     }
 
     override fun conectados(nombreUbicacion: String): List<Ubicacion> {
