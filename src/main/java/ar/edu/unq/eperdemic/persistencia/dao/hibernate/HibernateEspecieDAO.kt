@@ -3,11 +3,12 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.transactions.HibernateTransaction
+
 
 class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDAO {
     override fun lideres(): List<Especie> {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = """
             select e
             from Vector v
@@ -21,7 +22,7 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
     }
 
     override fun esPandemia(especieId: Int): Boolean {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = (
                 """
                     select count(*) > (select count(*) from Ubicacion ub) / 2
@@ -37,7 +38,7 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
     }
 
     override fun findEspecieLider(): Especie {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = """
             select e
             from Vector v
@@ -51,7 +52,7 @@ class HibernateEspecieDAO: HibernateDAO<Especie>(Especie::class.java), EspecieDA
     }
 
     override fun cantidadDeInfectados(especieId: Int): Int {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = (
                 """
                     select count(e.id)

@@ -7,8 +7,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.runner.Neo4JTransactionRunner
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityDoesNotExists
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
@@ -21,18 +19,14 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
-
-        Neo4JTransactionRunner.runTrx {
-            if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion, it)) {
+        TransactionRunner.runTrx {
+            if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
             }
+            if (vector.puedeMoverse(ubicacion)) {
+                vector.moverse(ubicacion!!.nombreUbicacion)
+            vectorService.actualizarVector(vector)
         }
-
-        if (vector.puedeMoverse(ubicacion)) {
-            vector.moverse(ubicacion!!.nombreUbicacion)
-            TransactionRunner.runTrx {
-                vectorService.actualizarVector(vector)
-            }
             contagiarZona(vector, nombreUbicacion)
         }
     }
@@ -60,9 +54,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         TransactionRunner.runTrx {
             validateEntityDoesNotExists<Ubicacion>(nombreUbicacion)
             ubicacionDAO.guardar(ubicacion)
-        }
-        Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.crearUbicacion(ubicacion, it)
+            neo4jUbicacionDao.crearUbicacion(ubicacion)
         }
         return ubicacion
     }
@@ -75,14 +67,14 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
-        Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino, it)
+        TransactionRunner.runTrx {
+            neo4jUbicacionDao.conectar(nombreUbicacionOrigen, nombreUbicacionDestino, tipoDeCamino)
         }
     }
 
     override fun conectados(nombreUbicacion: String): List<Ubicacion> {
-        return Neo4JTransactionRunner.runTrx {
-            neo4jUbicacionDao.conectados(nombreUbicacion, it)
+        return TransactionRunner.runTrx {
+            neo4jUbicacionDao.conectados(nombreUbicacion)
         }
     }
 

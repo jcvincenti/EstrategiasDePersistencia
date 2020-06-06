@@ -5,7 +5,6 @@ import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.EstadisticasService
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 
 class EstadisticaServiceImpl() : EstadisticasService {
 

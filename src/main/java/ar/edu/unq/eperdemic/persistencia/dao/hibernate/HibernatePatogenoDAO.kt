@@ -1,11 +1,8 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
-import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.transactions.HibernateTransaction
 
 open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), PatogenoDAO {
 
@@ -15,7 +12,7 @@ open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), P
     }
 
     override fun recuperarATodos(): List<Patogeno> {
-            val session = TransactionRunner.currentSession
+            val session = HibernateTransaction.currentSession
             val hql = """
             select p
             from Patogeno p
@@ -26,7 +23,7 @@ open class HibernatePatogenoDAO: HibernateDAO<Patogeno>(Patogeno::class.java), P
     }
 
     override fun existePatogenoConTipo(tipo: String): Boolean {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = """
             select p
             from Patogeno p

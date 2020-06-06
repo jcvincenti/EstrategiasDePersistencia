@@ -3,11 +3,11 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
+import ar.edu.unq.eperdemic.services.transactions.HibernateTransaction
 
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), VectorDAO {
     override fun getVectoresByLocacion(nombreDeLocacionActual: String?) : List<Vector> {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = ("from Vector v "
                 + "where v.nombreDeLocacionActual = :nombreDeLocacionActual ")
 
@@ -18,7 +18,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), Vector
     }
 
     override fun getVectorRandomEnLocacion(nombreDeLocacionActual: String?) : Vector? {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = """
             select v
             from Vector v
@@ -33,7 +33,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java), Vector
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
-        val session = TransactionRunner.currentSession
+        val session = HibernateTransaction.currentSession
         val hql = ("select e from Vector v"
                 + " inner join v.especies e "
                 + "where v.id = :vectorId ")
