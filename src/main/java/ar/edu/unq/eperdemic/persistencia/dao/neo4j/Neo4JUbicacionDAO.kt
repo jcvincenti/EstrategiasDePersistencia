@@ -33,6 +33,15 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         }
     }
 
+    override fun esUbicacionMuyLejana(origen: String, destino: String, tx: Transaction) : Boolean {
+        val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})" +
+                " RETURN SIGN(COUNT(r)) = 0"
+        val result = tx.run(query, Values.parameters(
+                "origen", origen,
+                "destino", destino))
+        return result.single().values()[0].asBoolean()
+    }
+
     fun clear(tx: Transaction) {
         tx.run("MATCH (n) DETACH DELETE n")
     }

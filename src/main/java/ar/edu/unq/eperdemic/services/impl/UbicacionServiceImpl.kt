@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
@@ -20,6 +21,12 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
+
+        Neo4JTransactionRunner.runTrx {
+            if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion, it)) {
+                throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
+            }
+        }
 
         if (vector.puedeMoverse(ubicacion)) {
             vector.moverse(ubicacion!!.nombreUbicacion)

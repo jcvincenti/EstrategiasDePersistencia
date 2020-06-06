@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
@@ -175,5 +176,11 @@ class UbicacionServiceTest {
     @Test
     fun conectadosListaVaciaTest(){
         assertTrue(ubicacionService.conectados("Cordoba").isEmpty())
+    }
+
+    @Test
+    fun moverAUbicacionInalcanzableTest(){
+        val exception = assertThrows<UbicacionMuyLejanaException> { ubicacionService.mover(1, "La Pampa") }
+        assertEquals("La ubicacion a la que intenta moverse no esta conectada", exception.message)
     }
 }
