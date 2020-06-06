@@ -22,6 +22,8 @@ class DataServiceNeo4j : DataService {
         }
         Neo4JTransactionRunner.runTrx {
             dao.conectar("Entre Rios", "La Pampa", "terrestre", it)
+            dao.conectar("Buenos Aires", "Cordoba", "terrestre", it)
+            dao.conectar("Bariloche", "Cordoba", "terrestre", it)
         }
     }
 
