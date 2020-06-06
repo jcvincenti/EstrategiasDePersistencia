@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.persistencia.dao.MutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.MutacionService
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 

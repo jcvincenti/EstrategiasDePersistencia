@@ -3,7 +3,6 @@ package ar.edu.unq.eperdemic.utils.hibernate
 import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateDataDAO
-import ar.edu.unq.eperdemic.services.runner.TransactionRunner
 import ar.edu.unq.eperdemic.utils.DataService
 
 class DataServiceHibernate : DataService {
