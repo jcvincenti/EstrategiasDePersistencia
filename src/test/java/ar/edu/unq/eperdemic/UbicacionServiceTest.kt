@@ -211,4 +211,15 @@ class UbicacionServiceTest {
         // con tres movimientos puede moverse a Cordoba, Entre Rios, La Pampa y Quilmes
         assertEquals(4, ubicacionService.capacidadDeExpansion(1, 3))
     }
+
+    @Test
+    fun capacidadDeExpansionConTiposDeCaminoNoValidosTest() {
+        ubicacionService.conectar("Buenos Aires", "Entre Rios", "aereo")
+        // con un movimiento puede moverse a Cordoba
+        assertEquals(1, ubicacionService.capacidadDeExpansion(1, 1))
+        // con dos movimientos puede moverse a Cordoba
+        assertEquals(1, ubicacionService.capacidadDeExpansion(1, 2))
+        // con tres movimientos puede moverse a Cordoba
+        assertEquals(1, ubicacionService.capacidadDeExpansion(1, 3))
+    }
 }
