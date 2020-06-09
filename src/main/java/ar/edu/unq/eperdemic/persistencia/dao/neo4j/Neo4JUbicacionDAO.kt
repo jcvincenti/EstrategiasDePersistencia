@@ -37,6 +37,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         }
     }
 
+    //TODO: Refactorizar por ubicaciones lindantes
     override fun esUbicacionMuyLejana(origen: String, destino: String) : Boolean {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})" +
@@ -47,6 +48,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return result.single().values()[0].asBoolean()
     }
 
+    //TODO: Refactorizar para que devuelva el bool directamente en la query
     override fun conexiones(origen: String, destino: String): List<TipoCaminoEnum> {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})"+

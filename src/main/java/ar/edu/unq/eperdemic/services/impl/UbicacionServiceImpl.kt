@@ -26,6 +26,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
             }
 
+            //TODO: Refactorizar para no hacer chequeos en memoria
+
             if (neo4jUbicacionDao.conexiones(vector.nombreDeLocacionActual, nombreUbicacion).any {
                         !it.puedeSerAtravesadoPor(vector.tipo)
                     }) {
