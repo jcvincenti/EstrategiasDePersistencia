@@ -192,8 +192,7 @@ class UbicacionServiceTest {
 
     @Test
     fun capacidadDeExpansionTest() {
-        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         ubicacionService.conectar("Buenos Aires", "Entre Rios", "terrestre")
-        assertEquals(2, ubicacionService.capacidadDeExpansion(1, 2))
+        assertEquals(2, ubicacionService.capacidadDeExpansion(1, 1))
     }
 }

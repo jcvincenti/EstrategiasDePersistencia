@@ -91,8 +91,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun capacidadDeExpansion(vectorId: Long, movimientos: Int): Int {
+        val vector = vectorService.recuperarVector(vectorId.toInt())
         return TransactionRunner.runTrx {
-            val vector = vectorService.recuperarVector(vectorId.toInt())
             val ubicacion = vector.nombreDeLocacionActual
             neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos, TipoCaminoEnum.caminosPosibles(vector.tipo))
         }

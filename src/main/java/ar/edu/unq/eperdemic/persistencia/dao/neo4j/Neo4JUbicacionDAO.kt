@@ -51,19 +51,20 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
 
     override fun capacidadDeExpansion(nombreDeUbicacion: String, movimientos: Int, tiposDeCamino: List<String>): Int {
         val tx = Neo4JTransaction.transaction
-        val tiposDeCamino = tiposDeCamino.map { "$it>|" }
-        val query = "MATCH (u:Ubicacion {nombreUbicacion: \$ubicacion})" +
+        var caminos = ""
+        tiposDeCamino.forEach { caminos = "$caminos$it>|" }
+        val query = "MATCH (u:Ubicacion {nombreUbicacion: \$ubicacion}) " +
                 "CALL apoc.path.subgraphNodes(u, {" +
-                "    relationshipFilter: \$tiposDeCamino" +
+                "    relationshipFilter: \$tiposDeCamino," +
                 "    minLevel: 1," +
                 "    maxLevel: \$movimientos" +
-                "})"
-                "YIELD node" +
+                "}) " +
+                "YIELD node " +
                 "RETURN count(node);"
         val result = tx!!.run(query, Values.parameters(
                 "ubicacion", nombreDeUbicacion,
                 "movimientos", movimientos,
-                "tiposDeCamino", tiposDeCamino))
+                "tiposDeCamino", caminos))
         return result.single()[0].asInt()
     }
 
