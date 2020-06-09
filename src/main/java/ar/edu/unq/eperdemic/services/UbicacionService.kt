@@ -8,6 +8,7 @@ interface UbicacionService {
     fun expandir(nombreUbicacion: String)
     fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String)
     fun conectados(nombreUbicacion: String) : List<Ubicacion>
+    fun capacidadDeExpansion(vectorId: Long, movimientos:Int): Int
     /* Operaciones CRUD*/
     fun crearUbicacion(nombreUbicacion: String): Ubicacion
     fun recuperarUbicacion(nombreUbicacion: String) : Ubicacion?

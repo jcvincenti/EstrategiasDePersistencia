@@ -47,6 +47,15 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return result.single().values()[0].asBoolean()
     }
 
+    override fun capacidadDeExpansion(nombreDeUbicacion: String, movimientos: Int): Int {
+        val tx = Neo4JTransaction.transaction
+        val query = ""
+        val result = tx!!.run(query, Values.parameters(
+                "ubicacion", nombreDeUbicacion,
+                "movimientos", movimientos))
+        return result.single()[0].asInt()
+    }
+
     fun clear() {
         val tx = Neo4JTransaction.transaction
         tx!!.run("MATCH (n) DETACH DELETE n")
