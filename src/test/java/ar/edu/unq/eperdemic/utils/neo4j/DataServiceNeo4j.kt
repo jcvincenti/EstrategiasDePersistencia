@@ -17,10 +17,14 @@ class DataServiceNeo4j : DataService {
         TransactionRunner.runTrx {
             ubicaciones.forEach { u ->
                 dao.crearUbicacion(u)
-                dao.conectar("Entre Rios", "La Pampa", "terrestre")
-                dao.conectar("Buenos Aires", "Cordoba", "terrestre")
-                dao.conectar("Bariloche", "Cordoba", "terrestre")
             }
+            dao.conectar("Entre Rios", "La Pampa", "terrestre")
+            dao.conectar("Buenos Aires", "Cordoba", "terrestre")
+            dao.conectar("Bariloche", "Cordoba", "terrestre")
+            dao.conectar("La Pampa", "Quilmes", "maritimo")
+            dao.conectar("Quilmes", "Berazategui", "aereo")
+            dao.conectar("Cordoba", "Quilmes", "aereo")
+
         }
     }
 

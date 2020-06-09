@@ -1,10 +1,10 @@
 package ar.edu.unq.eperdemic.persistencia.dao.neo4j
 
+import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.INeo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.transactions.Neo4JTransaction
 import org.neo4j.driver.Record
-import org.neo4j.driver.Transaction
 import org.neo4j.driver.Values
 
 class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
@@ -45,6 +45,24 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
                 "origen", origen,
                 "destino", destino))
         return result.single().values()[0].asBoolean()
+    }
+
+    override fun conexiones(origen: String, destino: String): List<TipoCaminoEnum> {
+        val tx = Neo4JTransaction.transaction
+        val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})"+
+                "RETURN [x in r | type(x)]"
+        val exc = tx!!.run(query, Values.parameters(
+                "origen", origen,
+                "destino", destino))
+
+        val result = exc.list { record: Record ->
+            record[0].values().map {
+                it.asString()
+            }.toList()
+        }
+        return result[0].map {
+            TipoCaminoEnum.parseTipo(it)!!
+        }
     }
 
     fun clear() {

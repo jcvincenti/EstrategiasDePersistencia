@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services.impl
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
+import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionNoAlcanzableException
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
@@ -20,9 +21,17 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
         TransactionRunner.runTrx {
+
             if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
             }
+
+            if (neo4jUbicacionDao.conexiones(vector.nombreDeLocacionActual, nombreUbicacion).any {
+                        !it.puedeSerAtravesadoPor(vector.tipo)
+                    }) {
+                throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
+            }
+
             if (vector.puedeMoverse(ubicacion)) {
                 vector.moverse(ubicacion!!.nombreUbicacion)
             vectorService.actualizarVector(vector)
