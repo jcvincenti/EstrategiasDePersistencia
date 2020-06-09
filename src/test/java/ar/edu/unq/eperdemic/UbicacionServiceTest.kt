@@ -189,4 +189,11 @@ class UbicacionServiceTest {
         val exception = assertThrows<UbicacionNoAlcanzableException> { ubicacionService.mover(4, "Quilmes") }
         assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
     }
+
+    @Test
+    fun capacidadDeExpansionTest() {
+        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
+        ubicacionService.conectar("Buenos Aires", "Entre Rios", "terrestre")
+        assertEquals(2, ubicacionService.capacidadDeExpansion(1, 2))
+    }
 }

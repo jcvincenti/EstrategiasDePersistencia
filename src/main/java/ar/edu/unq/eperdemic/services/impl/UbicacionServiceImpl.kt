@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
@@ -91,8 +92,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun capacidadDeExpansion(vectorId: Long, movimientos: Int): Int {
         return TransactionRunner.runTrx {
-            val ubicacion = vectorService.recuperarVector(vectorId.toInt()).nombreDeLocacionActual
-            neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos)
+            val vector = vectorService.recuperarVector(vectorId.toInt())
+            val ubicacion = vector.nombreDeLocacionActual
+            neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos, TipoCaminoEnum.caminosPosibles(vector.tipo))
         }
     }
 
