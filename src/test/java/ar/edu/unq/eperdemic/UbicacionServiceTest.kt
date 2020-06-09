@@ -166,6 +166,17 @@ class UbicacionServiceTest {
     }
 
     @Test
+    fun conectadosSinRepetidos(){
+        val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
+        val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"maritimo")
+        val conectados = ubicacionService.conectados(catamarca!!.nombreUbicacion).sortedBy { it.nombreUbicacion }
+
+        assertEquals(conectados.toSet().size, conectados.size)
+    }
+
+    @Test
     fun noConectadosTest(){
         val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
