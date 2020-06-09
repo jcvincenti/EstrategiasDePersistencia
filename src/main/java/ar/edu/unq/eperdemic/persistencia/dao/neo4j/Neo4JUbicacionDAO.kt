@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao.neo4j
 
 import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.INeo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.transactions.Neo4JTransaction
@@ -46,6 +47,25 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
                 "origen", origen,
                 "destino", destino))
         return result.single().values()[0].asBoolean()
+    }
+
+    override fun capacidadDeExpansion(nombreDeUbicacion: String, movimientos: Int, tiposDeCamino: List<String>): Int {
+        val tx = Neo4JTransaction.transaction
+        var caminos = ""
+        tiposDeCamino.forEach { caminos = "$caminos$it>|" }
+        val query = "MATCH (u:Ubicacion {nombreUbicacion: \$ubicacion}) " +
+                "CALL apoc.path.subgraphNodes(u, {" +
+                "    relationshipFilter: \$tiposDeCamino," +
+                "    minLevel: 1," +
+                "    maxLevel: \$movimientos" +
+                "}) " +
+                "YIELD node " +
+                "RETURN count(node);"
+        val result = tx!!.run(query, Values.parameters(
+                "ubicacion", nombreDeUbicacion,
+                "movimientos", movimientos,
+                "tiposDeCamino", caminos))
+        return result.single()[0].asInt()
     }
 
     //TODO: Refactorizar para que devuelva el bool directamente en la query

@@ -8,5 +8,6 @@ interface INeo4JUbicacionDAO {
     fun conectar(nombreUbicacionOrigen:String, nombreUbicacionDestino:String, tipoDeCamino:String)
     fun conectados(nombreUbicacion: String) : List<Ubicacion>
     fun esUbicacionMuyLejana(origen:String, destino:String) : Boolean
+    fun capacidadDeExpansion(nombreDeUbicacion:String, movimientos:Int, tiposDeCamino: List<String>): Int
     fun conexiones(origen: String, destino: String) : List<TipoCaminoEnum>
 }
