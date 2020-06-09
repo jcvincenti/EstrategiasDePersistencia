@@ -28,7 +28,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
-                "RETURN ubicacionConectada"
+                "RETURN DISTINCT(ubicacionConectada)"
         val res = tx!!.run(query, Values.parameters("nombreUbicacion", nombreUbicacion))
         return res.list { record: Record ->
             val ubicacion  = record.get(0)
