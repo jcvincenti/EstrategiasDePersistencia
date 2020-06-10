@@ -38,15 +38,17 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         }
     }
 
-    //TODO: Refactorizar por ubicaciones lindantes
     override fun esUbicacionMuyLejana(origen: String, destino: String) : Boolean {
         val tx = Neo4JTransaction.transaction
-        val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})" +
-                " RETURN SIGN(COUNT(r)) = 0"
-        val result = tx!!.run(query, Values.parameters(
+        val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen}), (m:Ubicacion {nombreUbicacion: \$destino})" +
+                " RETURN not exists ((n)-->(m)) "
+        val exc = tx!!.run(query, Values.parameters(
                 "origen", origen,
                 "destino", destino))
-        return result.single().values()[0].asBoolean()
+        val result = exc.list { record: Record ->
+            record[0].asBoolean()
+        }
+        return result[0]
     }
 
     override fun capacidadDeExpansion(nombreDeUbicacion: String, movimientos: Int, tiposDeCamino: List<String>): Int {
