@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface INeo4JUbicacionDAO {
@@ -10,4 +11,5 @@ interface INeo4JUbicacionDAO {
     fun esUbicacionMuyLejana(origen:String, destino:String) : Boolean
     fun capacidadDeExpansion(nombreDeUbicacion:String, movimientos:Int, tiposDeCamino: List<String>): Int
     fun conexiones(origen: String, destino: String) : List<TipoCaminoEnum>
+    fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String) : List<String>
 }

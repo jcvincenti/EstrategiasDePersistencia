@@ -233,4 +233,10 @@ class UbicacionServiceTest {
         // con tres movimientos puede moverse a Cordoba
         assertEquals(1, ubicacionService.capacidadDeExpansion(1, 3))
     }
+
+    @Test
+    fun caminoMasCorto() {
+        val caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Persona, "La Pampa", "La Pampa")
+        neo4jDataService.eliminarTodo()
+    }
 }

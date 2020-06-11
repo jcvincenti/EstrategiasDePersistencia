@@ -26,6 +26,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
                 "nombreUbicacionDestino", nombreUbicacionDestino))
 
     }
+
     override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
@@ -85,6 +86,26 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return result[0].map {
             TipoCaminoEnum.parseTipo(it)!!
         }
+    }
+
+    override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
+        val tx = Neo4JTransaction.transaction
+        val query = "MATCH (start:Ubicacion {nombreUbicacion: \$origen})," +
+                "(end:Ubicacion {nombreUbicacion: \$destino}) " +
+                "CALL gds.alpha.shortestPath.stream({nodeProjection: 'Ubicacion'," +
+                "  relationshipProjection: {" +
+                TipoCaminoEnum.getCaminosPosiblesConfig(tipoDeVector) +
+                "  }," +
+                "  startNode: start," +
+                "  endNode: end" +
+                "}) " +
+                "YIELD nodeId " +
+                "RETURN gds.util.asNode(nodeId).nombreUbicacion AS name;"
+        val result = tx!!.run(query, Values.parameters(
+                "origen", nombreUbicacionOrigen,
+                "destino", nombreUbicacionDestino
+        ))
+        return result.list().map { it.values().first().asString() }
     }
 
     fun clear() {

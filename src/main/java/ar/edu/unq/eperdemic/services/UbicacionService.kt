@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services
 
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface UbicacionService {
@@ -9,6 +10,8 @@ interface UbicacionService {
     fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String)
     fun conectados(nombreUbicacion: String) : List<Ubicacion>
     fun capacidadDeExpansion(vectorId: Long, movimientos:Int): Int
+    fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String) : List<String>
+    fun moverMasCorto(vectorId: Int, nombreUbicacion: String)
     /* Operaciones CRUD*/
     fun crearUbicacion(nombreUbicacion: String): Ubicacion
     fun recuperarUbicacion(nombreUbicacion: String) : Ubicacion?
