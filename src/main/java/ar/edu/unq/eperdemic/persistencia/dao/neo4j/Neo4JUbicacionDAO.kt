@@ -11,7 +11,7 @@ import org.neo4j.driver.Values
 class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     override fun crearUbicacion(ubicacion: Ubicacion) : Ubicacion{
         val tx = Neo4JTransaction.transaction
-        val query ="CREATE(ubicacion: Ubicacion {nombreUbicacion: \$nombre})"
+        val query ="MERGE(ubicacion: Ubicacion {nombreUbicacion: \$nombre})"
         tx!!.run(query, Values.parameters("nombre", ubicacion.nombreUbicacion))
         return ubicacion
     }
