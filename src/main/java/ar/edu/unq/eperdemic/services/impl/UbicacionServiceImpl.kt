@@ -28,9 +28,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
             }
 
-            //TODO: Refactorizar para no hacer chequeos en memoria
-
-            if (neo4jUbicacionDao.conexiones(vector.nombreDeLocacionActual, nombreUbicacion).any {
+            if (neo4jUbicacionDao.caminosConectados(vector.nombreDeLocacionActual, nombreUbicacion).any {
                         !it.puedeSerAtravesadoPor(vector.tipo)
                     }) {
                 throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
@@ -38,9 +36,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
             if (vector.puedeMoverse(ubicacion)) {
                 vector.moverse(ubicacion!!.nombreUbicacion)
-            vectorService.actualizarVector(vector)
-        }
-            contagiarZona(vector, nombreUbicacion)
+                vectorService.actualizarVector(vector)
+                contagiarZona(vector, nombreUbicacion)
+            }
         }
     }
 
