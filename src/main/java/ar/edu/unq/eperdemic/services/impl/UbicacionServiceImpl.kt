@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
+import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
@@ -94,6 +95,23 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             val ubicacion = vector.nombreDeLocacionActual
             neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos, TipoCaminoEnum.caminosPosibles(vector.tipo))
         }
+    }
+
+    override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
+        var caminoMasCorto = listOf<String>()
+        TransactionRunner.runTrx {
+            caminoMasCorto = neo4jUbicacionDao.caminoMasCorto(tipoDeVector, nombreUbicacionOrigen, nombreUbicacionDestino)
+        }
+        if (nombreUbicacionOrigen != nombreUbicacionDestino && caminoMasCorto.isEmpty()) {
+            throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
+        }
+        return caminoMasCorto
+    }
+
+    override fun moverMasCorto(vectorId: Int, nombreUbicacion: String) {
+        val vector = vectorService.recuperarVector(vectorId)
+        val caminoMasCorto = caminoMasCorto(vector.tipo, vector.nombreDeLocacionActual, nombreUbicacion).drop(1)
+        caminoMasCorto.forEach{mover(vectorId, it)}
     }
 
     fun cantidadUbicaciones(): Long {

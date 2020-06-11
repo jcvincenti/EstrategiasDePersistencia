@@ -26,6 +26,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
                 "nombreUbicacionDestino", nombreUbicacionDestino))
 
     }
+
     override fun conectados(nombreUbicacion: String) : List<Ubicacion> {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (Ubicacion{nombreUbicacion: \$nombreUbicacion})-->(ubicacionConectada : Ubicacion)"+
@@ -53,7 +54,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
 
     override fun capacidadDeExpansion(nombreDeUbicacion: String, movimientos: Int, tiposDeCamino: List<String>): Int {
         val tx = Neo4JTransaction.transaction
-        var caminos = tiposDeCamino.joinToString(separator = ">|") { it }
+        val caminos = tiposDeCamino.joinToString(separator = ">|") { it }
         val query = "MATCH (u:Ubicacion {nombreUbicacion: \$ubicacion}) " +
                 "CALL apoc.path.subgraphNodes(u, {" +
                 "    relationshipFilter: \$tiposDeCamino," +
@@ -87,9 +88,34 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         }
     }
 
+    override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
+        val tx = Neo4JTransaction.transaction
+        val caminosPosibles = getCaminosPosiblesConfig(tipoDeVector)
+        val query = "MATCH (start:Ubicacion {nombreUbicacion: \$origen})," +
+                "(end:Ubicacion {nombreUbicacion: \$destino}) " +
+                "CALL gds.alpha.shortestPath.stream({nodeProjection: 'Ubicacion'," +
+                "  relationshipProjection: {" +
+                caminosPosibles +
+                "  }," +
+                "  startNode: start," +
+                "  endNode: end" +
+                "}) " +
+                "YIELD nodeId " +
+                "RETURN gds.util.asNode(nodeId).nombreUbicacion AS name;"
+        val result = tx!!.run(query, Values.parameters(
+                "origen", nombreUbicacionOrigen,
+                "destino", nombreUbicacionDestino
+        ))
+        return result.list().map { it.values().first().asString() }
+    }
+
     fun clear() {
         val tx = Neo4JTransaction.transaction
         tx!!.run("MATCH (n) DETACH DELETE n")
+    }
+
+    private fun getCaminosPosiblesConfig(tipoDeVector: TipoDeVectorEnum) : String {
+        return TipoCaminoEnum.caminosPosibles(tipoDeVector).joinToString(separator = ", ") { "$it: {type: '$it'}" }
     }
 
 }

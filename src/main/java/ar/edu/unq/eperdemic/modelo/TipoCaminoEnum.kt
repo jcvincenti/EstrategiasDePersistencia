@@ -12,6 +12,7 @@ enum class TipoCaminoEnum {
                 else -> null
             }
         }
+
         fun caminosPosibles(tipoDeVector: TipoDeVectorEnum) : List<String> {
             return when(tipoDeVector) {
                 TipoDeVectorEnum.Persona -> listOf("terrestre","maritimo")
