@@ -111,9 +111,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun moverMasCorto(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val caminoMasCorto = caminoMasCorto(vector.tipo, vector.nombreDeLocacionActual, nombreUbicacion).drop(1)
-        for (ubicacion in caminoMasCorto) {
-            mover(vectorId, ubicacion)
-        }
+        caminoMasCorto.forEach{mover(vectorId, it)}
     }
 
     fun cantidadUbicaciones(): Long {

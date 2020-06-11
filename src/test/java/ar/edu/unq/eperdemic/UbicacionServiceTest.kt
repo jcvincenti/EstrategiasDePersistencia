@@ -36,7 +36,7 @@ class UbicacionServiceTest {
 
     @BeforeEach
     fun crearSetDeDatosIniciales() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this)
         dataService.crearSetDeDatosIniciales()
         neo4jDataService.crearSetDeDatosIniciales()
         portenho = vectorService.recuperarVector(1)
@@ -158,8 +158,8 @@ class UbicacionServiceTest {
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
         val cordoba = ubicacionService.recuperarUbicacion("Cordoba")
         ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
-        ubicacionService.conectar(catamarca!!.nombreUbicacion,cordoba!!.nombreUbicacion,"terrestre")
-        val conectados = ubicacionService.conectados(catamarca!!.nombreUbicacion).sortedBy { it.nombreUbicacion }
+        ubicacionService.conectar(catamarca.nombreUbicacion,cordoba!!.nombreUbicacion,"terrestre")
+        val conectados = ubicacionService.conectados(catamarca.nombreUbicacion).sortedBy { it.nombreUbicacion }
         assertEquals(2, conectados.size)
         assertEquals("Cordoba" ,conectados.first().nombreUbicacion)
         assertEquals("Entre Rios" ,conectados.last().nombreUbicacion)
@@ -170,8 +170,8 @@ class UbicacionServiceTest {
         val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
         ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
-        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"maritimo")
-        val conectados = ubicacionService.conectados(catamarca!!.nombreUbicacion).sortedBy { it.nombreUbicacion }
+        ubicacionService.conectar(catamarca.nombreUbicacion,entreRios.nombreUbicacion,"maritimo")
+        val conectados = ubicacionService.conectados(catamarca.nombreUbicacion).sortedBy { it.nombreUbicacion }
 
         assertEquals(conectados.toSet().size, conectados.size)
     }
@@ -235,8 +235,63 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun caminoMasCorto() {
-        val caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Persona, "La Pampa", "La Pampa")
-        neo4jDataService.eliminarTodo()
+    fun caminoMasCortoMenorAlConectarOrigenYDestinoTest() {
+        //Buenos Aires-[terrestre]->Cordoba-[aereo]->Quilmes
+        var caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Animal, "Buenos Aires", "Quilmes")
+        assertEquals(listOf("Buenos Aires", "Cordoba", "Quilmes"), caminoMasCorto)
+        ubicacionService.conectar("Buenos Aires", "Quilmes", "aereo")
+        caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Animal, "Buenos Aires", "Quilmes")
+        assertEquals(listOf("Buenos Aires", "Quilmes"), caminoMasCorto)
+    }
+
+    @Test
+    fun caminoMasCortoNoAlcanzableParaUnaPersonaTest() {
+        //Buenos Aires-[terrestre]->Cordoba-[aereo]->Quilmes
+        val exception = assertThrows<UbicacionNoAlcanzableException>{
+            ubicacionService.caminoMasCorto(TipoDeVectorEnum.Persona, "Buenos Aires", "Quilmes")
+        }
+        assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
+    }
+
+    @Test
+    fun caminoMasCortoALaMismaUbicacionEsVacioTest() {
+        assertTrue(ubicacionService.caminoMasCorto(TipoDeVectorEnum.Persona, "Buenos Aires", "Buenos Aires").isEmpty())
+    }
+
+    @Test
+    fun caminoMasCortoNoAlcanzableParaUbicacionesConCaminosOpuestosTest() {
+        //Buenos Aires-[terrestre]->Cordoba-[aereo]->Quilmes
+        val exception = assertThrows<UbicacionNoAlcanzableException>{
+            ubicacionService.caminoMasCorto(TipoDeVectorEnum.Animal, "Quilmes", "Buenos Aires")
+        }
+        assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
+    }
+
+    @Test
+    fun unaPersonaDeCordobaNoPuedeMoverseMasCortoABerazateguiTest() {
+        //Cordoba-[Aereo]->Quilmes-[Aereo/Terrestre]->Berazategui
+        val exception = assertThrows<UbicacionNoAlcanzableException>{
+            ubicacionService.moverMasCorto(4, "Berazategui")
+        }
+        assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
+    }
+
+    @Test
+    fun unAnimalDeCordobaPuedeMoverseMasCortoABerazateguiTest() {
+        //Cordoba-[Aereo]->Quilmes-[Aereo/Terrestre]->Berazategui
+        assertEquals("Cordoba", vectorService.recuperarVector(2).nombreDeLocacionActual)
+        ubicacionService.moverMasCorto(2, "Berazategui")
+        assertEquals("Berazategui", vectorService.recuperarVector(2).nombreDeLocacionActual)
+    }
+
+    @Test
+    fun unAnimalDeCordobaNoPuedeMoverseMasCortoABuenosAiresTest() {
+        //Buenos Aires-[Terrestre]->Cordoba
+        assertEquals("Cordoba", vectorService.recuperarVector(2).nombreDeLocacionActual)
+        val exception = assertThrows<UbicacionNoAlcanzableException>{
+            ubicacionService.moverMasCorto(2, "Buenos Aires")
+        }
+        assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
+        assertEquals("Cordoba", vectorService.recuperarVector(2).nombreDeLocacionActual)
     }
 }

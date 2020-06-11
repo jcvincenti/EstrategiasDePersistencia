@@ -20,10 +20,6 @@ enum class TipoCaminoEnum {
                 TipoDeVectorEnum.Insecto -> listOf("terrestre", "aereo")
             }
         }
-
-        fun getCaminosPosiblesConfig(tipoDeVector: TipoDeVectorEnum) : String {
-            return caminosPosibles(tipoDeVector).joinToString(separator = ", ") { "$it: {type: '$it'}" }
-        }
     }
 
     fun puedeSerAtravesadoPor(tipoVector: TipoDeVectorEnum) : Boolean {

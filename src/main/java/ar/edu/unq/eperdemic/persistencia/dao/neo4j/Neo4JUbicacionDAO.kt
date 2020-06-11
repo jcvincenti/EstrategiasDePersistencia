@@ -90,11 +90,12 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
 
     override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
         val tx = Neo4JTransaction.transaction
+        val caminosPosibles = getCaminosPosiblesConfig(tipoDeVector)
         val query = "MATCH (start:Ubicacion {nombreUbicacion: \$origen})," +
                 "(end:Ubicacion {nombreUbicacion: \$destino}) " +
                 "CALL gds.alpha.shortestPath.stream({nodeProjection: 'Ubicacion'," +
                 "  relationshipProjection: {" +
-                TipoCaminoEnum.getCaminosPosiblesConfig(tipoDeVector) +
+                caminosPosibles +
                 "  }," +
                 "  startNode: start," +
                 "  endNode: end" +
@@ -111,6 +112,10 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     fun clear() {
         val tx = Neo4JTransaction.transaction
         tx!!.run("MATCH (n) DETACH DELETE n")
+    }
+
+    private fun getCaminosPosiblesConfig(tipoDeVector: TipoDeVectorEnum) : String {
+        return TipoCaminoEnum.caminosPosibles(tipoDeVector).joinToString(separator = ", ") { "$it: {type: '$it'}" }
     }
 
 }
