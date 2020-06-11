@@ -36,8 +36,8 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             if (vector.puedeMoverse(ubicacion)) {
                 vector.moverse(ubicacion!!.nombreUbicacion)
                 vectorService.actualizarVector(vector)
+                contagiarZona(vector, nombreUbicacion)
             }
-            contagiarZona(vector, nombreUbicacion)
         }
     }
 
