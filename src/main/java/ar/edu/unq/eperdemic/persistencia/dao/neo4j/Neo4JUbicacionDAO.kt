@@ -70,8 +70,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return result.single()[0].asInt()
     }
 
-    //TODO: Refactorizar para que devuelva el bool directamente en la query
-    override fun conexiones(origen: String, destino: String): List<TipoCaminoEnum> {
+    override fun caminosConectados(origen: String, destino: String): List<TipoCaminoEnum> {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (n:Ubicacion {nombreUbicacion: \$origen})-[r*]->(m:Ubicacion {nombreUbicacion: \$destino})"+
                 "RETURN [x in r | type(x)]"
