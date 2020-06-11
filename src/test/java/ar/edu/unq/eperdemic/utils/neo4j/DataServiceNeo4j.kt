@@ -24,6 +24,7 @@ class DataServiceNeo4j : DataService {
             dao.conectar("La Pampa", "Quilmes", "maritimo")
             dao.conectar("Quilmes", "Berazategui", "aereo")
             dao.conectar("Cordoba", "Quilmes", "aereo")
+            dao.conectar("Quilmes", "Berazategui", "terrestre")
 
         }
     }
