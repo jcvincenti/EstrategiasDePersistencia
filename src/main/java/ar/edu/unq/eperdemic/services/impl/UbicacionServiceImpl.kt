@@ -99,11 +99,13 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
         var caminoMasCorto = listOf<String>()
-        TransactionRunner.runTrx {
-            caminoMasCorto = neo4jUbicacionDao.caminoMasCorto(tipoDeVector, nombreUbicacionOrigen, nombreUbicacionDestino)
-        }
-        if (nombreUbicacionOrigen != nombreUbicacionDestino && caminoMasCorto.isEmpty()) {
-            throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
+        if (nombreUbicacionOrigen != nombreUbicacionDestino) {
+            TransactionRunner.runTrx {
+                caminoMasCorto = neo4jUbicacionDao.caminoMasCorto(tipoDeVector, nombreUbicacionOrigen, nombreUbicacionDestino)
+            }
+            if (caminoMasCorto.isEmpty()) {
+                throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
+            }
         }
         return caminoMasCorto
     }

@@ -82,31 +82,29 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
             record[0].values().map {
                 it.asString()
             }.toList()
-        }
-        return result[0].map {
+        }.flatten().map {
             TipoCaminoEnum.parseTipo(it)!!
         }
+        return result
     }
 
     override fun caminoMasCorto(tipoDeVector: TipoDeVectorEnum, nombreUbicacionOrigen: String, nombreUbicacionDestino: String): List<String> {
         val tx = Neo4JTransaction.transaction
         val caminosPosibles = getCaminosPosiblesConfig(tipoDeVector)
         val query = "MATCH (start:Ubicacion {nombreUbicacion: \$origen})," +
-                "(end:Ubicacion {nombreUbicacion: \$destino}) " +
-                "CALL gds.alpha.shortestPath.stream({nodeProjection: 'Ubicacion'," +
-                "  relationshipProjection: {" +
-                caminosPosibles +
-                "  }," +
-                "  startNode: start," +
-                "  endNode: end" +
-                "}) " +
-                "YIELD nodeId " +
-                "RETURN gds.util.asNode(nodeId).nombreUbicacion AS name;"
-        val result = tx!!.run(query, Values.parameters(
+                "(end:Ubicacion {nombreUbicacion: \$destino}), " +
+                "path = shortestpath((start)–[:$caminosPosibles*]->(end)) " +
+                "RETURN [x in nodes(path) | x.nombreUbicacion];"
+        val exc = tx!!.run(query, Values.parameters(
                 "origen", nombreUbicacionOrigen,
                 "destino", nombreUbicacionDestino
         ))
-        return result.list().map { it.values().first().asString() }
+        val result = exc.list { record: Record ->
+            record[0].values().map {
+                it.asString()
+            }
+        }.flatten()
+        return result
     }
 
     fun clear() {
@@ -115,7 +113,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
     }
 
     private fun getCaminosPosiblesConfig(tipoDeVector: TipoDeVectorEnum) : String {
-        return TipoCaminoEnum.caminosPosibles(tipoDeVector).joinToString(separator = ", ") { "$it: {type: '$it'}" }
+        return TipoCaminoEnum.caminosPosibles(tipoDeVector).joinToString(separator = "|")
     }
 
 }
