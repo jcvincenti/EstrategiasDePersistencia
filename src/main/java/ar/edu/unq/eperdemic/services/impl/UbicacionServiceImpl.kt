@@ -93,7 +93,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
         val vector = vectorService.recuperarVector(vectorId.toInt())
         return TransactionRunner.runTrx {
             val ubicacion = vector.nombreDeLocacionActual
-            neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos, TipoCaminoEnum.caminosPosibles(vector.tipo))
+            neo4jUbicacionDao.capacidadDeExpansion(ubicacion, movimientos, vector.tipo)
         }
     }
 
