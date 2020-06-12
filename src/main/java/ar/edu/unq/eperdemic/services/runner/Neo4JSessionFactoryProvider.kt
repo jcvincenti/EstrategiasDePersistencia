@@ -9,10 +9,9 @@ class Neo4JSessionFactoryProvider private constructor() {
     private val driver: Driver
 
     init {
-        val env = System.getenv()
-        val url = env.getOrDefault("URL", "bolt://localhost:7687")
-        val username = env.getOrDefault("USER", "neo4j")
-        val password = env.getOrDefault("PASSWORD", "root")
+        val url = "bolt://localhost:7687"
+        val username = "neo4j"
+        val password = "root"
 
         driver = GraphDatabase.driver(url, AuthTokens.basic(username, password))
     }
