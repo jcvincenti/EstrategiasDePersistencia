@@ -16,6 +16,15 @@
         <property name="show_sql">true</property>
 
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+
+        <!-- Clases que van a ser persistidas ACA -->
+        <mapping class="ar.edu.unq.eperdemic.modelo.Vector"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.Especie"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.Ubicacion"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.Patogeno"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.FactorDeContagio"/>
+        <mapping class="ar.edu.unq.eperdemic.modelo.Mutacion"/>
 
     </session-factory>
 </hibernate-configuration>

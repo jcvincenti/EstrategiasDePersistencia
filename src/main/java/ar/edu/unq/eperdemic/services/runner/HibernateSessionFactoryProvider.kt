@@ -4,7 +4,7 @@ import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 
-class SessionFactoryProvider private constructor() {
+class HibernateSessionFactoryProvider private constructor() {
 
     private val sessionFactory: SessionFactory?
 
@@ -12,7 +12,7 @@ class SessionFactoryProvider private constructor() {
         val env = System.getenv()
         val user = env.getOrDefault("USER", "root")
         val password = env.getOrDefault("PASSWORD", "root")
-        val dataBase = env.getOrDefault("DATA_BASE", "epers_hibernate")
+        val dataBase = env.getOrDefault("DATA_BASE", "epers_hibernate_testigos")
         val host = env.getOrDefault("HOST", "localhost")
 
 
@@ -20,7 +20,7 @@ class SessionFactoryProvider private constructor() {
         configuration.configure("hibernate.cfg.xml")
         configuration.setProperty("hibernate.connection.username", user)
         configuration.setProperty("hibernate.connection.password", password)
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://$host:3306/$dataBase")
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://$host:3306/$dataBase?createDatabaseIfNotExist=true&serverTimezone=UTC")
         this.sessionFactory = configuration.buildSessionFactory()
     }
 
@@ -30,12 +30,12 @@ class SessionFactoryProvider private constructor() {
 
     companion object {
 
-        private var INSTANCE: SessionFactoryProvider? = null
+        private var INSTANCE: HibernateSessionFactoryProvider? = null
 
-        val instance: SessionFactoryProvider
+        val instance: HibernateSessionFactoryProvider
             get() {
                 if (INSTANCE == null) {
-                    INSTANCE = SessionFactoryProvider()
+                    INSTANCE = HibernateSessionFactoryProvider()
                 }
                 return INSTANCE!!
             }

@@ -8,8 +8,9 @@ interface PatogenoService {
     fun recuperarPatogeno(id: Int): Patogeno
     fun recuperarATodosLosPatogenos(): List<Patogeno>
     fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen : String) : Especie
-
+    fun actualizarPatogeno(patogeno: Patogeno)
     fun cantidadDeInfectados (especieId: Int) : Int
     fun esPandemia (especieId: Int) : Boolean
     fun recuperarEspecie(id: Int): Especie
+    fun actualizarEspecie(especie: Especie)
 }

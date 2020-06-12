@@ -2,35 +2,87 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
+import ar.edu.unq.eperdemic.services.exceptions.*
+import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
+import ar.edu.unq.eperdemic.services.utils.validateEntityExists
 
-class PatogenoServiceImpl(patogenoDAO: PatogenoDAO) : PatogenoService {
+
+
+class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
+
+    val especieDAO: EspecieDAO = HibernateEspecieDAO()
+
     override fun crearPatogeno(patogeno: Patogeno): Int {
-        TODO("not implemented")
+        ObjectStructureUtils.checkEmptyAttributes(patogeno)
+        if (existePatogenoConTipo(patogeno.tipo)) {
+            throw EntityAlreadyExistsException("La entidad ${Patogeno::class.simpleName} con tipo ${patogeno.tipo} ya existe")
+        }
+        return TransactionRunner.runTrx {
+                patogenoDAO.crear(patogeno)
+        }
     }
 
     override fun recuperarPatogeno(id: Int): Patogeno {
-        TODO("not implemented")
+        return TransactionRunner.runTrx {
+            patogenoDAO.recuperar(id)
+        }?: throw EntityNotFoundException("No se encontro un patogeno con el id ${id}")
     }
 
     override fun recuperarATodosLosPatogenos(): List<Patogeno> {
-        TODO("not implemented")
+        return TransactionRunner.runTrx {
+            patogenoDAO.recuperarATodos()
+        }
     }
 
     override fun agregarEspecie(id: Int, nombreEspecie: String, paisDeOrigen: String): Especie {
-        TODO("not implemented")
+        var especieCreada: Especie? = null
+        TransactionRunner.runTrx {
+            validateEntityExists<Patogeno>(id)
+            val patogeno = patogenoDAO.recuperar(id)
+            especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
+            especieDAO.guardar(especieCreada!!)
+        }
+        return especieCreada!!
+    }
+
+    override fun actualizarPatogeno(patogeno: Patogeno) {
+        TransactionRunner.runTrx {
+            patogenoDAO.actualizar(patogeno)
+        }
     }
 
     override fun cantidadDeInfectados(especieId: Int): Int {
-        TODO("Not yet implemented")
+       return TransactionRunner.runTrx {
+            especieDAO.cantidadDeInfectados(especieId)
+        }
     }
 
     override fun esPandemia(especieId: Int): Boolean {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx {
+            especieDAO.esPandemia(especieId)
+        }
     }
 
     override fun recuperarEspecie(id: Int): Especie {
-        TODO("Not yet implemented")
+        return TransactionRunner.runTrx {
+            validateEntityExists<Especie>(id)
+            especieDAO.recuperar(id)
+        }
+    }
+
+    override fun actualizarEspecie(especie: Especie) {
+        TransactionRunner.runTrx {
+            especieDAO.actualizar(especie)
+        }
+    }
+
+    private fun existePatogenoConTipo(tipo: String): Boolean {
+        return TransactionRunner.runTrx {
+            patogenoDAO.existePatogenoConTipo(tipo)
+        }
     }
 }

@@ -37,6 +37,7 @@ jobs:
           NEO4J_USER: ${{ secrets.NEO4J_USER }}
           NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
+
       - name: Success notification
         if: success()
         env:
