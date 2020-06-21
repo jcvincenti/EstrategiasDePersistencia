@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
+import ar.edu.unq.eperdemic.services.impl.FeedServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
@@ -293,5 +294,17 @@ class UbicacionServiceTest {
         }
         assertEquals("La ubicacion a la que intenta moverse no tiene un camino alcanzable", exception.message)
         assertEquals("Cordoba", vectorService.recuperarVector(2).nombreDeLocacionActual)
+    }
+
+    @Test
+    fun moverTest() {
+        /*
+        * En la variable eventos tienen que estar todos los arribos de la ubicacion que pasamos por parametro,
+        * los arribos a las ubicaciones lindantes de la ubicacion que pasamos por parametro y los contagios en
+        * la ubicacion que pasamos por parametro.
+        * */
+        val feedService = FeedServiceImpl()
+        val eventos = feedService.feedUbicacion("Cordoba")
+        ubicacionService.mover(1, "Cordoba")
     }
 }

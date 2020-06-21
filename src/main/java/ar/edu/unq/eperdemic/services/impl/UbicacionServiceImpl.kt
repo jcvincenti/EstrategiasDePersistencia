@@ -1,13 +1,11 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
-import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
-import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionNoAlcanzableException
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoArriboDAO
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
@@ -18,10 +16,12 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
     val neo4jUbicacionDao = Neo4JUbicacionDAO()
+    val mongoDao = MongoArriboDAO()
 
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
+        val arribo = Arribo(vectorId, vector.nombreDeLocacionActual, nombreUbicacion)
         TransactionRunner.runTrx {
 
             if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
@@ -35,11 +35,18 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             }
 
             if (vector.puedeMoverse(ubicacion)) {
+                logearArribo(arribo)
                 vector.moverse(ubicacion!!.nombreUbicacion)
                 vectorService.actualizarVector(vector)
                 contagiarZona(vector, nombreUbicacion)
             }
         }
+    }
+
+    fun logearArribo(arribo: Arribo) {
+        mongoDao.startTransaction()
+        mongoDao.save(arribo)
+        mongoDao.commit()
     }
 
     private fun contagiarZona(vector: Vector?, locacion: String?) {
