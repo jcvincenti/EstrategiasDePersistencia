@@ -25,29 +25,33 @@ class Vector() {
         this.nombreDeLocacionActual = ubicacion
     }
 
-    fun infectar(especie: Especie) {
+    fun infectar(especie: Especie): Boolean {
         if (especie.esContagioExitoso(this.tipo)) {
             especies.add(especie)
             if(this.tipo == TipoDeVectorEnum.Persona) {
                 especie.adn += 0.20F
             }
+            return true
         }
+        return false
     }
 
     fun estaInfectado() = this.especies.isNotEmpty()
 
     fun puedeSerInfectadoPor(tipo: TipoDeVectorEnum) = this.tipo.puedeSerInfectadoPor(tipo)
 
-    fun contagiar(vector: Vector) {
+    fun contagiar(vector: Vector): Boolean {
+        var fueContagioExitoso = false
         if (estaInfectado()) {
             if (vector.puedeSerInfectadoPor(tipo)) {
                 especies.forEach { especie ->
-                    vector.infectar(especie)
+                    fueContagioExitoso = fueContagioExitoso || vector.infectar(especie)
                 }
             }
         } else {
             throw VectorNoInfectadoException("El vector no esta infectado")
         }
+        return fueContagioExitoso
     }
 
     fun puedeMoverse(ubicacion: Ubicacion?) : Boolean = nombreDeLocacionActual != ubicacion!!.nombreUbicacion
