@@ -2,30 +2,31 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoContagioDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.utils.ObjectStructureUtils
 import ar.edu.unq.eperdemic.services.utils.*
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
-    val contagioDAO = MongoContagioDAO()
+    val mongoDao = MongoEventoDAO()
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach { vector ->
                 if (vectorInfectado.contagiar(vector)) {
-                    logearContagio(Contagio(vector.id!!, vector.nombreDeLocacionActual))
+                    mongoDao.logearEvento(Evento(
+                            null,
+                            vector.nombreDeLocacionActual,
+                            null,
+                            null,
+                            null,
+                            "Un vector fue contagiado en la ubicacion ${vector.nombreDeLocacionActual}")
+                    )
                 }
                 actualizarVector(vector)
             }
         }
-    }
-
-    fun logearContagio(contagio: Contagio) {
-        contagioDAO.startTransaction()
-        contagioDAO.save(contagio)
-        contagioDAO.commit()
     }
 
     override fun infectar(vector: Vector, especie: Especie) {

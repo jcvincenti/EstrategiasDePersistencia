@@ -2,15 +2,13 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Evento
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoArriboDAO
-import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoContagioDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.FeedService
 
-class FeedServiceImpl() : FeedService {
+class FeedServiceImpl : FeedService {
 
-    val arriboDAO = MongoArriboDAO()
-    val contagioDAO = MongoContagioDAO()
-    val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
+    private val eventoDAO = MongoEventoDAO()
+    private val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
 
     override fun feedPatogeno(tipoDePatogeno: String): List<Evento> {
         TODO("Not yet implemented")
@@ -21,9 +19,8 @@ class FeedServiceImpl() : FeedService {
     }
 
     override fun feedUbicacion(nombreDeUbicacion: String): List<Evento> {
-        val nombreUbicacionesLindantes = ubicacionService.conectados(nombreDeUbicacion).map { it.nombreUbicacion }
-        val arriboEventos = arriboDAO.getArribosPorUbicacion(nombreUbicacionesLindantes)
-        val contagioEventos = contagioDAO.findEq("nombreUbicacion", nombreDeUbicacion)
-        return listOf(arriboEventos, contagioEventos).flatten()
+        val nombreUbicacionesLindantes = ubicacionService.conectados(nombreDeUbicacion).map { it.nombreUbicacion }.toMutableList()
+        nombreUbicacionesLindantes.add(nombreDeUbicacion)
+        return eventoDAO.getFeedUbicacion(nombreDeUbicacion, nombreUbicacionesLindantes)
     }
 }
