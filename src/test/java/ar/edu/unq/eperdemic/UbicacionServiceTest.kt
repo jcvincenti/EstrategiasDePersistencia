@@ -303,8 +303,8 @@ class UbicacionServiceTest {
         * los arribos a las ubicaciones lindantes de la ubicacion que pasamos por parametro y los contagios en
         * la ubicacion que pasamos por parametro.
         * */
+        ubicacionService.mover(1, "Cordoba")
         val feedService = FeedServiceImpl()
         val eventos = feedService.feedUbicacion("Cordoba")
-        ubicacionService.mover(1, "Cordoba")
     }
 }
