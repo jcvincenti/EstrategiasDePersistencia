@@ -15,7 +15,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         TransactionRunner.runTrx {
             vectores.forEach { vector ->
                 if (vectorInfectado.contagiar(vector)) {
-                    mongoDao.logearEvento(Evento(
+                    mongoDao.logearEvento(Evento.buildEventoContagio(
                             null,
                             vector.nombreDeLocacionActual,
                             null,

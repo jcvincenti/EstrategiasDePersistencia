@@ -17,7 +17,7 @@ class MutacionServiceImpl(val mutacionDAO: MutacionDAO) : MutacionService {
         val especie = patogenoService.recuperarEspecie(especieId)
         especie.mutar(recuperarMutacion(mutacionId))
         patogenoService.actualizarEspecie(especie)
-        eventoDao.logearEvento(Evento(especie.patogeno.tipo, especie.nombre
+        eventoDao.logearEvento(Evento.buildEventoMutacion(especie.patogeno.tipo, especie.nombre
                 , "Se muto la especie ${especie.nombre} "))
     }
 
