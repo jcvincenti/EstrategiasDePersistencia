@@ -16,7 +16,20 @@ class Evento() {
     var especies: List<String>? = null
     var explicacion: String? = null
 
-    constructor(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : this() {
+
+    companion object {
+        fun buildEventoArribo(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : Evento {
+            return Evento(vectorId, nombreUbicacion, explicacion)
+        }
+        fun buildEventoMutacion(tipoDePatogeno: String?, especie: String?, explicacion: String) : Evento {
+            return Evento(tipoDePatogeno, especie, explicacion)
+        }
+        fun buildEventoContagio(vectorId: Int?, nombreUbicacion: String?, tipoDePatogeno: String?,
+                                especie: String?, especies: List<String>?, explicacion: String) : Evento {
+            return Evento(vectorId, nombreUbicacion, tipoDePatogeno, especie, especies, explicacion)
+        }
+    }
+    private constructor(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : this() {
         this.vectorId = vectorId
         this.nombreUbicacion = nombreUbicacion
         this.tipo = "Arribo"
@@ -24,7 +37,7 @@ class Evento() {
         this.timestamp = BSONTimestamp()
     }
 
-    constructor(tipoDePatogeno: String?, especie: String?, explicacion: String) : this() {
+    private constructor(tipoDePatogeno: String?, especie: String?, explicacion: String) : this() {
         this.tipoDePatogeno = tipoDePatogeno
         this.tipo = "Mutacion"
         this.especie = especie
@@ -32,7 +45,7 @@ class Evento() {
         this.timestamp = BSONTimestamp()
     }
 
-    constructor(
+    private constructor(
             vectorId: Int?,
             nombreUbicacion: String?,
             tipoDePatogeno: String?,

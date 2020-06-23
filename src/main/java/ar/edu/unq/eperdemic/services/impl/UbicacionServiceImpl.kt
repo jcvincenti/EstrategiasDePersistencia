@@ -21,7 +21,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
-        val arribo = Evento(vectorId, nombreUbicacion, "El vector id $vectorId viajó a $nombreUbicacion")
+        val arribo = Evento.buildEventoArribo(vectorId, nombreUbicacion, "El vector id $vectorId viajó a $nombreUbicacion")
         TransactionRunner.runTrx {
 
             if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
