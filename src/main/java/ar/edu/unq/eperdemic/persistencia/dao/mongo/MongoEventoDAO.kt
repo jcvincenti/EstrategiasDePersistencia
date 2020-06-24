@@ -9,9 +9,7 @@ import org.bson.conversions.Bson
 class MongoEventoDAO: GenericMongoDao<Evento>(Evento::class.java) {
 
     fun logearEvento(evento: Evento) {
-        this.startTransaction()
         this.save(evento)
-        this.commit()
     }
 
     fun getFeedUbicacion(nombreUbicacion: String, nombreUbicacionesLindantes: List<String>): List<Evento> {

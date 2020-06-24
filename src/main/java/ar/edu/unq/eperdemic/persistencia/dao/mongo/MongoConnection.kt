@@ -30,7 +30,7 @@ class MongoConnection {
         closeSession()
     }
 
-    protected fun closeSession(){
+    fun closeSession(){
         session?.close()
         session = null
     }
