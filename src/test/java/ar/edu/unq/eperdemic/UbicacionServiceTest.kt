@@ -302,10 +302,15 @@ class UbicacionServiceTest {
 
     @Test
     fun moverUnVectorGeneraEventoDeArriboYContagioTest() {
+        ubicacionService.conectar("Cordoba", "Quilmes", "terrestre")
         ubicacionService.mover(1, "Cordoba")
+        ubicacionService.mover(1, "Quilmes")
         val eventos = feedService.feedUbicacion("Cordoba")
-        assertEquals(2, eventos.size)
-        assertEquals("Contagio", eventos.first().tipo)
+        assertEquals(3, eventos.size)
+        assertEquals("Arribo", eventos.first().tipo)
+        assertEquals("Quilmes", eventos.first().nombreUbicacion)
+        assertEquals("Contagio", eventos[1].tipo)
         assertEquals("Arribo", eventos.last().tipo)
+        assertEquals("Cordoba", eventos.last().nombreUbicacion)
     }
 }
