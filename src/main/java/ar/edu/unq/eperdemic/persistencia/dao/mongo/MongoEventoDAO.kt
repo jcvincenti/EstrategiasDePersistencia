@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.Evento
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.Indexes
+import org.bson.conversions.Bson
 
 class MongoEventoDAO: GenericMongoDao<Evento>(Evento::class.java) {
 
@@ -24,8 +25,11 @@ class MongoEventoDAO: GenericMongoDao<Evento>(Evento::class.java) {
                 eq("tipo", "Contagio")
             )
         )
+        return ordenarEventos(eventosFilter)
+    }
 
-        val match = Aggregates.match(eventosFilter)
+    private fun ordenarEventos(filter: Bson): List<Evento> {
+        val match = Aggregates.match(filter)
         val sort = Aggregates.sort(Indexes.descending("timestamp"))
 
         return aggregate(listOf(match, sort), Evento::class.java)
