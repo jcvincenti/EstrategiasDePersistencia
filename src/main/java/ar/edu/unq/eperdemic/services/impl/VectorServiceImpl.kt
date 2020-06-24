@@ -16,22 +16,24 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach { vector ->
-                vector.especies.forEach {
-                    if (patogenoService.esPandemia(it.id)) {
-                        mongoDao.logearEvento(Evento.buildEventoContagio(
-                                null,
-                                null,
-                                it.patogeno.tipo,
-                                it.nombre,
-                                null,
-                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} es pandemia"
-                        ))
-                    }
-                }
 
-                val especiesAnteriores = vector.especies
+                val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
+                val especiesAnteriores = vectores.map { it.especies }.flatten()
 
                 if (vectorInfectado.contagiar(vector)) {
+                    vector.especies.forEach {
+                        if (patogenoService.esPandemia(it.id)) {
+                            mongoDao.logearEvento(Evento.buildEventoContagio(
+                                    null,
+                                    null,
+                                    it.patogeno.tipo,
+                                    it.nombre,
+                                    null,
+                                    "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} es pandemia"
+                            ))
+                        }
+                    }
+
                     mongoDao.logearEvento(Evento.buildEventoContagio(
                             vectorInfectado.id,
                             vector.nombreDeLocacionActual,
@@ -59,7 +61,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                                 it.patogeno.tipo,
                                 it.nombre,
                                 null,
-                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vectorInfectado.nombreDeLocacionActual}"
                         ))
                     }
                 }
