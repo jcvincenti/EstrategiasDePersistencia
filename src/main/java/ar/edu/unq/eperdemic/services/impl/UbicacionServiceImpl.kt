@@ -28,7 +28,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
             }
 
-            if (neo4jUbicacionDao.caminosConectados(vector.nombreDeLocacionActual, nombreUbicacion).any {
+            if (neo4jUbicacionDao.caminosConectados(vector.nombreDeLocacionActual, nombreUbicacion).all {
                         !it.puedeSerAtravesadoPor(vector.tipo)
                     }) {
                 throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
