@@ -55,6 +55,16 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                     "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
             ))
         }
+        if (existeEspecieEnUbicacion(vector.nombreDeLocacionActual, especie)) {
+            mongoDao.logearEvento(Evento.buildEventoContagio(
+                    null,
+                    vector.nombreDeLocacionActual,
+                    especie.patogeno.tipo,
+                    especie.nombre,
+                    null,
+                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+            ))
+        }
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
@@ -105,5 +115,10 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             validateEntityExists<Ubicacion>(locacion!!)
             vectorDAO.getVectorRandomEnLocacion(locacion)
         }
+    }
+
+    fun existeEspecieEnUbicacion(locacion: String, especie: Especie) : Boolean{
+        val vectores = getVectoresByLocacion(locacion)
+        return vectores.map { it.especies }.flatten().contains(especie)
     }
 }
