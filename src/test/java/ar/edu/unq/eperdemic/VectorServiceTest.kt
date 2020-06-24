@@ -274,4 +274,16 @@ class VectorServiceTest {
 
         assertEquals(100, patogenoService.recuperarEspecie(paperas.id).getCapacidadDeContagio(TipoDeVectorEnum.Persona))
     }
+
+    @Test
+    fun contagioTest(){
+        // el vector con id 2 es un animal, el vector con id 3 es un insecto
+        val vectores = mutableListOf(vectorService.recuperarVector(2), vectorService.recuperarVector(3), catamarquenho, entrerriano, pampeano)
+        val gripe = patogenoService.recuperarEspecie(1)
+        val h1n1 = patogenoService.recuperarEspecie(2)
+        vectorService.infectar(cordobes, paperas)
+        vectorService.infectar(cordobes, h1n1)
+        vectorService.infectar(cordobes, gripe)
+        vectorService.contagiar(cordobes, vectores)
+    }
 }

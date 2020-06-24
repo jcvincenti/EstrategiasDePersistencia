@@ -23,6 +23,15 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                             null,
                             "El vector ${vectorInfectado.id} contagio al vector ${vector.id} en la ubicacion ${vector.nombreDeLocacionActual}")
                     )
+                    var nombreEspecies = vector.especies.map{it.nombre}
+                    mongoDao.logearEvento(Evento.buildEventoContagio(
+                            vector.id,
+                            null,
+                            null,
+                            null,
+                            nombreEspecies,
+                            "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
+                    )
                 }
                 actualizarVector(vector)
             }
@@ -37,16 +46,6 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
-        val enfermedades = vectorDAO.enfermedades(vectorId)
-        val nombreEspecies = enfermedades.map{ especie -> especie.nombre }
-        mongoDao.logearEvento(Evento.buildEventoContagio(
-                vectorId,
-                null,
-                null,
-                null,
-                nombreEspecies,
-                "El vector id ${vectorId} está infectado con las siguientes especies: ${nombreEspecies}")
-                )
         return TransactionRunner.runTrx {
             vectorDAO.enfermedades(vectorId)
         }
