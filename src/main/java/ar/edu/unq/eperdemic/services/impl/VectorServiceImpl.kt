@@ -16,6 +16,21 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach { vector ->
+                vector.especies.forEach {
+                    if (patogenoService.esPandemia(it.id)) {
+                        mongoDao.logearEvento(Evento.buildEventoContagio(
+                                null,
+                                null,
+                                it.patogeno.tipo,
+                                it.nombre,
+                                null,
+                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} es pandemia"
+                        ))
+                    }
+                }
+
+                val especiesAnteriores = vector.especies
+
                 if (vectorInfectado.contagiar(vector)) {
                     mongoDao.logearEvento(Evento.buildEventoContagio(
                             vectorInfectado.id,
@@ -34,6 +49,19 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                             nombreEspecies,
                             "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
                     )
+                    val especiesALogear = vector.especies
+
+                    especiesALogear.removeAll(especiesAnteriores)
+                    especiesALogear.forEach {
+                        mongoDao.logearEvento(Evento.buildEventoContagio(
+                                null,
+                                vector.nombreDeLocacionActual,
+                                it.patogeno.tipo,
+                                it.nombre,
+                                null,
+                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+                        ))
+                    }
                 }
                 actualizarVector(vector)
             }
@@ -55,7 +83,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                     "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
             ))
         }
-        if (existeEspecieEnUbicacion(vector.nombreDeLocacionActual, especie)) {
+        if (!existeEspecieEnUbicacion(vector.nombreDeLocacionActual, especie)) {
             mongoDao.logearEvento(Evento.buildEventoContagio(
                     null,
                     vector.nombreDeLocacionActual,
