@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionNoAlcanzableException
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
@@ -31,6 +32,8 @@ class UbicacionServiceTest {
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
     val dataService = DataServiceHibernate()
     val neo4jDataService = DataServiceNeo4j()
+    val mongoDAO = MongoEventoDAO()
+    val feedService = FeedServiceImpl()
     lateinit var portenho: Vector
     lateinit var cordobes: Vector
     lateinit var insecto: Vector
@@ -49,6 +52,7 @@ class UbicacionServiceTest {
     fun eliminarTodo() {
         dataService.eliminarTodo()
         neo4jDataService.eliminarTodo()
+        mongoDAO.deleteAll()
     }
 
     @Test
@@ -297,14 +301,11 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun moverTest() {
-        /*
-        * En la variable eventos tienen que estar todos los arribos de la ubicacion que pasamos por parametro,
-        * los arribos a las ubicaciones lindantes de la ubicacion que pasamos por parametro y los contagios en
-        * la ubicacion que pasamos por parametro.
-        * */
+    fun moverUnVectorGeneraEventoDeArriboYContagioTest() {
         ubicacionService.mover(1, "Cordoba")
-        val feedService = FeedServiceImpl()
         val eventos = feedService.feedUbicacion("Cordoba")
+        assertEquals(2, eventos.size)
+        assertEquals("Contagio", eventos.first().tipo)
+        assertEquals("Arribo", eventos.last().tipo)
     }
 }
