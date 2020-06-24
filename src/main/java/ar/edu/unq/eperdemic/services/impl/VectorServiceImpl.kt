@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
@@ -10,6 +11,7 @@ import ar.edu.unq.eperdemic.services.utils.*
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     val mongoDao = MongoEventoDAO()
+    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
@@ -42,6 +44,16 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         TransactionRunner.runTrx {
             vector.infectar(especie)
             vectorDAO.actualizar(vector)
+        }
+        if (patogenoService.esPandemia(especie.id)) {
+            mongoDao.logearEvento(Evento.buildEventoContagio(
+                    null,
+                    null,
+                    especie.patogeno.tipo,
+                    especie.nombre,
+                    null,
+                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
+            ))
         }
     }
 
