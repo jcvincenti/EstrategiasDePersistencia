@@ -25,7 +25,7 @@ class Vector() {
         this.nombreDeLocacionActual = ubicacion
     }
 
-    fun infectar(especie: Especie): Boolean {
+    fun infectar(especie: Especie) : Boolean{
         if (especie.esContagioExitoso(this.tipo)) {
             especies.add(especie)
             if(this.tipo == TipoDeVectorEnum.Persona) {
@@ -45,7 +45,7 @@ class Vector() {
         if (estaInfectado()) {
             if (vector.puedeSerInfectadoPor(tipo)) {
                 especies.forEach { especie ->
-                    fueContagioExitoso = fueContagioExitoso || vector.infectar(especie)
+                    fueContagioExitoso = vector.infectar(especie) || fueContagioExitoso
                 }
             }
         } else {

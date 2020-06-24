@@ -16,12 +16,21 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             vectores.forEach { vector ->
                 if (vectorInfectado.contagiar(vector)) {
                     mongoDao.logearEvento(Evento.buildEventoContagio(
-                            null,
+                            vectorInfectado.id,
                             vector.nombreDeLocacionActual,
                             null,
                             null,
                             null,
-                            "Un vector fue contagiado en la ubicacion ${vector.nombreDeLocacionActual}")
+                            "El vector ${vectorInfectado.id} contagio al vector ${vector.id} en la ubicacion ${vector.nombreDeLocacionActual}")
+                    )
+                    var nombreEspecies = vector.especies.map{it.nombre}
+                    mongoDao.logearEvento(Evento.buildEventoContagio(
+                            vector.id,
+                            null,
+                            null,
+                            null,
+                            nombreEspecies,
+                            "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
                     )
                 }
                 actualizarVector(vector)
