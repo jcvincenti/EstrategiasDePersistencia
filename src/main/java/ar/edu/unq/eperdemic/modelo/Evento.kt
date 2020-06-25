@@ -27,6 +27,37 @@ class Evento() {
                                 especie: String?, especies: List<String>?, explicacion: String) : Evento {
             return Evento(vectorId, nombreUbicacion, tipoDePatogeno, especie, especies, explicacion)
         }
+
+        fun buildEventoContagio(vector: Vector, vectorInfectado: Vector, explicacion: String): Evento {
+            return Evento(vector, vectorInfectado, explicacion)
+        }
+
+        fun buildEventoContagio(vector: Vector, nombreEspecies: List<String>, explicacion: String ) : Evento {
+            return Evento(vector, nombreEspecies, explicacion)
+        }
+
+        fun buildEventoContagio(especie: Especie, explicacion: String) : Evento {
+            return Evento(especie, explicacion)
+        }
+
+    }
+
+    private constructor(especie: Especie, explicacion: String) : this() {
+        this.tipoDePatogeno = especie.patogeno.tipo
+        this.especie = especie.nombre
+        this.explicacion = explicacion
+    }
+
+    private constructor(vector: Vector,nombreEspecies: List<String>, explicacion: String ) : this(){
+        this.vectorId = vector.id
+        this.especies = nombreEspecies
+        this.explicacion = explicacion
+    }
+
+    private constructor(vector: Vector, vectorInfectado: Vector, explicacion: String) {
+        this.vectorId = vectorInfectado.id
+        this.nombreUbicacion = vector.nombreDeLocacionActual
+        this.explicacion = explicacion
     }
     private constructor(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : this() {
         this.vectorId = vectorId
