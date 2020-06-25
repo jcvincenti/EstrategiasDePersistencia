@@ -1,5 +1,8 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
+import ar.edu.unq.eperdemic.modelo.AtributoEnum
+import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeEventoEnum
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
@@ -11,6 +14,7 @@ import ar.edu.unq.eperdemic.services.impl.*
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import ar.edu.unq.eperdemic.utils.neo4j.DataServiceNeo4j
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,14 +56,17 @@ class FeedServiceTest {
         val pampeano = vectorService.recuperarVector(6)
         val barilochense = vectorService.recuperarVector(5)
         val quilmenho = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Quilmes").aModelo()
-        val vectores = listOf(cordobes, pampeano, barilochense, portenho)
+        val catamarquenho = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Catamarca").aModelo()
+        val vectores = listOf(cordobes, pampeano, barilochense, catamarquenho,portenho)
         vectorService.crearVector(quilmenho)
+        vectorService.crearVector(catamarquenho)
         quilmenho.infectar(sarampion)
         vectorService.contagiar(quilmenho, vectores)
         mutacion.mutacionesRequeridas.add(mutacionService.recuperarMutacion(1))
         mutacionService.crearMutacion(mutacion)
-        mutacionService.mutar(sarampion.id, 4)
-       // val eventos = feedService.feedPatogeno(patogeno.tipo)
+        mutacionService.mutar(sarampion.id, mutacion.id)
+       // val eventos = feedService.feedPatogeno(patogeno.tipo),
+        assertTrue(patogenoService.esPandemia(sarampion.id))
     }
 
     @Test
