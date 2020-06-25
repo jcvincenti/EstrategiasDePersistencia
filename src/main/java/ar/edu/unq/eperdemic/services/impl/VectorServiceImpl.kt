@@ -22,57 +22,54 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                 val especiesNoPandemicas: List<Especie> = vectorInfectado.especies.filter { !patogenoService.esPandemia(it.id) }
                 
                 if (vectorInfectado.contagiar(vector)) {
-                    mongoDao.logearEvento(Evento.buildEventoContagio(
-                            vectorInfectado.id,
-                            vector.nombreDeLocacionActual,
-                            null,
-                            null,
-                            null,
-                            "El vector ${vectorInfectado.id} contagio al vector ${vector.id} en la ubicacion ${vector.nombreDeLocacionActual}")
-                    )
-                    var nombreEspecies = vector.especies.map{it.nombre}
-                    mongoDao.logearEvento(Evento.buildEventoContagio(
-                            vector.id,
-                            null,
-                            null,
-                            null,
-                            nombreEspecies,
-                            "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
-                    )
+                    logearContagio(vectorInfectado, vector)
+                    logearEnfermedadesQuePadece(vector)
+
                     val especiesALogear = vector.especies
 
                     especiesALogear.removeAll(especiesAnteriores)
                     especiesALogear.forEach {
-                        mongoDao.logearEvento(Evento.buildEventoContagio(
-                                null,
-                                null,
-                                it.patogeno.tipo,
-                                it.nombre,
-                                null,
-                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
-                        ))
+                        logearAparicion(it, vector.nombreDeLocacionActual)
                     }
                 }
                 actualizarVector(vector)
                 especiesNoPandemicas.forEach {
                     if (patogenoService.esPandemia(it.id)) {
-                        mongoDao.logearEvento(Evento.buildEventoContagio(
-                                null,
-                                null,
-                                it.patogeno.tipo,
-                                it.nombre,
-                                null,
-                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} es pandemia"
-                        ))
+                        logearPandemia(it)
                     }
                 }
             }
         }
     }
 
+    private fun logearContagio(vectorInfectado: Vector, vector: Vector) {
+        mongoDao.logearEvento(Evento.buildEventoContagio(
+                vectorInfectado.id,
+                vector.nombreDeLocacionActual,
+                null,
+                null,
+                null,
+                "El vector ${vectorInfectado.id} contagio al vector ${vector.id} en la ubicacion ${vector.nombreDeLocacionActual}")
+        )
+    }
+
+    private fun logearEnfermedadesQuePadece(vector: Vector) {
+        val nombreEspecies = vector.especies.map{it.nombre}
+
+        mongoDao.logearEvento(Evento.buildEventoContagio(
+                vector.id,
+                null,
+                null,
+                null,
+                nombreEspecies,
+                "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
+        )
+    }
+
     override fun infectar(vector: Vector, especie: Especie) {
         val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
         val especiesAnteriores = vectores.map { it.especies }.flatten()
+        val eraPandemia = patogenoService.esPandemia(especie.id)
 
         TransactionRunner.runTrx {
             vector.infectar(especie)
@@ -82,26 +79,34 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
         // Si la lista es mayor, quiere decir que la especie no estaba previamente y que el contagio fue exitoso
         if (especiesPosteriores.size > especiesAnteriores.size) {
-            mongoDao.logearEvento(Evento.buildEventoContagio(
-                    null,
-                    null,
-                    especie.patogeno.tipo,
-                    especie.nombre,
-                    null,
-                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
-            ))
+            logearAparicion(especie, vector.nombreDeLocacionActual)
         }
 
-        if (patogenoService.esPandemia(especie.id)) {
-            mongoDao.logearEvento(Evento.buildEventoContagio(
-                    null,
-                    null,
-                    especie.patogeno.tipo,
-                    especie.nombre,
-                    null,
-                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
-            ))
+        if (!eraPandemia && patogenoService.esPandemia(especie.id)) {
+            logearPandemia(especie)
         }
+    }
+
+    private fun logearAparicion(especie: Especie, ubicacion: String) {
+        mongoDao.logearEvento(Evento.buildEventoContagio(
+                null,
+                null,
+                especie.patogeno.tipo,
+                especie.nombre,
+                null,
+                "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${ubicacion}"
+        ))
+    }
+
+    private fun logearPandemia(especie: Especie) {
+        mongoDao.logearEvento(Evento.buildEventoContagio(
+                null,
+                null,
+                especie.patogeno.tipo,
+                especie.nombre,
+                null,
+                "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
+        ))
     }
 
     override fun enfermedades(vectorId: Int): List<Especie> {
