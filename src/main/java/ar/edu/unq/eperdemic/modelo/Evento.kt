@@ -24,11 +24,6 @@ class Evento() {
             return Evento(especie.patogeno.tipo, especie.nombre, explicacion)
         }
 
-        fun buildEventoContagio(vectorId: Int?, nombreUbicacion: String?, tipoDePatogeno: String?,
-                                especie: String?, especies: List<String>?, explicacion: String) : Evento {
-            return Evento(vectorId, nombreUbicacion, tipoDePatogeno, especie, especies, explicacion)
-        }
-
         fun buildEventoContagio(vector: Vector, vectorInfectado: Vector, explicacion: String): Evento {
             return Evento(vector, vectorInfectado, explicacion)
         }
@@ -76,23 +71,5 @@ class Evento() {
         this.explicacion = explicacion
         this.timestamp = BSONTimestamp()
     }
-
-    private constructor(
-            vectorId: Int?,
-            nombreUbicacion: String?,
-            tipoDePatogeno: String?,
-            especie: String?,
-            especies: List<String>?,
-            explicacion: String
-    ) : this() {
-        this.vectorId = vectorId
-        this.nombreUbicacion = nombreUbicacion
-        this.tipoDePatogeno = tipoDePatogeno
-        this.tipo = TipoDeEventoEnum.Contagio
-        this.especie = especie
-        this.especies = especies
-        this.explicacion = explicacion
-        this.timestamp = BSONTimestamp()
-    }
-
+    
 }

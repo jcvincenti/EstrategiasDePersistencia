@@ -43,12 +43,8 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     private fun logearContagio(vectorInfectado: Vector, vector: Vector) {
-        mongoDao.logearEvento(Evento.buildEventoContagio(
-                vectorInfectado.id,
-                vector.nombreDeLocacionActual,
-                null,
-                null,
-                null,
+        mongoDao.logearEvento(Evento.buildEventoContagio(vector,
+                vectorInfectado,
                 "El vector ${vectorInfectado.id} contagio al vector ${vector.id} en la ubicacion ${vector.nombreDeLocacionActual}")
         )
     }
@@ -57,11 +53,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         val nombreEspecies = vector.especies.map{it.nombre}
 
         mongoDao.logearEvento(Evento.buildEventoContagio(
-                vector.id,
-                null,
-                null,
-                null,
-                nombreEspecies,
+                vector, nombreEspecies,
                 "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
         )
     }
@@ -89,22 +81,13 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
     private fun logearAparicion(especie: Especie, ubicacion: String) {
         mongoDao.logearEvento(Evento.buildEventoContagio(
-                null,
-                null,
-                especie.patogeno.tipo,
-                especie.nombre,
-                null,
-                "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${ubicacion}"
+                especie, "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${ubicacion}"
         ))
     }
 
     private fun logearPandemia(especie: Especie) {
         mongoDao.logearEvento(Evento.buildEventoContagio(
-                null,
-                null,
-                especie.patogeno.tipo,
-                especie.nombre,
-                null,
+                especie,
                 "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
         ))
     }
