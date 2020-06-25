@@ -38,6 +38,18 @@ class MongoEventoDAO: GenericMongoDao<Evento>(Evento::class.java) {
         return ordenarEventos(eventosFilter)
     }
 
+    fun getFeedPatogeno(tipoDePatogeno: String) : List<Evento> {
+        val eventosFilter = or(
+                and(
+                        eq("tipoDePatogeno", tipoDePatogeno ),
+                        eq("tipo", "Mutacion")),
+                and(
+                        eq("tipoDePatogeno", tipoDePatogeno),
+                        eq("tipo","Contagio"))
+        )
+        return ordenarEventos(eventosFilter)
+    }
+
     private fun ordenarEventos(filter: Bson): List<Evento> {
         val match = Aggregates.match(filter)
         val sort = Aggregates.sort(Indexes.descending("timestamp"))
