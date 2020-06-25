@@ -61,7 +61,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                                 it.patogeno.tipo,
                                 it.nombre,
                                 null,
-                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vectorInfectado.nombreDeLocacionActual}"
+                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
                         ))
                     }
                 }
