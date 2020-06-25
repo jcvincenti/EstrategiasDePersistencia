@@ -51,6 +51,7 @@ class FeedServiceTest {
         assertEquals(4, eventos.size)
         assertEquals("Contagio", eventos.first().tipo)
         assertEquals("Contagio", eventos.last().tipo)
+        assertEquals(5, eventos.last().especies!!)
     }
 
     @Test
