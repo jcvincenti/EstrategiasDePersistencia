@@ -71,10 +71,27 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
+        val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
+        val especiesAnteriores = vectores.map { it.especies }.flatten()
+
         TransactionRunner.runTrx {
             vector.infectar(especie)
             vectorDAO.actualizar(vector)
         }
+        val especiesPosteriores = vectores.map { it.especies }.flatten()
+
+        // Si la lista es mayor, quiere decir que la especie no estaba previamente y que el contagio fue exitoso
+        if (especiesPosteriores.size > especiesAnteriores.size) {
+            mongoDao.logearEvento(Evento.buildEventoContagio(
+                    null,
+                    vector.nombreDeLocacionActual,
+                    especie.patogeno.tipo,
+                    especie.nombre,
+                    null,
+                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+            ))
+        }
+
         if (patogenoService.esPandemia(especie.id)) {
             mongoDao.logearEvento(Evento.buildEventoContagio(
                     null,
@@ -83,16 +100,6 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                     especie.nombre,
                     null,
                     "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
-            ))
-        }
-        if (!existeEspecieEnUbicacion(vector.nombreDeLocacionActual, especie)) {
-            mongoDao.logearEvento(Evento.buildEventoContagio(
-                    null,
-                    vector.nombreDeLocacionActual,
-                    especie.patogeno.tipo,
-                    especie.nombre,
-                    null,
-                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
             ))
         }
     }
@@ -145,10 +152,5 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             validateEntityExists<Ubicacion>(locacion!!)
             vectorDAO.getVectorRandomEnLocacion(locacion)
         }
-    }
-
-    fun existeEspecieEnUbicacion(locacion: String, especie: Especie) : Boolean{
-        val vectores = getVectoresByLocacion(locacion)
-        return vectores.map { it.especies }.flatten().contains(especie)
     }
 }
