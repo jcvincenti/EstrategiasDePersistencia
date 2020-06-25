@@ -7,6 +7,7 @@ import ar.edu.unq.eperdemic.modelo.exceptions.CapacidadDeContagioInvalidaExcepti
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.exceptions.EntityAlreadyExistsException
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
@@ -26,6 +27,7 @@ class PatogenoServiceTest {
     private val vectorService = VectorServiceImpl(HibernateVectorDAO())
     private val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
     private val dataService = DataServiceHibernate()
+    val mongoDAO = MongoEventoDAO()
 
     @BeforeEach
     fun init() {
@@ -34,6 +36,7 @@ class PatogenoServiceTest {
     @AfterEach
     fun cleanUp() {
         dataService.eliminarTodo()
+        mongoDAO.deleteAll()
     }
 
     @Test

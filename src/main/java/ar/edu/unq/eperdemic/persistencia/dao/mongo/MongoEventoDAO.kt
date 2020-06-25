@@ -12,6 +12,18 @@ class MongoEventoDAO: GenericMongoDao<Evento>(Evento::class.java) {
         this.save(evento)
     }
 
+    fun getFeedVector(vectorId: Long) : List<Evento> {
+        val eventosFilter = or(
+                and(
+                        eq("vectorId", vectorId.toInt()),
+                        eq("tipo", "Arribo")),
+                and(
+                        eq("tipo", "Contagio"),
+                        eq("vectorId", vectorId.toInt())
+        ))
+        return ordenarEventos(eventosFilter)
+    }
+
     fun getFeedUbicacion(nombreUbicacion: String, nombreUbicacionesLindantes: List<String>): List<Evento> {
         val eventosFilter = or(
             and(

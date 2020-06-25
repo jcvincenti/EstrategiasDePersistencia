@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.modelo
 
 import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.types.BSONTimestamp
-import java.time.LocalDateTime
 
 class Evento() {
     @BsonProperty("id")
@@ -62,4 +61,5 @@ class Evento() {
         this.explicacion = explicacion
         this.timestamp = BSONTimestamp()
     }
+
 }
