@@ -42,18 +42,24 @@ class Evento() {
         this.tipoDePatogeno = especie.patogeno.tipo
         this.especie = especie.nombre
         this.explicacion = explicacion
+        this.tipo = TipoDeEventoEnum.Contagio
+        this.timestamp = BSONTimestamp()
     }
 
     private constructor(vector: Vector,nombreEspecies: List<String>, explicacion: String ) : this(){
         this.vectorId = vector.id
         this.especies = nombreEspecies
         this.explicacion = explicacion
+        this.tipo = TipoDeEventoEnum.Contagio
+        this.timestamp = BSONTimestamp()
     }
 
     private constructor(vector: Vector, vectorInfectado: Vector, explicacion: String) : this() {
         this.vectorId = vectorInfectado.id
         this.nombreUbicacion = vector.nombreDeLocacionActual
         this.explicacion = explicacion
+        this.tipo = TipoDeEventoEnum.Contagio
+        this.timestamp = BSONTimestamp()
     }
 
     private constructor(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : this() {
