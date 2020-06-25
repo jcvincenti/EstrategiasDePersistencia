@@ -57,7 +57,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                     especiesALogear.forEach {
                         mongoDao.logearEvento(Evento.buildEventoContagio(
                                 null,
-                                vector.nombreDeLocacionActual,
+                                null,
                                 it.patogeno.tipo,
                                 it.nombre,
                                 null,
@@ -84,7 +84,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         if (especiesPosteriores.size > especiesAnteriores.size) {
             mongoDao.logearEvento(Evento.buildEventoContagio(
                     null,
-                    vector.nombreDeLocacionActual,
+                    null,
                     especie.patogeno.tipo,
                     especie.nombre,
                     null,
