@@ -19,7 +19,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
 
                 val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
                 val especiesAnteriores = vectores.map { it.especies }.flatten()
-                val especiesNoPandemicas: List<Especie> = vector.especies.filter { !patogenoService.esPandemia(it.id) }
+                val especiesNoPandemicas: List<Especie> = vectorInfectado.especies.filter { !patogenoService.esPandemia(it.id) }
                 
                 if (vectorInfectado.contagiar(vector)) {
                     mongoDao.logearEvento(Evento.buildEventoContagio(

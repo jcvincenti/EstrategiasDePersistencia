@@ -44,7 +44,7 @@ class FeedServiceTest {
     fun eliminarTodo() {
         dataService.eliminarTodo()
         neo4jDataService.eliminarTodo()
-        //mongoDAO.deleteAll()
+        mongoDAO.deleteAll()
     }
 
     @Test
