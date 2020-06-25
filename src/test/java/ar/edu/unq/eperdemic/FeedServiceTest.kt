@@ -1,18 +1,20 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
+import ar.edu.unq.eperdemic.modelo.AtributoEnum
+import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.modelo.TipoDeEventoEnum
 import ar.edu.unq.eperdemic.modelo.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
-import ar.edu.unq.eperdemic.services.impl.FeedServiceImpl
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImpl
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
+import ar.edu.unq.eperdemic.services.impl.*
 import ar.edu.unq.eperdemic.utils.hibernate.DataServiceHibernate
 import ar.edu.unq.eperdemic.utils.neo4j.DataServiceNeo4j
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +28,8 @@ class FeedServiceTest {
     val neo4jDataService = DataServiceNeo4j()
     val mongoDAO = MongoEventoDAO()
     val vectorService = VectorServiceImpl(HibernateVectorDAO())
+    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
+    val mutacionService = MutacionServiceImpl(HibernateMutacionDAO())
     lateinit var portenho: Vector
 
     @BeforeEach
@@ -41,6 +45,28 @@ class FeedServiceTest {
         dataService.eliminarTodo()
         neo4jDataService.eliminarTodo()
         mongoDAO.deleteAll()
+    }
+
+    @Test
+    fun feedPatogenoTest(){
+        val sarampion = patogenoService.agregarEspecie(1, "sarampion", "indefinido")
+        val patogeno = patogenoService.recuperarPatogeno(1)
+        val mutacion = Mutacion(AtributoEnum.Defensa, 0F, 10)
+        val cordobes = vectorService.recuperarVector(4)
+        val pampeano = vectorService.recuperarVector(6)
+        val barilochense = vectorService.recuperarVector(5)
+        val quilmenho = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Quilmes").aModelo()
+        val catamarquenho = VectorFrontendDTO(VectorFrontendDTO.TipoDeVector.Persona,"Catamarca").aModelo()
+        val vectores = listOf(cordobes, pampeano, barilochense, catamarquenho,portenho)
+        vectorService.crearVector(quilmenho)
+        vectorService.crearVector(catamarquenho)
+        quilmenho.infectar(sarampion)
+        vectorService.contagiar(quilmenho, vectores)
+        mutacion.mutacionesRequeridas.add(mutacionService.recuperarMutacion(1))
+        mutacionService.crearMutacion(mutacion)
+        mutacionService.mutar(sarampion.id, mutacion.id)
+       // val eventos = feedService.feedPatogeno(patogeno.tipo),
+        assertTrue(patogenoService.esPandemia(sarampion.id))
     }
 
     @Test
