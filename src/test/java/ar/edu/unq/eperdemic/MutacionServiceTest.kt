@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.modelo.AtributoEnum
 import ar.edu.unq.eperdemic.modelo.Mutacion
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.impl.MutacionServiceImpl
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
@@ -20,7 +21,7 @@ class MutacionServiceTest {
     val dataService = DataServiceHibernate()
     val mutacionService = MutacionServiceImpl(HibernateMutacionDAO())
     val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
-
+    val mongoDAO = MongoEventoDAO()
     @BeforeEach
     fun crearSetDeDatosIniciales() {
         dataService.crearSetDeDatosIniciales()
@@ -29,6 +30,7 @@ class MutacionServiceTest {
     @AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
+        mongoDAO.deleteAll()
     }
 
     @Test

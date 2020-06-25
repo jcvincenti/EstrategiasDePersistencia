@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
 import ar.edu.unq.eperdemic.services.exceptions.EmptyPropertyException
 import ar.edu.unq.eperdemic.services.impl.MutacionServiceImpl
@@ -30,7 +31,7 @@ class VectorServiceTest {
     lateinit var pampeano: Vector
     lateinit var entrerriano: Vector
     lateinit var catamarquenho: Vector
-
+    val mongoDAO = MongoEventoDAO()
     @BeforeEach
     fun crearSetDeDatosIniciales() {
         MockitoAnnotations.initMocks(this)
@@ -52,6 +53,7 @@ class VectorServiceTest {
     @AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
+        mongoDAO.deleteAll()
     }
 
     @Test

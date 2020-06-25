@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.impl.EstadisticaServiceImpl
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImpl
@@ -28,7 +29,7 @@ class EstadisticaServiceTest {
     lateinit var portenho: Vector
     lateinit var insectoBarilochense: Vector
     lateinit var barilochense: Vector
-
+    val mongoDAO = MongoEventoDAO()
     @BeforeEach
     fun crearSetDeDatosIniciales() {
         dataService.crearSetDeDatosIniciales()
@@ -46,6 +47,7 @@ class EstadisticaServiceTest {
     @AfterEach
     fun eliminarTodo() {
         dataService.eliminarTodo()
+        mongoDAO.deleteAll()
     }
 
     @Test
