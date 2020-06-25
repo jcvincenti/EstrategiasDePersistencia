@@ -14,8 +14,8 @@ class FeedServiceImpl : FeedService {
         TODO("Not yet implemented")
     }
 
-    override fun feedVector(vectorId: Int): List<Evento> {
-        TODO("Not yet implemented")
+    override fun feedVector(vectorId: Long): List<Evento> {
+        return eventoDAO.getFeedVector(vectorId)
     }
 
     override fun feedUbicacion(nombreDeUbicacion: String): List<Evento> {
