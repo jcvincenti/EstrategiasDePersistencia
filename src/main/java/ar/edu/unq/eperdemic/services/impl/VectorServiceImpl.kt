@@ -73,6 +73,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     override fun infectar(vector: Vector, especie: Especie) {
         val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
         val especiesAnteriores = vectores.map { it.especies }.flatten()
+        val eraPandemia = patogenoService.esPandemia(especie.id)
 
         TransactionRunner.runTrx {
             vector.infectar(especie)
@@ -92,7 +93,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             ))
         }
 
-        if (patogenoService.esPandemia(especie.id)) {
+        if (patogenoService.esPandemia(especie.id) && !eraPandemia) {
             mongoDao.logearEvento(Evento.buildEventoContagio(
                     null,
                     null,
