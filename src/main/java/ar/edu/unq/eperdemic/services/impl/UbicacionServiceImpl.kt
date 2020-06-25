@@ -21,8 +21,7 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
         val ubicacion = recuperarUbicacion(nombreUbicacion)
-        val arribo = Evento.buildEventoArribo(vectorId, nombreUbicacion, "El vector id $vectorId viajó a $nombreUbicacion")
-        TransactionRunner.runTrx {
+       TransactionRunner.runTrx {
 
             if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
                 throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
@@ -35,9 +34,9 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
             }
 
             if (vector.puedeMoverse(ubicacion)) {
-                mongoDao.logearEvento(arribo)
                 vector.moverse(ubicacion!!.nombreUbicacion)
                 vectorService.actualizarVector(vector)
+                mongoDao.logearEvento(Evento.buildEventoArribo(vector, "El vector id $vectorId viajó a $nombreUbicacion"))
                 contagiarZona(vector, nombreUbicacion)
             }
         }

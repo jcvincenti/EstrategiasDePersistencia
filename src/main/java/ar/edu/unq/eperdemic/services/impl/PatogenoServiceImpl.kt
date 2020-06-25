@@ -50,8 +50,8 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
             especieCreada = patogeno!!.crearEspecie(nombreEspecie,paisDeOrigen)
             especieDAO.guardar(especieCreada!!)
         }
-        eventoDao.logearEvento(Evento.buildEventoMutacion(patogeno!!.tipo, especieCreada!!.nombre
-                , "Se creo la especie ${especieCreada!!.nombre}"))
+        eventoDao.logearEvento(Evento.buildEventoMutacion(especieCreada!!,
+                "Se creo la especie ${especieCreada!!.nombre}"))
         return especieCreada!!
     }
 

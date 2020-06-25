@@ -1,10 +1,9 @@
 import ar.edu.unq.eperdemic.services.transactions.HibernateTransaction
-import ar.edu.unq.eperdemic.services.transactions.MongoDBTransaction
 import ar.edu.unq.eperdemic.services.transactions.Neo4JTransaction
 import ar.edu.unq.eperdemic.services.transactions.Transaction
 
 object TransactionRunner {
-    private var transactions:List<Transaction> = listOf(HibernateTransaction(), Neo4JTransaction(), MongoDBTransaction())
+    private var transactions:List<Transaction> = listOf(HibernateTransaction(), Neo4JTransaction())
 
     fun <T> runTrx(bloque: ()->T): T {
         try{
