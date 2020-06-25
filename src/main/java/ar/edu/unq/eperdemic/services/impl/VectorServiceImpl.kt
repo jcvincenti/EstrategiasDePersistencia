@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.mongo.MongoEventoDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.exceptions.EntityNotFoundException
@@ -10,11 +11,29 @@ import ar.edu.unq.eperdemic.services.utils.*
 
 open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     val mongoDao = MongoEventoDAO()
+    val patogenoService = PatogenoServiceImpl(HibernatePatogenoDAO())
 
     override fun contagiar(vectorInfectado: Vector, vectores: List<Vector>) {
         TransactionRunner.runTrx {
             vectores.forEach { vector ->
+
+                val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
+                val especiesAnteriores = vectores.map { it.especies }.flatten()
+
                 if (vectorInfectado.contagiar(vector)) {
+                    vector.especies.forEach {
+                        if (patogenoService.esPandemia(it.id)) {
+                            mongoDao.logearEvento(Evento.buildEventoContagio(
+                                    null,
+                                    null,
+                                    it.patogeno.tipo,
+                                    it.nombre,
+                                    null,
+                                    "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} es pandemia"
+                            ))
+                        }
+                    }
+
                     mongoDao.logearEvento(Evento.buildEventoContagio(
                             vectorInfectado.id,
                             vector.nombreDeLocacionActual,
@@ -32,6 +51,19 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
                             nombreEspecies,
                             "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
                     )
+                    val especiesALogear = vector.especies
+
+                    especiesALogear.removeAll(especiesAnteriores)
+                    especiesALogear.forEach {
+                        mongoDao.logearEvento(Evento.buildEventoContagio(
+                                null,
+                                vector.nombreDeLocacionActual,
+                                it.patogeno.tipo,
+                                it.nombre,
+                                null,
+                                "La especie ${it.nombre} del patogeno ${it.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+                        ))
+                    }
                 }
                 actualizarVector(vector)
             }
@@ -39,9 +71,36 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
     }
 
     override fun infectar(vector: Vector, especie: Especie) {
+        val vectores = getVectoresByLocacion(vector.nombreDeLocacionActual)
+        val especiesAnteriores = vectores.map { it.especies }.flatten()
+
         TransactionRunner.runTrx {
             vector.infectar(especie)
             vectorDAO.actualizar(vector)
+        }
+        val especiesPosteriores = vectores.map { it.especies }.flatten()
+
+        // Si la lista es mayor, quiere decir que la especie no estaba previamente y que el contagio fue exitoso
+        if (especiesPosteriores.size > especiesAnteriores.size) {
+            mongoDao.logearEvento(Evento.buildEventoContagio(
+                    null,
+                    vector.nombreDeLocacionActual,
+                    especie.patogeno.tipo,
+                    especie.nombre,
+                    null,
+                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} aparecio en ${vector.nombreDeLocacionActual}"
+            ))
+        }
+
+        if (patogenoService.esPandemia(especie.id)) {
+            mongoDao.logearEvento(Evento.buildEventoContagio(
+                    null,
+                    null,
+                    especie.patogeno.tipo,
+                    especie.nombre,
+                    null,
+                    "La especie ${especie.nombre} del patogeno ${especie.patogeno.tipo} es pandemia"
+            ))
         }
     }
 
