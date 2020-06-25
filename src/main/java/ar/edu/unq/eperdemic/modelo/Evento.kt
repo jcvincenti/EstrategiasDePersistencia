@@ -10,7 +10,7 @@ class Evento() {
     var vectorId: Int? = null
     var nombreUbicacion: String? = null
     var tipoDePatogeno: String? = null
-    var tipo: String? = null
+    var tipo: TipoDeEventoEnum? = null
     var especie: String? = null
     var especies: List<String>? = null
     var explicacion: String? = null
@@ -31,14 +31,14 @@ class Evento() {
     private constructor(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : this() {
         this.vectorId = vectorId
         this.nombreUbicacion = nombreUbicacion
-        this.tipo = "Arribo"
+        this.tipo = TipoDeEventoEnum.Arribo
         this.explicacion = explicacion
         this.timestamp = BSONTimestamp()
     }
 
     private constructor(tipoDePatogeno: String?, especie: String?, explicacion: String) : this() {
         this.tipoDePatogeno = tipoDePatogeno
-        this.tipo = "Mutacion"
+        this.tipo = TipoDeEventoEnum.Mutacion
         this.especie = especie
         this.explicacion = explicacion
         this.timestamp = BSONTimestamp()
@@ -55,7 +55,7 @@ class Evento() {
         this.vectorId = vectorId
         this.nombreUbicacion = nombreUbicacion
         this.tipoDePatogeno = tipoDePatogeno
-        this.tipo = "Contagio"
+        this.tipo = TipoDeEventoEnum.Contagio
         this.especie = especie
         this.especies = especies
         this.explicacion = explicacion

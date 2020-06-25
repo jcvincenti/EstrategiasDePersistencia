@@ -1,8 +1,6 @@
 package ar.edu.unq.eperdemic
 
-import ar.edu.unq.eperdemic.dto.VectorFrontendDTO
-import ar.edu.unq.eperdemic.modelo.AtributoEnum
-import ar.edu.unq.eperdemic.modelo.Mutacion
+import ar.edu.unq.eperdemic.modelo.TipoDeEventoEnum
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateMutacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
@@ -71,8 +69,8 @@ class FeedServiceTest {
         ubicacionService.mover(4, "Bariloche")
         val eventos = feedService.feedVector(4)
         assertEquals(4, eventos.size)
-        assertEquals("Contagio", eventos.first().tipo)
-        assertEquals("Contagio", eventos.last().tipo)
+        assertEquals(TipoDeEventoEnum.Contagio, eventos.first().tipo)
+        assertEquals(TipoDeEventoEnum.Contagio, eventos.last().tipo)
         assertEquals(5, eventos.last().especies!!.size)
     }
 
@@ -83,10 +81,10 @@ class FeedServiceTest {
         ubicacionService.mover(1, "Quilmes")
         val eventos = feedService.feedUbicacion("Cordoba")
         assertEquals(3, eventos.size)
-        assertEquals("Arribo", eventos.first().tipo)
+        assertEquals(TipoDeEventoEnum.Arribo, eventos.first().tipo)
         assertEquals("Quilmes", eventos.first().nombreUbicacion)
-        assertEquals("Contagio", eventos[1].tipo)
-        assertEquals("Arribo", eventos.last().tipo)
+        assertEquals(TipoDeEventoEnum.Contagio, eventos[1].tipo)
+        assertEquals(TipoDeEventoEnum.Arribo, eventos.last().tipo)
         assertEquals("Cordoba", eventos.last().nombreUbicacion)
     }
 }
