@@ -18,11 +18,11 @@ class Evento() {
 
 
     companion object {
-        fun buildEventoArribo(vectorId: Int?, nombreUbicacion: String?, explicacion: String) : Evento {
-            return Evento(vectorId, nombreUbicacion, explicacion)
+        fun buildEventoArribo(vector: Vector, explicacion: String) : Evento {
+            return Evento(vector.id, vector.nombreDeLocacionActual, explicacion)
         }
-        fun buildEventoMutacion(tipoDePatogeno: String?, especie: String?, explicacion: String) : Evento {
-            return Evento(tipoDePatogeno, especie, explicacion)
+        fun buildEventoMutacion(especie: Especie, explicacion: String) : Evento {
+            return Evento(especie.patogeno.tipo, especie.nombre, explicacion)
         }
         fun buildEventoContagio(vectorId: Int?, nombreUbicacion: String?, tipoDePatogeno: String?,
                                 especie: String?, especies: List<String>?, explicacion: String) : Evento {
