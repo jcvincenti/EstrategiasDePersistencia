@@ -82,7 +82,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
             logearAparicion(especie, vector.nombreDeLocacionActual)
         }
 
-        if (patogenoService.esPandemia(especie.id) && !eraPandemia) {
+        if (!eraPandemia && patogenoService.esPandemia(especie.id)) {
             logearPandemia(especie)
         }
     }
