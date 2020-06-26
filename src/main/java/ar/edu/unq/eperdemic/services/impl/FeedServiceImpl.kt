@@ -11,7 +11,7 @@ class FeedServiceImpl : FeedService {
     private val ubicacionService = UbicacionServiceImpl(HibernateUbicacionDAO())
 
     override fun feedPatogeno(tipoDePatogeno: String): List<Evento> {
-        TODO("Not yet implemented")
+        return eventoDAO.getFeedPatogeno(tipoDePatogeno)
     }
 
     override fun feedVector(vectorId: Long): List<Evento> {
