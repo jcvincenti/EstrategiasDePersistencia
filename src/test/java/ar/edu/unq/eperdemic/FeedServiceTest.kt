@@ -103,7 +103,6 @@ class FeedServiceTest {
         assertEquals(4, eventos.size)
         assertEquals(TipoDeEventoEnum.Contagio, eventos.first().tipo)
         assertEquals(TipoDeEventoEnum.Contagio, eventos.last().tipo)
-        assertEquals(5, eventos.last().especies!!.size)
     }
 
     @Test
