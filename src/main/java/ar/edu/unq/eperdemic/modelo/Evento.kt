@@ -12,7 +12,6 @@ class Evento() {
     var tipoDePatogeno: String? = null
     var tipo: TipoDeEventoEnum? = null
     var especie: String? = null
-    var especies: List<String>? = null
     var explicacion: String? = null
 
     companion object {
@@ -28,8 +27,8 @@ class Evento() {
             return Evento(vector, vectorInfectado, explicacion)
         }
 
-        fun buildEventoContagio(vector: Vector, nombreEspecies: List<String>, explicacion: String ) : Evento {
-            return Evento(vector, nombreEspecies, explicacion)
+        fun buildEventoContagio(vector: Vector, explicacion: String ) : Evento {
+            return Evento(vector, explicacion)
         }
 
         fun buildEventoContagio(especie: Especie, explicacion: String) : Evento {
@@ -46,9 +45,8 @@ class Evento() {
         this.timestamp = BSONTimestamp()
     }
 
-    private constructor(vector: Vector,nombreEspecies: List<String>, explicacion: String ) : this(){
+    private constructor(vector: Vector, explicacion: String ) : this(){
         this.vectorId = vector.id
-        this.especies = nombreEspecies
         this.explicacion = explicacion
         this.tipo = TipoDeEventoEnum.Contagio
         this.timestamp = BSONTimestamp()

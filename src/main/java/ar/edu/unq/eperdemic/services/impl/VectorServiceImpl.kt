@@ -53,8 +53,7 @@ open class VectorServiceImpl(val vectorDAO: VectorDAO) : VectorService {
         val nombreEspecies = vector.especies.map{it.nombre}
 
         mongoDao.logearEvento(Evento.buildEventoContagio(
-                vector, nombreEspecies,
-                "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
+                vector, "El vector id ${vector.id} está infectado con las siguientes especies: ${nombreEspecies}")
         )
     }
 
