@@ -16,7 +16,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return ubicacion
     }
 
-    override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
+    override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: TipoCaminoEnum) {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (ubicacionOrigen: Ubicacion), (ubicacionDestino: Ubicacion)" +
                 " WHERE ubicacionOrigen.nombreUbicacion = \$nombreUbicacionOrigen AND ubicacionDestino.nombreUbicacion = \$nombreUbicacionDestino" +

@@ -6,18 +6,18 @@ enum class TipoCaminoEnum {
     companion object TipoDeCaminoBuilder {
         fun parseTipo(tipo: String): TipoCaminoEnum? {
             return when(tipo) {
-                "terrestre" -> Terrestre
-                "maritimo" -> Maritimo
-                "aereo" -> Aereo
+                "Terrestre" -> Terrestre
+                "Maritimo" -> Maritimo
+                "Aereo" -> Aereo
                 else -> null
             }
         }
 
-        fun caminosPosibles(tipoDeVector: TipoDeVectorEnum) : List<String> {
+        fun caminosPosibles(tipoDeVector: TipoDeVectorEnum) : List<TipoCaminoEnum> {
             return when(tipoDeVector) {
-                TipoDeVectorEnum.Persona -> listOf("terrestre","maritimo")
-                TipoDeVectorEnum.Animal -> listOf("terrestre", "maritimo", "aereo")
-                TipoDeVectorEnum.Insecto -> listOf("terrestre", "aereo")
+                TipoDeVectorEnum.Persona -> listOf(Terrestre,Maritimo)
+                TipoDeVectorEnum.Animal -> listOf(Terrestre, Maritimo, Aereo)
+                TipoDeVectorEnum.Insecto -> listOf(Terrestre, Aereo)
             }
         }
     }
