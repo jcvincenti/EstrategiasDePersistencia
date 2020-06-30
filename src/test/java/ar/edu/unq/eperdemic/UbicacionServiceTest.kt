@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.modelo.exceptions.UbicacionMuyLejanaException
@@ -162,8 +163,8 @@ class UbicacionServiceTest {
         val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
         val cordoba = ubicacionService.recuperarUbicacion("Cordoba")
-        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
-        ubicacionService.conectar(catamarca.nombreUbicacion,cordoba!!.nombreUbicacion,"terrestre")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion, TipoCaminoEnum.Terrestre)
+        ubicacionService.conectar(catamarca.nombreUbicacion,cordoba!!.nombreUbicacion,TipoCaminoEnum.Terrestre)
         val conectados = ubicacionService.conectados(catamarca.nombreUbicacion).sortedBy { it.nombreUbicacion }
         assertEquals(2, conectados.size)
         assertEquals("Cordoba" ,conectados.first().nombreUbicacion)
@@ -174,8 +175,8 @@ class UbicacionServiceTest {
     fun conectadosSinRepetidos(){
         val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
-        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,"terrestre")
-        ubicacionService.conectar(catamarca.nombreUbicacion,entreRios.nombreUbicacion,"maritimo")
+        ubicacionService.conectar(catamarca!!.nombreUbicacion,entreRios!!.nombreUbicacion,TipoCaminoEnum.Terrestre)
+        ubicacionService.conectar(catamarca.nombreUbicacion,entreRios.nombreUbicacion,TipoCaminoEnum.Maritimo)
         val conectados = ubicacionService.conectados(catamarca.nombreUbicacion).sortedBy { it.nombreUbicacion }
 
         assertEquals(conectados.toSet().size, conectados.size)
@@ -185,7 +186,7 @@ class UbicacionServiceTest {
     fun noConectadosTest(){
         val entreRios = ubicacionService.recuperarUbicacion("Entre Rios")
         val catamarca = ubicacionService.recuperarUbicacion("Catamarca")
-        ubicacionService.conectar(entreRios!!.nombreUbicacion,catamarca!!.nombreUbicacion,"terrestre")
+        ubicacionService.conectar(entreRios!!.nombreUbicacion,catamarca!!.nombreUbicacion,TipoCaminoEnum.Terrestre)
         assertTrue(ubicacionService.conectados("Catamarca").isEmpty())
     }
 
@@ -208,7 +209,7 @@ class UbicacionServiceTest {
 
     @Test
     fun capacidadDeExpansionTest() {
-        ubicacionService.conectar("Buenos Aires", "Entre Rios", "terrestre")
+        ubicacionService.conectar("Buenos Aires", "Entre Rios", TipoCaminoEnum.Terrestre)
         // con un movimiento puede moverse a Cordoba y Entre Rios
         assertEquals(2, ubicacionService.capacidadDeExpansion(1, 1))
         // con dos movimientos puede moverse a Cordoba, Entre Rios y La Pampa
@@ -219,7 +220,7 @@ class UbicacionServiceTest {
 
     @Test
     fun capacidadDeExpansionVariosTiposDeCaminoTest() {
-        ubicacionService.conectar("Buenos Aires", "Entre Rios", "maritimo")
+        ubicacionService.conectar("Buenos Aires", "Entre Rios", TipoCaminoEnum.Maritimo)
         // con un movimiento puede moverse a Cordoba y Entre Rios
         assertEquals(2, ubicacionService.capacidadDeExpansion(1, 1))
         // con dos movimientos puede moverse a Cordoba, Entre Rios y La Pampa
@@ -230,7 +231,7 @@ class UbicacionServiceTest {
 
     @Test
     fun capacidadDeExpansionConTiposDeCaminoNoValidosTest() {
-        ubicacionService.conectar("Buenos Aires", "Entre Rios", "aereo")
+        ubicacionService.conectar("Buenos Aires", "Entre Rios", TipoCaminoEnum.Aereo)
         // con un movimiento puede moverse a Cordoba
         assertEquals(1, ubicacionService.capacidadDeExpansion(1, 1))
         // con dos movimientos puede moverse a Cordoba
@@ -244,7 +245,7 @@ class UbicacionServiceTest {
         //Buenos Aires-[terrestre]->Cordoba-[aereo]->Quilmes
         var caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Animal, "Buenos Aires", "Quilmes")
         assertEquals(listOf("Buenos Aires", "Cordoba", "Quilmes"), caminoMasCorto)
-        ubicacionService.conectar("Buenos Aires", "Quilmes", "aereo")
+        ubicacionService.conectar("Buenos Aires", "Quilmes", TipoCaminoEnum.Aereo)
         caminoMasCorto = ubicacionService.caminoMasCorto(TipoDeVectorEnum.Animal, "Buenos Aires", "Quilmes")
         assertEquals(listOf("Buenos Aires", "Quilmes"), caminoMasCorto)
     }

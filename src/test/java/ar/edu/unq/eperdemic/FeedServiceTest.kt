@@ -96,7 +96,7 @@ class FeedServiceTest {
 
     @Test
     fun feedVectorTest() {
-        ubicacionService.conectar("Cordoba", "Bariloche", "terrestre")
+        ubicacionService.conectar("Cordoba", "Bariloche", TipoCaminoEnum.Terrestre)
         ubicacionService.mover(1, "Cordoba")
         ubicacionService.mover(4, "Bariloche")
         val eventos = feedService.feedVector(4)
@@ -107,7 +107,7 @@ class FeedServiceTest {
 
     @Test
     fun moverUnVectorGeneraEventoDeArriboYContagioTest() {
-        ubicacionService.conectar("Cordoba", "Quilmes", "terrestre")
+        ubicacionService.conectar("Cordoba", "Quilmes", TipoCaminoEnum.Terrestre)
         ubicacionService.mover(1, "Cordoba")
         ubicacionService.mover(1, "Quilmes")
         val eventos = feedService.feedUbicacion("Cordoba")

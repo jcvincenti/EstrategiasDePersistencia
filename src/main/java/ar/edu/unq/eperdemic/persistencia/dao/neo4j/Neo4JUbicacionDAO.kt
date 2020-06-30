@@ -4,11 +4,14 @@ import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
 import ar.edu.unq.eperdemic.modelo.TipoDeVectorEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.INeo4JUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.transactions.Neo4JTransaction
 import org.neo4j.driver.Record
 import org.neo4j.driver.Values
 
 class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
+    val ubicacionDao = HibernateUbicacionDAO()
+
     override fun crearUbicacion(ubicacion: Ubicacion) : Ubicacion{
         val tx = Neo4JTransaction.transaction
         val query ="MERGE(ubicacion: Ubicacion {nombreUbicacion: \$nombre})"
@@ -16,7 +19,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return ubicacion
     }
 
-    override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: String) {
+    override fun conectar(nombreUbicacionOrigen: String, nombreUbicacionDestino: String, tipoDeCamino: TipoCaminoEnum) {
         val tx = Neo4JTransaction.transaction
         val query = "MATCH (ubicacionOrigen: Ubicacion), (ubicacionDestino: Ubicacion)" +
                 " WHERE ubicacionOrigen.nombreUbicacion = \$nombreUbicacionOrigen AND ubicacionDestino.nombreUbicacion = \$nombreUbicacionDestino" +
@@ -35,7 +38,7 @@ class Neo4JUbicacionDAO : INeo4JUbicacionDAO{
         return res.list { record: Record ->
             val ubicacion  = record.get(0)
             val nombre = ubicacion.get("nombreUbicacion").asString()
-            Ubicacion(nombre)
+            ubicacionDao.recuperar(nombre)
         }
     }
 

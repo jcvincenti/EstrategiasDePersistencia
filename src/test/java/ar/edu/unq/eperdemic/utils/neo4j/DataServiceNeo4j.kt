@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.utils.neo4j
 
+import ar.edu.unq.eperdemic.modelo.TipoCaminoEnum
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4JUbicacionDAO
 import ar.edu.unq.eperdemic.utils.DataService
@@ -18,13 +19,13 @@ class DataServiceNeo4j : DataService {
             ubicaciones.forEach { u ->
                 dao.crearUbicacion(u)
             }
-            dao.conectar("Entre Rios", "La Pampa", "terrestre")
-            dao.conectar("Buenos Aires", "Cordoba", "terrestre")
-            dao.conectar("Bariloche", "Cordoba", "terrestre")
-            dao.conectar("La Pampa", "Quilmes", "maritimo")
-            dao.conectar("Quilmes", "Berazategui", "aereo")
-            dao.conectar("Cordoba", "Quilmes", "aereo")
-            dao.conectar("Quilmes", "Berazategui", "terrestre")
+            dao.conectar("Entre Rios", "La Pampa", TipoCaminoEnum.Terrestre)
+            dao.conectar("Buenos Aires", "Cordoba", TipoCaminoEnum.Terrestre)
+            dao.conectar("Bariloche", "Cordoba", TipoCaminoEnum.Terrestre)
+            dao.conectar("La Pampa", "Quilmes", TipoCaminoEnum.Maritimo)
+            dao.conectar("Quilmes", "Berazategui", TipoCaminoEnum.Aereo)
+            dao.conectar("Cordoba", "Quilmes", TipoCaminoEnum.Aereo)
+            dao.conectar("Quilmes", "Berazategui", TipoCaminoEnum.Terrestre)
 
         }
     }

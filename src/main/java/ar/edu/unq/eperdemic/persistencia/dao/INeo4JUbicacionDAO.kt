@@ -6,7 +6,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface INeo4JUbicacionDAO {
     fun crearUbicacion(ubicacion: Ubicacion) : Ubicacion
-    fun conectar(nombreUbicacionOrigen:String, nombreUbicacionDestino:String, tipoDeCamino:String)
+    fun conectar(nombreUbicacionOrigen:String, nombreUbicacionDestino:String, tipoDeCamino:TipoCaminoEnum)
     fun conectados(nombreUbicacion: String) : List<Ubicacion>
     fun esUbicacionMuyLejana(origen:String, destino:String) : Boolean
     fun capacidadDeExpansion(nombreDeUbicacion:String, movimientos:Int, tipoDeVector: TipoDeVectorEnum): Int
