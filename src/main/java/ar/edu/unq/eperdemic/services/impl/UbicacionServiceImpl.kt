@@ -20,26 +20,37 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
 
     override fun mover(vectorId: Int, nombreUbicacion: String) {
         val vector = vectorService.recuperarVector(vectorId)
-        val ubicacion = recuperarUbicacion(nombreUbicacion)
+        val destino = recuperarUbicacion(nombreUbicacion)
        TransactionRunner.runTrx {
-
-            if (neo4jUbicacionDao.esUbicacionMuyLejana(vector.nombreDeLocacionActual, nombreUbicacion)) {
-                throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
-            }
-
-            if (neo4jUbicacionDao.caminosConectados(vector.nombreDeLocacionActual, nombreUbicacion).all {
-                        !it.puedeSerAtravesadoPor(vector.tipo)
-                    }) {
-                throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
-            }
-
-            if (vector.puedeMoverse(ubicacion)) {
-                vector.moverse(ubicacion!!.nombreUbicacion)
-                vectorService.actualizarVector(vector)
-                mongoDao.logearEvento(Evento.buildEventoArribo(vector, "El vector id $vectorId viajó a $nombreUbicacion"))
-                contagiarZona(vector, nombreUbicacion)
-            }
+           if (vector.puedeMoverse(destino) &&
+                   esCercana(vector.nombreDeLocacionActual, nombreUbicacion) &&
+                   puedeAtravesar(vector, nombreUbicacion)) {
+                moverse(vector, nombreUbicacion)
+           }
         }
+    }
+
+    private fun moverse(vector: Vector, destino: String) {
+        vector.moverse(destino)
+        vectorService.actualizarVector(vector)
+        mongoDao.logearEvento(Evento.buildEventoArribo(vector, "El vector id ${vector.id} viajó a $destino"))
+        contagiarZona(vector, destino)
+    }
+
+    private fun esCercana(origen: String, destino: String) : Boolean {
+        if (neo4jUbicacionDao.esUbicacionMuyLejana(origen, destino)) {
+            throw UbicacionMuyLejanaException("La ubicacion a la que intenta moverse no esta conectada")
+        }
+        return true
+    }
+
+    private fun puedeAtravesar(vector: Vector, destino: String) : Boolean {
+        if (neo4jUbicacionDao.caminosConectados(vector.nombreDeLocacionActual, destino).all {
+                    !it.puedeSerAtravesadoPor(vector.tipo)
+                }) {
+            throw UbicacionNoAlcanzableException("La ubicacion a la que intenta moverse no tiene un camino alcanzable")
+        }
+        return true
     }
 
     private fun contagiarZona(vector: Vector?, locacion: String?) {
@@ -111,9 +122,11 @@ class UbicacionServiceImpl(val ubicacionDAO: UbicacionDAO) : UbicacionService {
     }
 
     override fun moverMasCorto(vectorId: Int, nombreUbicacion: String) {
-        val vector = vectorService.recuperarVector(vectorId)
-        val caminoMasCorto = caminoMasCorto(vector.tipo, vector.nombreDeLocacionActual, nombreUbicacion).drop(1)
-        caminoMasCorto.forEach{mover(vectorId, it)}
+        TransactionRunner.runTrx {
+            val vector = vectorService.recuperarVector(vectorId)
+            val caminoMasCorto = caminoMasCorto(vector.tipo, vector.nombreDeLocacionActual, nombreUbicacion).drop(1)
+            caminoMasCorto.forEach{moverse(vector, it)}
+        }
     }
 
     fun cantidadUbicaciones(): Long {
