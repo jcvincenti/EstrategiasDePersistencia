@@ -6,7 +6,7 @@ import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.codecs.pojo.PojoCodecProvider
 
-class MongoConnection {
+object MongoConnection {
     var client: MongoClient
     var dataBase: MongoDatabase
     var session: ClientSession? = null

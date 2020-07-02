@@ -6,7 +6,7 @@ import org.bson.conversions.Bson
 
 open class GenericMongoDao<T>(entityType: Class<T>) {
 
-    protected var connection = MongoConnection()
+    protected var connection = MongoConnection
     protected var collection:MongoCollection<T>
 
     init {
